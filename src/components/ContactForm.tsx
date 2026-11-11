@@ -2,13 +2,14 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 import { ArrowIcon } from './icons';
 import {
   contactSchema,
   MIN_FILL_MS,
   SERVICE_OPTIONS,
+  type ContactData,
   type ContactInput,
 } from '@/lib/contact-schema';
 import { content } from '@/content';
@@ -19,6 +20,43 @@ const F = content.form;
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Status = 'idle' | 'sending' | 'failed';
+type FieldName = 'name' | 'mobile' | 'email' | 'service' | 'message';
+const FIELDS: readonly FieldName[] = ['name', 'mobile', 'email', 'service', 'message'];
+
+/** Label with an optional red asterisk, the control, and its inline error. */
+function Field({
+  id,
+  label,
+  required,
+  error,
+  children,
+}: {
+  id: FieldName;
+  label: string;
+  required?: boolean;
+  error?: string;
+  children: ReactNode;
+}) {
+  return (
+    <label htmlFor={`f-${id}`}>
+      <span className="lbl">
+        {label}
+        {required ? (
+          <b className="req" aria-hidden="true">
+            {' '}
+            *
+          </b>
+        ) : null}
+      </span>
+      {children}
+      {error ? (
+        <span className="err" id={`err-${id}`} role="alert">
+          {error}
+        </span>
+      ) : null}
+    </label>
+  );
+}
 
 export function ContactForm() {
   const router = useRouter();
@@ -32,11 +70,19 @@ export function ContactForm() {
     setError,
     setValue,
     formState: { errors },
-  } = useForm<ContactInput>({
+  } = useForm<ContactInput, unknown, ContactData>({
     resolver: zodResolver(contactSchema),
     mode: 'onTouched',
     // startedAt and page are filled in at submit time; they only need to satisfy the shared schema here.
-    defaultValues: { name: '', contact: '', message: '', service: '', company: '', startedAt: 0 },
+    defaultValues: {
+      name: '',
+      mobile: '',
+      email: '',
+      message: '',
+      service: '',
+      company: '',
+      startedAt: 0,
+    },
   });
 
   // Preselect the service when the form is opened from a service page (?service=slug).
@@ -56,11 +102,7 @@ export function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...values,
-          startedAt: startedAt.current,
-          page: pathname,
-        }),
+        body: JSON.stringify({ ...values, startedAt: startedAt.current, page: pathname }),
       });
       if (res.ok) {
         router.push('/thank-you');
@@ -70,8 +112,8 @@ export function ContactForm() {
         const data = (await res.json().catch(() => ({}))) as { fields?: Record<string, string> };
         let shown = false;
         for (const [name, message] of Object.entries(data.fields ?? {})) {
-          if (['name', 'contact', 'message', 'service'].includes(name)) {
-            setError(name as 'name' | 'contact' | 'message' | 'service', { message });
+          if ((FIELDS as readonly string[]).includes(name)) {
+            setError(name as FieldName, { message });
             shown = true;
           }
         }
@@ -88,6 +130,11 @@ export function ContactForm() {
 
   const sending = status === 'sending';
   const hasEmail = !isPlaceholder(SITE.email);
+  const err = (n: FieldName) => errors[n]?.message as string | undefined;
+  const a11y = (n: FieldName) => ({
+    'aria-invalid': errors[n] ? (true as const) : undefined,
+    'aria-describedby': errors[n] ? `err-${n}` : undefined,
+  });
 
   return (
     <form className="fcard" onSubmit={onSubmit} noValidate aria-busy={sending}>
@@ -103,44 +150,45 @@ export function ContactForm() {
         </p>
       ) : null}
 
-      <label>
-        <span className="lbl">{F.name.label}</span>
+      <Field id="name" label={F.name.label} required error={err('name')}>
         <input
+          id="f-name"
           type="text"
           autoComplete="name"
           placeholder={F.name.placeholder}
-          aria-invalid={errors.name ? true : undefined}
-          aria-describedby={errors.name ? 'err-name' : undefined}
+          aria-required="true"
+          {...a11y('name')}
           {...register('name')}
         />
-        {errors.name ? (
-          <span className="err" id="err-name" role="alert">
-            {errors.name.message}
-          </span>
-        ) : null}
-      </label>
+      </Field>
 
-      <label>
-        <span className="lbl">{F.contact.label}</span>
+      <Field id="mobile" label={F.mobile.label} required error={err('mobile')}>
         <input
-          type="text"
-          autoComplete="email"
-          inputMode="email"
-          placeholder={F.contact.placeholder}
-          aria-invalid={errors.contact ? true : undefined}
-          aria-describedby={errors.contact ? 'err-contact' : undefined}
-          {...register('contact')}
+          id="f-mobile"
+          type="tel"
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder={F.mobile.placeholder}
+          aria-required="true"
+          {...a11y('mobile')}
+          {...register('mobile')}
         />
-        {errors.contact ? (
-          <span className="err" id="err-contact" role="alert">
-            {errors.contact.message}
-          </span>
-        ) : null}
-      </label>
+      </Field>
 
-      <label>
-        <span className="lbl">{F.service.label}</span>
-        <select {...register('service')}>
+      <Field id="email" label={F.email.label} required error={err('email')}>
+        <input
+          id="f-email"
+          type="email"
+          autoComplete="email"
+          placeholder={F.email.placeholder}
+          aria-required="true"
+          {...a11y('email')}
+          {...register('email')}
+        />
+      </Field>
+
+      <Field id="service" label={F.service.label} error={err('service')}>
+        <select id="f-service" {...a11y('service')} {...register('service')}>
           <option value="">{F.service.placeholder}</option>
           {SERVICE_OPTIONS.map((o) => (
             <option key={o} value={o}>
@@ -148,22 +196,17 @@ export function ContactForm() {
             </option>
           ))}
         </select>
-      </label>
+      </Field>
 
-      <label>
-        <span className="lbl">{F.message.label}</span>
+      <Field id="message" label={F.message.label} required error={err('message')}>
         <textarea
+          id="f-message"
           placeholder={F.message.placeholder}
-          aria-invalid={errors.message ? true : undefined}
-          aria-describedby={errors.message ? 'err-message' : undefined}
+          aria-required="true"
+          {...a11y('message')}
           {...register('message')}
         />
-        {errors.message ? (
-          <span className="err" id="err-message" role="alert">
-            {errors.message.message}
-          </span>
-        ) : null}
-      </label>
+      </Field>
 
       {/* Honeypot: hidden from people and from assistive tech. */}
       <div className="hp" aria-hidden="true">

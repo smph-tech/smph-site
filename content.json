@@ -757,16 +757,20 @@
   },
   "form": {
     "name": {
-      "label": "Your name",
+      "label": "Name",
       "placeholder": "Full name"
     },
-    "contact": {
-      "label": "Email or phone",
-      "placeholder": "How we can reach you"
+    "mobile": {
+      "label": "Mobile number",
+      "placeholder": "e.g. 98765 43210"
+    },
+    "email": {
+      "label": "Email",
+      "placeholder": "name@example.com"
     },
     "service": {
-      "label": "Service (optional)",
-      "placeholder": "Choose a service",
+      "label": "Service",
+      "placeholder": "Select a service (optional)",
       "options": [
         "Web applications",
         "Mobile apps",
@@ -780,6 +784,7 @@
       "label": "What is the problem?",
       "placeholder": "Describe what is slow, manual or missing"
     },
+    "required": "required",
     "submit": "Send message",
     "sending": "Sending",
     "failure": "Sorry, your message did not go through. Please email us directly at"
