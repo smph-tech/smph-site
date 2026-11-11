@@ -1,0 +1,53 @@
+/* Design tokens. Source of truth for colour, radius, type and layout.
+   Values come from design-handoff/reference/*.html. */
+
+@theme {
+  --color-page: #060a22;
+  --color-footer: #04061a;
+  --color-light: #edf1ff;
+  --color-ink: #0b1230;
+  --color-text: #eaf0ff;
+  --color-muted: #a3b3dc;
+  --color-muted-light: #56628c;
+  --color-blue: #4f7bff;
+  --color-violet: #7c4dff;
+  --color-violet-alt: #8b5cf6;
+  --color-cyan: #22d3ee;
+
+  --radius-card: 26px;
+  --radius-card-lg: 34px;
+  --radius-button: 16px;
+  --radius-pill: 999px;
+
+  --font-sans: var(--font-jakarta), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+:root {
+  --bg: #060a22;
+  --bg-footer: #04061a;
+  --bg-light: #edf1ff;
+  --ink: #0b1230;
+  --tx: #eaf0ff;
+  --mu: #a3b3dc;
+  --mu-light: #56628c;
+
+  --blue: #4f7bff;
+  --violet: #7c4dff;
+  --cyan: #22d3ee;
+
+  --grad-primary: linear-gradient(135deg, #4f7bff, #7c4dff);
+  --grad-cta: linear-gradient(135deg, #2646de, #6c3df0 62%, #8a3cf0);
+  --grad-text-dark: linear-gradient(90deg, #6f96ff, #b08bff 55%, #34dbf2);
+  --grad-text-light: linear-gradient(90deg, #2f54e8, #7c4dff 60%, #0c93b0);
+  --grad-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
+
+  --shadow-btn: 0 12px 32px -6px rgba(90, 110, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  --shadow-btn-hover:
+    0 18px 40px -6px rgba(90, 110, 255, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+
+  --container: 1240px;
+  --gutter: 40px;
+  --gutter-sm: 22px;
+  --bp: 900px;
+}

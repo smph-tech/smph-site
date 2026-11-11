@@ -1,0 +1,371 @@
+/* Production additions on top of the ported reference CSS (site.css).
+   Everything here is something the static reference could not show. */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  background: #060a22;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+[id] {
+  scroll-margin-top: 24px;
+}
+
+/* skip link */
+.skip {
+  position: absolute;
+  left: 12px;
+  top: -80px;
+  z-index: 100;
+  background: #fff;
+  color: #0b1230;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.skip:focus {
+  top: 12px;
+}
+
+/* focus rings */
+.pg :focus-visible,
+.mm :focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 3px;
+  border-radius: 10px;
+}
+.pg .light :focus-visible {
+  outline-color: #3552dc;
+}
+.pg .btn:focus-visible {
+  outline-offset: 4px;
+  border-radius: 16px;
+}
+.pg .btn.sm:focus-visible {
+  border-radius: 14px;
+}
+.pg .fcard :focus-visible {
+  outline-color: #3552dc;
+}
+.pg .fcard input:focus-visible,
+.pg .fcard textarea:focus-visible,
+.pg .fcard select:focus-visible {
+  outline: 0;
+  border-color: #4f7bff;
+  box-shadow: 0 0 0 4px rgba(79, 123, 255, 0.25);
+}
+
+/* header: dropdown + burger button */
+.dd > a .caret {
+  font-size: 0.8em;
+  margin-left: 2px;
+}
+.pg .burger {
+  display: none;
+  background: none;
+  border: 0;
+  padding: 6px;
+  margin: -6px;
+  color: #eaf0ff;
+  cursor: pointer;
+  border-radius: 12px;
+}
+@container pg (max-width:900px) {
+  .pg .burger {
+    display: block;
+  }
+}
+.mi a.on,
+.nav a[aria-current='page'] {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+/* mobile menu: a native modal <dialog>, so it traps focus and closes on Escape */
+.mm {
+  margin: 0 0 0 auto;
+  padding: 0;
+  width: min(420px, 100vw);
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  border: 0;
+  background: #0a1040;
+  color: #eaf0ff;
+  font-family: var(--font-sans);
+  box-shadow: -30px 0 80px rgba(0, 0, 30, 0.6);
+  overflow-y: auto;
+}
+.mm::backdrop {
+  background: rgba(3, 5, 25, 0.7);
+  backdrop-filter: blur(4px);
+}
+.mm-in {
+  padding: 22px 22px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mm-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 52px;
+  margin-bottom: 14px;
+}
+.mm button.mm-x {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.mm a {
+  color: inherit;
+  text-decoration: none;
+}
+.mm .mm-l {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.mm .mm-l:hover,
+.mm .mm-l[aria-current='page'] {
+  background: rgba(255, 255, 255, 0.08);
+}
+.mm .mm-h {
+  margin: 14px 16px 4px;
+  font: 600 12px var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8fa3d8;
+}
+.mm .mm-s {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 14px;
+}
+.mm .mm-s:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+.mm .mm-s img {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex: none;
+}
+.mm .mm-s b {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+}
+.mm .mm-s span {
+  display: block;
+  font-size: 13px;
+  color: #a3b3dc;
+  line-height: 1.35;
+  margin-top: 1px;
+}
+.mm .btn {
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 30px;
+  border-radius: 16px;
+  background: var(--grad-primary);
+  color: #fff;
+  font: 700 16px var(--font-sans);
+  box-shadow: var(--shadow-btn);
+}
+
+/* placeholders stay visible; this only makes them findable */
+[data-placeholder] {
+  font-style: inherit;
+}
+.ft span.fl {
+  display: block;
+  padding: 4px 0;
+  color: #c0cbee;
+}
+
+/* hero image: reserve space, no layout shift */
+.h3d > img.main {
+  height: auto;
+}
+
+/* contact form */
+.fcard select {
+  display: block;
+  width: 100%;
+  border: 1.5px solid #d6ddf5;
+  border-radius: 14px;
+  padding: 15px 16px;
+  font: 500 16px var(--font-sans);
+  background-color: #f6f8ff;
+  color: var(--ink);
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #56628c 50%),
+    linear-gradient(135deg, #56628c 50%, transparent 50%);
+  background-position:
+    calc(100% - 22px) 52%,
+    calc(100% - 16px) 52%;
+  background-size:
+    6px 6px,
+    6px 6px;
+  background-repeat: no-repeat;
+}
+.fcard input,
+.fcard textarea,
+.fcard select {
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s;
+}
+.fcard textarea {
+  height: 128px;
+  resize: vertical;
+}
+.fcard [aria-invalid='true'] {
+  border-color: #c2263d;
+  background: #fff7f8;
+}
+.fcard .err {
+  display: block;
+  margin: 8px 0 0;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #b3122d;
+}
+.fcard label > span.lbl em {
+  font-style: normal;
+  font-weight: 500;
+  color: #56628c;
+}
+.fcard .hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.fcard .btn[disabled] {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
+}
+.fcard .fail {
+  margin: 0 0 20px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff1f3;
+  border: 1.5px solid #f0b4bf;
+  color: #7d0f23;
+  font-size: 15px;
+  font-weight: 600;
+}
+.fcard .fail a {
+  text-decoration: underline;
+}
+.fcard .ok {
+  text-align: center;
+  padding: 24px 0;
+}
+.fcard .ok h3 {
+  margin: 0 0 10px;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+.fcard .ok p {
+  margin: 0;
+  color: #56628c;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spin {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
+}
+
+/* contact page header sits on the gradient band */
+.cband {
+  background: var(--grad-cta);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pg *,
+  .pg *::before,
+  .pg *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .spin {
+    animation: none !important;
+  }
+}
+
+/* next/image adds width/height attributes; keep the reference sizing */
+.tc img,
+.zimg img {
+  height: auto;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.trow.h .sr-only {
+  display: none;
+}
+html:has(dialog.mm[open]) {
+  overflow: hidden;
+}
+
+/* header height, used to push hero content below the absolutely-positioned header */
+.hero-pad {
+  --hd: 92px;
+}
+@container pg (max-width:900px) {
+  .hero-pad {
+    --hd: 74px;
+  }
+}
+/* the contact page heading is the h1, but a touch smaller than the home h1 */
+.h1.cp {
+  font-size: clamp(34px, 4.4cqw, 60px);
+}
+.trust li {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
