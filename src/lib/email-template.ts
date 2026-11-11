@@ -14,8 +14,8 @@ export const oneLine = (s: string) => s.replace(/[\r\n]+/g, ' ').trim();
 export type OwnerEmailInput = {
   id: string;
   name: string;
-  contact: string;
-  contactIsEmail: boolean;
+  mobile: string;
+  email: string;
   service?: string;
   message: string;
   page?: string;
@@ -32,7 +32,8 @@ export function ownerEmail(i: OwnerEmailInput) {
     `New enquiry from the SMPH.Tech website`,
     ``,
     `Name: ${i.name}`,
-    `${i.contactIsEmail ? 'Email' : 'Phone'}: ${i.contact}`,
+    `Mobile: ${i.mobile}`,
+    `Email: ${i.email}`,
     `Service: ${service}`,
     `Source page: ${i.page || '-'}`,
     `Received: ${when}`,
@@ -52,7 +53,8 @@ export function ownerEmail(i: OwnerEmailInput) {
 <p style="margin:0 0 20px;color:#56628C;font-size:14px">From the SMPH.Tech website</p>
 <table style="border-collapse:collapse;font-size:15px">
 ${row('Name', escapeHtml(i.name))}
-${row(i.contactIsEmail ? 'Email' : 'Phone', escapeHtml(i.contact))}
+${row('Mobile', escapeHtml(i.mobile))}
+${row('Email', escapeHtml(i.email))}
 ${row('Service', escapeHtml(service))}
 ${row('Source page', escapeHtml(i.page || '-'))}
 ${row('Received', escapeHtml(when))}

@@ -1,9 +1,12 @@
 import type { ContactData } from './contact-schema';
+import type { SheetPayload } from './apps-script';
 
+/** Column order in the sheet. The Apps Script (apps-script/Code.gs) writes the same order. */
 export const SHEET_HEADERS = [
   'Received (IST)',
   'Name',
-  'Email or phone',
+  'Mobile',
+  'Email',
   'Service',
   'Message',
   'Source page',
@@ -21,9 +24,6 @@ export function sanitizeCell(value: unknown): string {
   return /^[=+\-@\t\r]/.test(s) ? `'${s}` : s;
 }
 
-/** A trusted value that must stay as typed (not turned into a date or number). */
-const asText = (s: string) => `'${s}`;
-
 /** YYYY-MM-DD HH:mm in Asia/Kolkata. */
 export function formatIST(date: Date): string {
   const parts = new Intl.DateTimeFormat('en-GB', {
@@ -39,23 +39,25 @@ export function formatIST(date: Date): string {
   return `${get('year')}-${get('month')}-${get('day')} ${get('hour')}:${get('minute')}`;
 }
 
-export type EnquiryRecord = Pick<ContactData, 'name' | 'contact' | 'message'> & {
+export type EnquiryRecord = Pick<ContactData, 'name' | 'mobile' | 'email' | 'message'> & {
   service?: string;
   page?: string;
   id: string;
-  receivedAt: Date;
 };
 
-/** One sheet row, in the same order as SHEET_HEADERS. */
-export function buildRow(r: EnquiryRecord): string[] {
-  return [
-    asText(formatIST(r.receivedAt)),
-    sanitizeCell(r.name),
-    sanitizeCell(r.contact),
-    sanitizeCell(r.service || 'Not specified'),
-    sanitizeCell(r.message),
-    sanitizeCell(r.page || ''),
-    'New',
-    asText(r.id),
-  ];
+/**
+ * The body sent to the Apps Script. Free-text fields are sanitised against formula injection.
+ * `mobile` is not: the schema has already reduced it to digits with an optional leading +,
+ * and the script stores every cell as plain text. The script adds the IST time and Status "New".
+ */
+export function buildSheetPayload(r: EnquiryRecord): SheetPayload {
+  return {
+    name: sanitizeCell(r.name),
+    mobile: r.mobile,
+    email: sanitizeCell(r.email),
+    service: sanitizeCell(r.service || ''),
+    message: sanitizeCell(r.message),
+    source: sanitizeCell(r.page || ''),
+    id: r.id,
+  };
 }

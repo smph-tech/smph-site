@@ -1,32 +1,35 @@
 import { randomUUID } from 'node:crypto';
 import type { ContactData } from './contact-schema';
-import { isEmail } from './contact-schema';
+import { postToAppsScript, type SheetPayload } from './apps-script';
 import { autoReplyEmail, ownerEmail } from './email-template';
 import {
+  appsScriptConfig,
   isProd,
   mailConfig,
   sheetUrl,
-  sheetsConfig,
+  type AppsScriptConfig,
   type MailConfig,
-  type SheetsConfig,
 } from './env';
 import { sendMail, type Mail } from './mailer';
-import { buildRow } from './sheet-row';
-import { appendEnquiryRow } from './sheets';
+import { buildSheetPayload } from './sheet-row';
 import { SITE, isPlaceholder } from '@/content/site';
 
 export type Outcome = 'ok' | 'failed' | 'skipped';
 export type EnquiryResult = { id: string; sheet: Outcome; email: Outcome; success: boolean };
 
 export type Deps = {
-  appendRow: (cfg: SheetsConfig, row: string[]) => Promise<void>;
+  saveRow: (cfg: AppsScriptConfig, payload: SheetPayload) => Promise<void>;
   send: (cfg: MailConfig, mail: Mail) => Promise<void>;
 };
-const realDeps: Deps = { appendRow: appendEnquiryRow, send: sendMail };
+const realDeps: Deps = {
+  saveRow: (cfg, payload) => postToAppsScript(cfg, payload),
+  send: sendMail,
+};
 
 /**
- * Saves the enquiry to the sheet and emails the owner, in parallel.
- * Success means at least one of the two worked.
+ * Saves the enquiry through the Apps Script and, only if email is configured, emails the owner.
+ * Both run in parallel. Success means at least one of them worked, so an enquiry is never
+ * reported as failed while it actually reached the owner.
  * In development with nothing configured, it logs the payload and reports success.
  */
 export async function processEnquiry(
@@ -35,15 +38,12 @@ export async function processEnquiry(
   now = new Date(),
 ): Promise<EnquiryResult> {
   const id = `SMPH-${randomUUID().slice(0, 8).toUpperCase()}`;
-  const sheets = sheetsConfig();
+  const script = appsScriptConfig();
   const mail = mailConfig();
 
-  if (!isProd() && !sheets.ok && !mail.ok) {
+  if (!isProd() && !script.ok && !mail.enabled) {
     console.log(
-      `[dev] not sent: no Google Sheets or email settings found. Missing: ${[
-        ...sheets.missing,
-        ...mail.missing,
-      ].join(', ')}`,
+      `[dev] not sent: no Apps Script settings found. Missing: ${script.missing.join(', ')}`,
     );
     console.log('[dev] enquiry payload:', {
       id,
@@ -55,32 +55,28 @@ export async function processEnquiry(
   }
 
   const service = data.service || undefined;
-  const contactIsEmail = isEmail(data.contact);
   const record = {
     name: data.name,
-    contact: data.contact,
+    mobile: data.mobile,
+    email: data.email,
     message: data.message,
     service,
     page: data.page,
     id,
-    receivedAt: now,
   };
 
   const sheetTask = async (): Promise<Outcome> => {
-    if (!sheets.ok)
-      throw new Error(`Google Sheets not configured. Missing: ${sheets.missing.join(', ')}`);
-    await deps.appendRow(sheets.value, buildRow(record));
+    if (!script.ok)
+      throw new Error(`Apps Script not configured. Missing: ${script.missing.join(', ')}`);
+    await deps.saveRow(script.value, buildSheetPayload(record));
     return 'ok';
   };
 
+  // Email off means skipped: no error, no log, nothing for the visitor to see.
   const emailTask = async (): Promise<Outcome> => {
-    if (!mail.ok) throw new Error(`Email not configured. Missing: ${mail.missing.join(', ')}`);
-    const msg = ownerEmail({ ...record, contactIsEmail, sheetUrl: sheetUrl() });
-    await deps.send(mail.value, {
-      to: mail.value.to,
-      ...msg,
-      replyTo: contactIsEmail ? data.contact.trim() : undefined,
-    });
+    if (!mail.enabled) return 'skipped';
+    const msg = ownerEmail({ ...record, receivedAt: now, sheetUrl: sheetUrl() });
+    await deps.send(mail.value, { to: mail.value.to, ...msg, replyTo: data.email });
     return 'ok';
   };
 
@@ -89,14 +85,14 @@ export async function processEnquiry(
   const emailOutcome: Outcome = e.status === 'fulfilled' ? e.value : 'failed';
 
   // Server-side detail only. Never sent to the browser.
-  if (s.status === 'rejected') console.error('[contact] sheet failed:', id, errorSummary(s.reason));
+  if (s.status === 'rejected') console.error('[contact] save failed:', id, errorSummary(s.reason));
   if (e.status === 'rejected') console.error('[contact] email failed:', id, errorSummary(e.reason));
 
   // Optional receipt to the visitor. Never affects the result.
-  if (emailOutcome === 'ok' && mail.ok && mail.value.autoReply && contactIsEmail) {
+  if (emailOutcome === 'ok' && mail.enabled && mail.value.autoReply) {
     const reply = autoReplyEmail(data.name, isPlaceholder(SITE.replyTime) ? null : SITE.replyTime);
     deps
-      .send(mail.value, { to: data.contact.trim(), ...reply })
+      .send(mail.value, { to: data.email, ...reply })
       .catch((err) => console.error('[contact] auto-reply failed:', id, errorSummary(err)));
   }
 

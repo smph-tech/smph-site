@@ -52,5 +52,5 @@ Until `instagramUrl`, `youtubeUrl` and a real email are set, those items are pla
 ## Not placeholders, but please check
 
 - **Hero status chips** ("Booking confirmed", "New enquiry", "Process automated", and the per-service chips) are decorative interface labels from the design, not claims. They are hidden from screen readers.
-- **Primary button contrast.** White text on the blue-to-violet gradient is 3.7:1 at the blue end (WCAG AA needs 4.5:1 for 16px text). The gradient is exactly as specified. If you want AA strictly, darken the start colour in `--grad-primary` in `src/styles/tokens.css` to about `#3B66F0`.
+- **Button colour.** The primary gradient now starts at `#3B66F0` (the approved design had `#4F7BFF`) so white button text passes AA (4.8:1). Everything else about the buttons is unchanged.
 - **Open Graph image** (`public/og.png`) uses the headline "We engineer growth for your business." Regenerate with `pnpm assets` if the headline changes.

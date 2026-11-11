@@ -1,11 +1,7 @@
 /** Server-side configuration, read from the environment on every call. */
 
-export type SheetsConfig = {
-  clientEmail: string;
-  privateKey: string;
-  sheetId: string;
-  tab: string;
-};
+export type AppsScriptConfig = { url: string; secret: string };
+
 export type MailConfig = {
   transport: 'resend' | 'smtp';
   to: string;
@@ -19,62 +15,51 @@ const env = (k: string) => process.env[k]?.trim() || undefined;
 
 export const isProd = () => process.env.NODE_ENV === 'production';
 
-/** Returns the config or the list of missing variable names. */
-export function sheetsConfig():
-  { ok: true; value: SheetsConfig } | { ok: false; missing: string[] } {
-  const clientEmail = env('GOOGLE_SERVICE_ACCOUNT_EMAIL');
-  const rawKey = env('GOOGLE_PRIVATE_KEY');
-  const sheetId = env('GOOGLE_SHEET_ID');
-  const missing = [
-    !clientEmail && 'GOOGLE_SERVICE_ACCOUNT_EMAIL',
-    !rawKey && 'GOOGLE_PRIVATE_KEY',
-    !sheetId && 'GOOGLE_SHEET_ID',
-  ].filter(Boolean) as string[];
-  if (missing.length || !clientEmail || !rawKey || !sheetId) return { ok: false, missing };
-  return {
-    ok: true,
-    value: {
-      clientEmail,
-      // Env files and Vercel store the key with literal \n; turn them into real newlines.
-      privateKey: rawKey.replace(/^"|"$/g, '').replace(/\\n/g, '\n'),
-      sheetId,
-      tab: env('GOOGLE_SHEET_TAB') ?? 'Enquiries',
-    },
-  };
+/** Where enquiries are saved: the Google Apps Script web app that writes to the sheet. */
+export function appsScriptConfig():
+  { ok: true; value: AppsScriptConfig } | { ok: false; missing: string[] } {
+  const url = env('APPS_SCRIPT_URL');
+  const secret = env('APPS_SCRIPT_SECRET');
+  const missing = [!url && 'APPS_SCRIPT_URL', !secret && 'APPS_SCRIPT_SECRET'].filter(
+    Boolean,
+  ) as string[];
+  if (missing.length || !url || !secret) return { ok: false, missing };
+  return { ok: true, value: { url, secret } };
 }
 
-export function mailConfig(): { ok: true; value: MailConfig } | { ok: false; missing: string[] } {
-  const transport = env('EMAIL_TRANSPORT') === 'smtp' ? 'smtp' : 'resend';
+/**
+ * Email is optional. With no RESEND_API_KEY it is simply off: no error, no log, no warning.
+ * (EMAIL_TRANSPORT=smtp is an explicit opt-in to the Nodemailer fallback and needs the SMTP_* values.)
+ */
+export function mailConfig(): { enabled: false } | { enabled: true; value: MailConfig } {
+  const smtpMode = env('EMAIL_TRANSPORT') === 'smtp';
   const to = env('CONTACT_TO_EMAIL');
-  const from = env('CONTACT_FROM_EMAIL') ?? 'SMPH.Tech <onboarding@resend.dev>';
   const autoReply = env('SEND_AUTOREPLY') === 'true';
-  const missing: string[] = [];
-  if (!to) missing.push('CONTACT_TO_EMAIL');
 
-  if (transport === 'resend') {
+  if (!smtpMode) {
     const resendKey = env('RESEND_API_KEY');
-    if (!resendKey) missing.push('RESEND_API_KEY');
-    if (missing.length || !to || !resendKey) return { ok: false, missing };
-    return { ok: true, value: { transport, to, from, resendKey, autoReply } };
+    if (!resendKey) return { enabled: false };
+    if (!to) {
+      // Server log only. A key without an inbox is a setup slip worth knowing about.
+      console.warn('[contact] RESEND_API_KEY is set but CONTACT_TO_EMAIL is not; email is off.');
+      return { enabled: false };
+    }
+    const from = env('CONTACT_FROM_EMAIL') ?? 'SMPH.Tech <onboarding@resend.dev>';
+    return { enabled: true, value: { transport: 'resend', to, from, resendKey, autoReply } };
   }
 
   const host = env('SMTP_HOST');
-  const port = Number(env('SMTP_PORT') ?? 587);
   const user = env('SMTP_USER');
   const pass = env('SMTP_PASS');
-  if (!host) missing.push('SMTP_HOST');
-  if (!user) missing.push('SMTP_USER');
-  if (!pass) missing.push('SMTP_PASS');
-  if (missing.length || !to || !host || !user || !pass) return { ok: false, missing };
+  if (!to || !host || !user || !pass) return { enabled: false };
   // Gmail and most SMTP servers only send as the account that logs in.
-  const smtpFrom = env('CONTACT_FROM_EMAIL') ?? `SMPH.Tech <${user}>`;
+  const from = env('CONTACT_FROM_EMAIL') ?? `SMPH.Tech <${user}>`;
+  const port = Number(env('SMTP_PORT') ?? 587);
   return {
-    ok: true,
-    value: { transport, to, from: smtpFrom, smtp: { host, port, user, pass }, autoReply },
+    enabled: true,
+    value: { transport: 'smtp', to, from, smtp: { host, port, user, pass }, autoReply },
   };
 }
 
-export const sheetUrl = () => {
-  const id = env('GOOGLE_SHEET_ID');
-  return id ? `https://docs.google.com/spreadsheets/d/${id}/edit` : undefined;
-};
+/** Optional link shown in the owner email, e.g. https://docs.google.com/spreadsheets/d/<id>/edit */
+export const sheetUrl = () => env('SHEET_URL');

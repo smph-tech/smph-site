@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { SHEET_HEADERS, buildRow, formatIST, sanitizeCell } from '@/lib/sheet-row';
+import { SHEET_HEADERS, buildSheetPayload, formatIST, sanitizeCell } from '@/lib/sheet-row';
 
 describe('sanitizeCell (formula injection)', () => {
   it.each([
@@ -10,7 +10,6 @@ describe('sanitizeCell (formula injection)', () => {
     ['@SUM(1)', "'@SUM(1)"],
     ['\t=1+1', "'\t=1+1"],
     ['\r=1+1', "'\r=1+1"],
-    ['+91 98765 43210', "'+91 98765 43210"],
   ])('prefixes %j', (input, expected) => expect(sanitizeCell(input)).toBe(expected));
 
   it.each(['Hello', 'a=b', 'email@x.com', '', 'a+b', '1+1', ' =1'])('leaves %j alone', (v) =>
@@ -30,40 +29,49 @@ describe('formatIST', () => {
   });
 });
 
-describe('buildRow', () => {
-  const row = buildRow({
-    id: 'SMPH-ABCD1234',
-    receivedAt: new Date('2026-03-05T20:45:00Z'),
-    name: '=cmd|calc',
-    contact: '+91 98765 43210',
-    service: undefined,
-    message: '@evil',
-    page: '/services/web-applications',
-  });
-  it('matches the column order and count', () => {
+describe('sheet columns', () => {
+  it('are in the agreed order', () => {
     expect(SHEET_HEADERS).toEqual([
       'Received (IST)',
       'Name',
-      'Email or phone',
+      'Mobile',
+      'Email',
       'Service',
       'Message',
       'Source page',
       'Status',
       'ID',
     ]);
-    expect(row).toHaveLength(SHEET_HEADERS.length);
   });
-  it('sanitises user fields and sets Status to New', () => {
-    expect(row[0]).toBe("'2026-03-06 02:15");
-    expect(row[1]).toBe("'=cmd|calc");
-    expect(row[2]).toBe("'+91 98765 43210");
-    expect(row[3]).toBe('Not specified');
-    expect(row[4]).toBe("'@evil");
-    expect(row[5]).toBe('/services/web-applications');
-    expect(row[6]).toBe('New');
-    expect(row[7]).toBe("'SMPH-ABCD1234");
+});
+
+describe('buildSheetPayload', () => {
+  const payload = buildSheetPayload({
+    id: 'SMPH-ABCD1234',
+    name: '=cmd|calc',
+    mobile: '+919876543210',
+    email: 'a@b.co',
+    service: undefined,
+    message: '@evil',
+    page: '/services/web-applications',
   });
-  it('never emits a cell that starts with a formula character', () => {
-    for (const c of row) expect(c).not.toMatch(/^[=+\-@]/);
+  it('has exactly the fields the Apps Script expects (secret is added when sending)', () => {
+    expect(Object.keys(payload)).toEqual([
+      'name',
+      'mobile',
+      'email',
+      'service',
+      'message',
+      'source',
+      'id',
+    ]);
+  });
+  it('sanitises free-text fields and leaves the validated mobile number clean', () => {
+    expect(payload.name).toBe("'=cmd|calc");
+    expect(payload.message).toBe("'@evil");
+    expect(payload.mobile).toBe('+919876543210');
+    expect(payload.source).toBe('/services/web-applications');
+    expect(payload.service).toBe('');
+    expect(payload.id).toBe('SMPH-ABCD1234');
   });
 });

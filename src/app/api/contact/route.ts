@@ -5,6 +5,8 @@ import { rateLimit } from '@/lib/rate-limit';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+// Apps Script can take a few seconds to answer.
+export const maxDuration = 30;
 
 const MAX_BODY_BYTES = 20_000;
 
