@@ -20,7 +20,13 @@ export default function NotFound() {
           The link may be old or mistyped. Try the home page or our services.
         </p>
         <div
-          style={{ marginTop: 38, display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}
+          style={{
+            marginTop: 38,
+            display: 'flex',
+            gap: 14,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
         >
           <Button href="/" arrow>
             Back to home

@@ -23,6 +23,8 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLAnchorElement>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // Escape moves focus back to the trigger; that focus must not re-open the menu.
+  const skipFocusOpen = useRef(false);
 
   // Close menus after navigation.
   useEffect(() => {
@@ -36,7 +38,9 @@ export function Header() {
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape' && open) {
       setOpen(false);
+      skipFocusOpen.current = true;
       triggerRef.current?.focus();
+      skipFocusOpen.current = false;
     }
   };
 
@@ -53,7 +57,9 @@ export function Header() {
             data-open={open}
             onMouseEnter={() => setOpen(true)}
             onMouseLeave={() => setOpen(false)}
-            onFocus={() => setOpen(true)}
+            onFocus={() => {
+              if (!skipFocusOpen.current) setOpen(true);
+            }}
             onBlur={onBlur}
             onKeyDown={onKeyDown}
           >
@@ -65,7 +71,10 @@ export function Header() {
               aria-controls="services-menu"
               aria-current={current('/services')}
             >
-              {NAV.services} <span className="caret" aria-hidden="true">&#9662;</span>
+              {NAV.services}{' '}
+              <span className="caret" aria-hidden="true">
+                &#9662;
+              </span>
             </Link>
             <div className="menu" id="services-menu">
               <div className="mi">
@@ -115,7 +124,12 @@ export function Header() {
           onClick={() => dialogRef.current?.showModal()}
         >
           <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-            <path d="M5 10h20M5 15h20M5 20h20" stroke="#EAF0FF" strokeWidth="2.2" strokeLinecap="round" />
+            <path
+              d="M5 10h20M5 15h20M5 20h20"
+              stroke="#EAF0FF"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+            />
           </svg>
         </button>
       </div>
@@ -138,7 +152,12 @@ export function Header() {
               onClick={() => dialogRef.current?.close()}
             >
               <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M4 4l12 12M16 4L4 16" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
+                <path
+                  d="M4 4l12 12M16 4L4 16"
+                  stroke="#fff"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                />
               </svg>
             </button>
           </div>

@@ -22,7 +22,7 @@ type Props = {
 
 export function Button({ href, variant = 'primary', small, arrow, style, children }: Props) {
   return (
-    <Link className={`btn${VARIANT[variant]}${small ? ' sm' : ''}`} href={href} style={style}>
+    <Link className={`btn${VARIANT[variant]}${small ? 'sm' : ''}`} href={href} style={style}>
       {children}
       {arrow ? <ArrowIcon /> : null}
     </Link>

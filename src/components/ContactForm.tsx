@@ -5,7 +5,12 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { ArrowIcon } from './icons';
-import { contactSchema, MIN_FILL_MS, SERVICE_OPTIONS, type ContactInput } from '@/lib/contact-schema';
+import {
+  contactSchema,
+  MIN_FILL_MS,
+  SERVICE_OPTIONS,
+  type ContactInput,
+} from '@/lib/contact-schema';
 import { content } from '@/content';
 import { SERVICES } from '@/content/services';
 import { SITE, isPlaceholder } from '@/content/site';
@@ -30,7 +35,8 @@ export function ContactForm() {
   } = useForm<ContactInput>({
     resolver: zodResolver(contactSchema),
     mode: 'onTouched',
-    defaultValues: { name: '', contact: '', message: '', service: '', company: '' },
+    // startedAt and page are filled in at submit time; they only need to satisfy the shared schema here.
+    defaultValues: { name: '', contact: '', message: '', service: '', company: '', startedAt: 0 },
   });
 
   // Preselect the service when the form is opened from a service page (?service=slug).

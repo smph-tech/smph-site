@@ -6,7 +6,7 @@ export function FeatureGrid({ items }: { items: readonly { title: string; text: 
   return (
     <div className="feat">
       {items.map((b, i) => (
-        <GlassCard className={`fc${items.length === 5 && i < 2 ? ' w' : ''}`} key={b.title}>
+        <GlassCard className={`fc${items.length === 5 && i < 2 ? 'w' : ''}`} key={b.title}>
           <div className="ck">
             <TickPlain />
           </div>

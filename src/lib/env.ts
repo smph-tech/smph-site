@@ -20,7 +20,8 @@ const env = (k: string) => process.env[k]?.trim() || undefined;
 export const isProd = () => process.env.NODE_ENV === 'production';
 
 /** Returns the config or the list of missing variable names. */
-export function sheetsConfig(): { ok: true; value: SheetsConfig } | { ok: false; missing: string[] } {
+export function sheetsConfig():
+  { ok: true; value: SheetsConfig } | { ok: false; missing: string[] } {
   const clientEmail = env('GOOGLE_SERVICE_ACCOUNT_EMAIL');
   const rawKey = env('GOOGLE_PRIVATE_KEY');
   const sheetId = env('GOOGLE_SHEET_ID');

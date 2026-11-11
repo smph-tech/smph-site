@@ -44,6 +44,7 @@ export default function AboutPage() {
                 width={1600}
                 height={1158}
                 priority
+                quality={70}
                 sizes="(max-width: 900px) 112vw, 660px"
               />
             </div>
@@ -138,11 +139,19 @@ export default function AboutPage() {
 }
 
 /** A real link once the account URL is set. Until then a marked, non-clickable button. */
-function SocialButton({ href, label, dark }: { href: string | null; label: string; dark?: boolean }) {
+function SocialButton({
+  href,
+  label,
+  dark,
+}: {
+  href: string | null;
+  label: string;
+  dark?: boolean;
+}) {
   if (!href || isPlaceholder(href)) {
     return (
       <span
-        className={`btn${dark ? ' dk' : ''}`}
+        className={`btn${dark ? 'dk' : ''}`}
         data-placeholder=""
         aria-disabled="true"
         style={{ cursor: 'default' }}
@@ -152,7 +161,7 @@ function SocialButton({ href, label, dark }: { href: string | null; label: strin
     );
   }
   return (
-    <a className={`btn${dark ? ' dk' : ''}`} href={href} rel="noopener noreferrer">
+    <a className={`btn${dark ? 'dk' : ''}`} href={href} rel="noopener noreferrer">
       {label}
     </a>
   );

@@ -78,6 +78,7 @@ export default function HomePage() {
                 width={1600}
                 height={1158}
                 priority
+                quality={70}
                 sizes="(max-width: 900px) 112vw, 660px"
               />
               {h.chips.map((c, i) => (

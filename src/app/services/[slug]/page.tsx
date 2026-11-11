@@ -27,8 +27,6 @@ export function generateStaticParams(): Params[] {
   return SERVICES.map((s) => ({ slug: s.slug }));
 }
 
-export const dynamicParams = false;
-
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const service = getService(slug);
@@ -164,11 +162,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       <section className="sec">
         <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120, maxWidth: 980 }}>
           <Reveal>
-            <SectionHeading
-              eyebrow={S.faq.eyebrow}
-              title={S.faq.h2}
-              style={{ marginBottom: 48 }}
-            />
+            <SectionHeading eyebrow={S.faq.eyebrow} title={S.faq.h2} style={{ marginBottom: 48 }} />
             <FaqAccordion items={service.faq} />
           </Reveal>
         </div>

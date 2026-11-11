@@ -52,7 +52,12 @@ export function TickBlue() {
 /** Bare tick path. Size and stroke match the reference usage. */
 export function TickPlain({ size = 14 }: { size?: number }) {
   return (
-    <svg width={size} height={size} viewBox={size === 24 ? '0 0 24 24' : '0 0 14 14'} aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox={size === 24 ? '0 0 24 24' : '0 0 14 14'}
+      aria-hidden="true"
+    >
       <path
         d="M2.5 7.5l3 3 6-7"
         fill="none"

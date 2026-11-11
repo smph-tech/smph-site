@@ -2,7 +2,14 @@ import { randomUUID } from 'node:crypto';
 import type { ContactData } from './contact-schema';
 import { isEmail } from './contact-schema';
 import { autoReplyEmail, ownerEmail } from './email-template';
-import { isProd, mailConfig, sheetUrl, sheetsConfig, type MailConfig, type SheetsConfig } from './env';
+import {
+  isProd,
+  mailConfig,
+  sheetUrl,
+  sheetsConfig,
+  type MailConfig,
+  type SheetsConfig,
+} from './env';
 import { sendMail, type Mail } from './mailer';
 import { buildRow } from './sheet-row';
 import { appendEnquiryRow } from './sheets';
@@ -38,7 +45,12 @@ export async function processEnquiry(
         ...mail.missing,
       ].join(', ')}`,
     );
-    console.log('[dev] enquiry payload:', { id, ...data, startedAt: undefined, company: undefined });
+    console.log('[dev] enquiry payload:', {
+      id,
+      ...data,
+      startedAt: undefined,
+      company: undefined,
+    });
     return { id, sheet: 'skipped', email: 'skipped', success: true };
   }
 
@@ -55,7 +67,8 @@ export async function processEnquiry(
   };
 
   const sheetTask = async (): Promise<Outcome> => {
-    if (!sheets.ok) throw new Error(`Google Sheets not configured. Missing: ${sheets.missing.join(', ')}`);
+    if (!sheets.ok)
+      throw new Error(`Google Sheets not configured. Missing: ${sheets.missing.join(', ')}`);
     await deps.appendRow(sheets.value, buildRow(record));
     return 'ok';
   };

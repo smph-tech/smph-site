@@ -1,5 +1,6 @@
 import { Blob } from './Backdrop';
 import { ContactForm } from './ContactForm';
+import { LazyContactForm } from './LazyContactForm';
 import { Eyebrow } from './Eyebrow';
 import { Rich } from './Rich';
 import { TickPlain } from './icons';
@@ -70,7 +71,7 @@ export function ContactSection({
               ))}
             </ul>
           </div>
-          <ContactForm />
+          {asPage ? <ContactForm /> : <LazyContactForm />}
         </div>
       </div>
     </section>

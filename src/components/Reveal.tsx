@@ -1,8 +1,11 @@
 'use client';
 
-import { LazyMotion, domAnimation, useReducedMotion } from 'motion/react';
+import { LazyMotion, useReducedMotion } from 'motion/react';
 import * as m from 'motion/react-m';
 import type { CSSProperties, ReactNode } from 'react';
+
+// Loaded after hydration so the animation code never blocks first render.
+const loadFeatures = () => import('./motion-features').then((m) => m.default);
 
 /** Subtle scroll reveal: fade and rise 12px, once. Off for reduced motion. */
 export function Reveal({
@@ -23,7 +26,7 @@ export function Reveal({
     );
   }
   return (
-    <LazyMotion features={domAnimation} strict>
+    <LazyMotion features={loadFeatures} strict>
       <m.div
         data-reveal=""
         className={className}

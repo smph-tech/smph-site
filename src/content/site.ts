@@ -8,8 +8,8 @@
 export const SITE = {
   name: 'SMPH.Tech',
   email: '[EMAIL]',
-  instagram: '[INSTAGRAM HANDLE]',
-  youtube: '[YOUTUBE CHANNEL]',
+  instagram: '[HANDLE]',
+  youtube: '[CHANNEL]',
   replyTime: '[24 hours]',
   /** Full URLs. Leave null until the real accounts exist. */
   instagramUrl: null as string | null,

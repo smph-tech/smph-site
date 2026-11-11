@@ -12,7 +12,9 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "assets": "node scripts/make-assets.mjs",
-    "shots": "node scripts/screenshots.mjs"
+    "shots": "node scripts/screenshots.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "e2e": "node scripts/e2e.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^7.0.5",

@@ -30,7 +30,13 @@ export default function ThankYouPage() {
           <Rich text={T.lead} />
         </p>
         <div
-          style={{ marginTop: 38, display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}
+          style={{
+            marginTop: 38,
+            display: 'flex',
+            gap: 14,
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+          }}
         >
           <Button href="/" arrow>
             {T.home}

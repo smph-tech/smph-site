@@ -28,7 +28,10 @@ export async function POST(req: NextRequest) {
     console.log(JSON.stringify({ evt: 'contact', outcome: 'rate_limited' }));
     return NextResponse.json(
       { ok: false, error: 'Too many messages from this connection. Please try again later.' },
-      { status: 429, headers: { 'Retry-After': String(limit.retryAfterSec), 'Cache-Control': 'no-store' } },
+      {
+        status: 429,
+        headers: { 'Retry-After': String(limit.retryAfterSec), 'Cache-Control': 'no-store' },
+      },
     );
   }
 
@@ -73,12 +76,18 @@ export async function POST(req: NextRequest) {
       }),
     );
     if (!result.success) {
-      return json({ ok: false, error: 'Something went wrong on our side. Please email us instead.' }, 500);
+      return json(
+        { ok: false, error: 'Something went wrong on our side. Please email us instead.' },
+        500,
+      );
     }
     return json({ ok: true, id: result.id });
   } catch (err) {
     console.error('[contact] unexpected failure:', err instanceof Error ? err.name : 'unknown');
-    return json({ ok: false, error: 'Something went wrong on our side. Please email us instead.' }, 500);
+    return json(
+      { ok: false, error: 'Something went wrong on our side. Please email us instead.' },
+      500,
+    );
   }
 }
 

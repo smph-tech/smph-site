@@ -1,7 +1,12 @@
 import type { Metadata } from 'next';
 import { SITE } from '@/content/site';
 
-const OG_IMAGE = { url: '/og.png', width: 1200, height: 630, alt: `${SITE.name}: we engineer growth for your business` };
+const OG_IMAGE = {
+  url: '/og.png',
+  width: 1200,
+  height: 630,
+  alt: `${SITE.name}: we engineer growth for your business`,
+};
 
 /** Per-page metadata: title, description, canonical, Open Graph and Twitter. */
 export function pageMetadata(opts: {

@@ -16,7 +16,7 @@ export function ServiceBentoCard({
   const size = IMAGE_SIZE[service.image]!;
   return (
     <Link
-      className={`bc${wide ? ' w3' : ''}`}
+      className={`bc${wide ? 'w3' : ''}`}
       href={serviceHref(service.slug)}
       style={{ background: service.cardGradient }}
     >

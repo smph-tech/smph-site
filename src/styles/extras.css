@@ -171,7 +171,10 @@ html {
   font-size: 15px;
   font-weight: 700;
 }
-.mm .mm-s span {
+.mm .mm-s > span {
+  color: inherit;
+}
+.mm .mm-s span span {
   display: block;
   font-size: 13px;
   color: #a3b3dc;
@@ -368,4 +371,29 @@ html:has(dialog.mm[open]) {
   display: flex;
   align-items: center;
   gap: 9px;
+}
+
+/* Reduced motion: scroll-reveal content is always visible, never moved. */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Placeholder that holds the form card's size until the form code loads */
+.fcard-ph {
+  min-height: 617px;
+}
+/* Static blurred blobs: give them their own layer so the blur is painted once */
+.blob {
+  will-change: transform;
+  transform: translateZ(0);
+}
+/* Keep artwork proportions if max-width squeezes it */
+.bc .ic,
+.ocard img,
+.zimg img,
+.h3d > img.main {
+  object-fit: contain;
 }

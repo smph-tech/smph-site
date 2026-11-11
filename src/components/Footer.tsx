@@ -35,7 +35,7 @@ export function Footer() {
             <p style={{ margin: '18px 0 0', maxWidth: 330 }}>{FOOTER.about}</p>
           </div>
           <div>
-            <h4>{FOOTER.services}</h4>
+            <h2>{FOOTER.services}</h2>
             {SERVICES.map((s) => (
               <Link key={s.slug} href={serviceHref(s.slug)}>
                 {s.name}
@@ -43,20 +43,22 @@ export function Footer() {
             ))}
           </div>
           <div>
-            <h4>{FOOTER.company}</h4>
+            <h2>{FOOTER.company}</h2>
             <Link href="/how-we-work">How we work</Link>
             <Link href="/about">About</Link>
             <Link href="/contact">{FOOTER.contact}</Link>
           </div>
           <div>
-            <h4>{FOOTER.follow}</h4>
+            <h2>{FOOTER.follow}</h2>
             <Maybe href={SITE.instagramUrl}>Instagram {SITE.instagram}</Maybe>
             <Maybe href={SITE.youtubeUrl}>YouTube {SITE.youtube}</Maybe>
             <Maybe href={mail}>{SITE.email}</Maybe>
           </div>
         </div>
         <div className="ftb">
-          <span>&copy; {new Date().getFullYear()} {SITE.name}</span>
+          <span>
+            &copy; {new Date().getFullYear()} {SITE.name}
+          </span>
           <span>{FOOTER.replies}</span>
         </div>
       </div>
