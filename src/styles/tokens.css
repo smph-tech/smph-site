@@ -36,7 +36,8 @@
   --violet: #7c4dff;
   --cyan: #22d3ee;
 
-  --grad-primary: linear-gradient(135deg, #4f7bff, #7c4dff);
+  /* Start colour #3B66F0 (reference: #4F7BFF) so white text is 4.5:1 or better: 4.8:1 at the blue end, 4.8:1 at the violet end. */
+  --grad-primary: linear-gradient(135deg, #3b66f0, #7c4dff);
   --grad-cta: linear-gradient(135deg, #2646de, #6c3df0 62%, #8a3cf0);
   --grad-text-dark: linear-gradient(90deg, #6f96ff, #b08bff 55%, #34dbf2);
   --grad-text-light: linear-gradient(90deg, #2f54e8, #7c4dff 60%, #0c93b0);
