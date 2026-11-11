@@ -1,12 +1,13 @@
 import { GlassCard } from './GlassCard';
 import { TickPlain } from './icons';
+import { cx } from '@/lib/cx';
 
 /** "What we build" bento: the first two cards are wide when there are five. */
 export function FeatureGrid({ items }: { items: readonly { title: string; text: string }[] }) {
   return (
     <div className="feat">
       {items.map((b, i) => (
-        <GlassCard className={`fc${items.length === 5 && i < 2 ? 'w' : ''}`} key={b.title}>
+        <GlassCard className={cx('fc', items.length === 5 && i < 2 && 'w')} key={b.title}>
           <div className="ck">
             <TickPlain />
           </div>

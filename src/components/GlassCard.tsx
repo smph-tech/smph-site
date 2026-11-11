@@ -1,4 +1,5 @@
 import type { CSSProperties, ElementType, ReactNode } from 'react';
+import { cx } from '@/lib/cx';
 
 export function GlassCard({
   as: Tag = 'div',
@@ -12,7 +13,7 @@ export function GlassCard({
   children: ReactNode;
 }) {
   return (
-    <Tag className={`glass ${className}`.trim()} style={style}>
+    <Tag className={cx('glass', className)} style={style}>
       {children}
     </Tag>
   );

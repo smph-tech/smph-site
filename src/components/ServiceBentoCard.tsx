@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowIcon } from './icons';
 import { IMAGE_SIZE, serviceHref, type Service } from '@/content/services';
 import { HOME } from '@/content/pages';
+import { cx } from '@/lib/cx';
 
 export function ServiceBentoCard({
   service,
@@ -16,7 +17,7 @@ export function ServiceBentoCard({
   const size = IMAGE_SIZE[service.image]!;
   return (
     <Link
-      className={`bc${wide ? 'w3' : ''}`}
+      className={cx('bc', wide && 'w3')}
       href={serviceHref(service.slug)}
       style={{ background: service.cardGradient }}
     >
