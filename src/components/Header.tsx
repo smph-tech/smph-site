@@ -12,7 +12,7 @@ import { SITE } from '@/content/site';
 function Logo() {
   return (
     <Link className="brand" href="/">
-      <Image src="/logo/logo-tile-720.png" alt="" width={44} height={44} priority />
+      <Image src="/logo/logo-tile-720.png" alt="" width={44} height={44} loading="eager" />
       <span>{SITE.name}</span>
     </Link>
   );

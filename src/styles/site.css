@@ -117,7 +117,7 @@ body {
   height: 56px;
   padding: 0 30px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   color: #fff;
   font: 700 16px var(--font-sans);
   border: 0;
@@ -169,6 +169,7 @@ body {
 .blob {
   position: absolute;
   border-radius: 50%;
+  background: var(--c);
   filter: blur(100px);
   pointer-events: none;
 }
@@ -562,7 +563,7 @@ body {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -630,7 +631,7 @@ body {
   width: 60px;
   height: 60px;
   border-radius: 18px;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -937,7 +938,7 @@ body {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   color: #fff;
   display: flex;
   align-items: center;
@@ -995,7 +996,7 @@ summary::after {
 }
 details[open] summary::after {
   content: '\2212';
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
 }
 details p {
   margin: 0 0 26px;
@@ -1155,7 +1156,7 @@ details p {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   color: #fff;
   display: flex;
   align-items: center;
@@ -1204,7 +1205,7 @@ details p {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4f7bff, #7c4dff);
+  background: var(--grad-primary);
   display: flex;
   align-items: center;
   justify-content: center;

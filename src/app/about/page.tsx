@@ -8,6 +8,7 @@ import { TeamGrid } from '@/components/TeamGrid';
 import { content } from '@/content';
 import { SITE, isPlaceholder } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
+import { cx } from '@/lib/cx';
 
 const A = content.about;
 
@@ -45,7 +46,7 @@ export default function AboutPage() {
                 height={1158}
                 priority
                 quality={70}
-                sizes="(max-width: 900px) 112vw, 660px"
+                sizes="(max-width: 900px) 90vw, 660px"
               />
             </div>
           </div>
@@ -151,7 +152,7 @@ function SocialButton({
   if (!href || isPlaceholder(href)) {
     return (
       <span
-        className={`btn${dark ? 'dk' : ''}`}
+        className={cx('btn', dark && 'dk')}
         data-placeholder=""
         aria-disabled="true"
         style={{ cursor: 'default' }}
@@ -161,7 +162,7 @@ function SocialButton({
     );
   }
   return (
-    <a className={`btn${dark ? 'dk' : ''}`} href={href} rel="noopener noreferrer">
+    <a className={cx('btn', dark && 'dk')} href={href} rel="noopener noreferrer">
       {label}
     </a>
   );

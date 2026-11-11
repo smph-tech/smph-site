@@ -92,7 +92,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                 width={size.w}
                 height={size.h}
                 priority
-                sizes="(max-width: 900px) 90vw, 520px"
+                sizes="(max-width: 900px) 70vw, 520px"
               />
               <div className="chip" style={{ left: 0, top: '10%' }} aria-hidden="true">
                 <b>&#10003;</b>

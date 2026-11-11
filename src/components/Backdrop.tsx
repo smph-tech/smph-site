@@ -15,7 +15,7 @@ export function Blob({
     <div
       className="blob"
       aria-hidden="true"
-      style={{ width: size, height: size, background: color, opacity, ...pos }}
+      style={{ width: size, height: size, opacity, '--c': color, ...pos } as CSSProperties}
     />
   );
 }

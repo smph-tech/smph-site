@@ -79,7 +79,7 @@ export default function HomePage() {
                 height={1158}
                 priority
                 quality={70}
-                sizes="(max-width: 900px) 112vw, 660px"
+                sizes="(max-width: 900px) 90vw, 660px"
               />
               {h.chips.map((c, i) => (
                 <div className="chip" key={c.text} style={CHIP_POS[i]} aria-hidden="true">

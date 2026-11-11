@@ -383,7 +383,7 @@ html:has(dialog.mm[open]) {
 
 /* Placeholder that holds the form card's size until the form code loads */
 .fcard-ph {
-  min-height: 617px;
+  min-height: 720px;
 }
 /* Static blurred blobs: give them their own layer so the blur is painted once */
 .blob {
@@ -396,4 +396,37 @@ html:has(dialog.mm[open]) {
 .zimg img,
 .h3d > img.main {
   object-fit: contain;
+}
+
+/* required-field asterisk (red, AA on white) */
+.fcard .req {
+  color: #c8203c;
+  font-weight: 800;
+}
+
+/*
+ * Phones: the 100px Gaussian blur on 400-560px blobs is the most expensive thing on the page to
+ * paint. Below 900px the blobs are drawn as a soft radial mask instead (no blur filter), scaled up
+ * so the glow reaches as far as the blurred disc did. Looks the same, costs far less.
+ * The mask stops follow a Gaussian edge: ~full colour inside, 50% at the old radius, ~0 at +2 sigma.
+ */
+@container pg (max-width:900px) {
+  .blob {
+    filter: none;
+    transform: translateZ(0) scale(1.7);
+    -webkit-mask-image: radial-gradient(
+      closest-side,
+      #000 24%,
+      rgba(0, 0, 0, 0.5) 59%,
+      rgba(0, 0, 0, 0.16) 80%,
+      transparent 100%
+    );
+    mask-image: radial-gradient(
+      closest-side,
+      #000 24%,
+      rgba(0, 0, 0, 0.5) 59%,
+      rgba(0, 0, 0, 0.16) 80%,
+      transparent 100%
+    );
+  }
 }
