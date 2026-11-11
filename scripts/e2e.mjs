@@ -101,7 +101,7 @@ async function ui() {
   ok(await menu.isVisible(), 'dropdown opens on hover');
   await page.mouse.move(700, 600);
   ok(!(await menu.isVisible()), 'dropdown closes when mouse leaves');
-  await page.goto(BASE + '/about');
+  await page.goto(BASE + '/about', { waitUntil: 'networkidle' }); // wait for hydration
   await page.keyboard.press('Tab'); // skip link
   await page.keyboard.press('Tab'); // logo
   await page.keyboard.press('Tab'); // services trigger
