@@ -1,0 +1,578 @@
+{
+  "brand": {
+    "name": "SMPH.Tech",
+    "tagline": "We engineer growth for businesses: software, systems and marketing that remove what holds you back."
+  },
+  "placeholders": {
+    "email": "[EMAIL]",
+    "instagram": "[INSTAGRAM HANDLE]",
+    "youtube": "[YOUTUBE CHANNEL]",
+    "replyTime": "[24 hours]"
+  },
+  "services": [
+    {
+      "key": "web",
+      "slug": "web-applications",
+      "name": "Web applications",
+      "problem": "Customers have to call or message us just to book, order or pay.",
+      "short": "We build web apps that take that work off your team.",
+      "image": "/3d/web.png",
+      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(110,150,255,.55),transparent 55%),linear-gradient(160deg,#1E32B8,#0A1250)",
+      "heroChips": [
+        "Booking confirmed",
+        "Payment received"
+      ],
+      "h1Html": "Web applications that take work <em>off your team</em>.",
+      "lead": "Booking, ordering, payments, customer accounts and admin tools, built around how your business actually runs.",
+      "needs": [
+        "Customers have to call or message you to book, order or pay.",
+        "You collect forms, payments or approvals by hand.",
+        "Your team needs one shared tool, not another spreadsheet."
+      ],
+      "builds": [
+        {
+          "title": "Customer portals",
+          "text": "Booking, ordering and accounts that work on any screen, so customers help themselves."
+        },
+        {
+          "title": "Payments and checkout",
+          "text": "Online payment, receipts and confirmation emails, connected to the way you get paid."
+        },
+        {
+          "title": "Admin panel",
+          "text": "A simple back office so your team manages data and content without calling us."
+        },
+        {
+          "title": "Integrations",
+          "text": "Email, SMS and the tools you already use, connected where it saves time."
+        },
+        {
+          "title": "Hosting and handover",
+          "text": "Live on a fast, secure server, with documentation and a walkthrough."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Map the journey",
+          "text": "We follow what your customer and your team do today, and where it breaks."
+        },
+        {
+          "title": "Design the screens",
+          "text": "Clear screens first, so you approve what it looks like before we build."
+        },
+        {
+          "title": "Build and demo",
+          "text": "Short cycles with a working demo link each time."
+        },
+        {
+          "title": "Launch and train",
+          "text": "Tested on phone and desktop, then live, with your team trained."
+        }
+      ],
+      "examples": [
+        "Booking portal",
+        "Online store",
+        "Customer dashboard",
+        "Admin panel"
+      ],
+      "faq": [
+        {
+          "q": "Will it work on phones?",
+          "a": "Yes. Every web app is designed for phone, tablet and desktop from the start."
+        },
+        {
+          "q": "Can we edit content ourselves?",
+          "a": "Yes. We build an admin panel so your team can manage content and data without a developer."
+        },
+        {
+          "q": "Who owns the code?",
+          "a": "[To confirm: code and designs are handed to you when the project is paid for.]"
+        }
+      ],
+      "timeline": "[X to Y weeks]"
+    },
+    {
+      "key": "mobile",
+      "slug": "mobile-apps",
+      "name": "Mobile apps",
+      "problem": "Our customers and our staff live on their phones.",
+      "short": "We build Android and iOS apps they will use every day.",
+      "image": "/3d/mobile.png",
+      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(170,120,255,.55),transparent 55%),linear-gradient(160deg,#5A3CF0,#170F5E)",
+      "heroChips": [
+        "Push notification sent",
+        "Live on both stores"
+      ],
+      "h1Html": "Mobile apps your customers will <em>actually open</em>.",
+      "lead": "Android and iOS apps from one codebase, with the features your customers and staff need every day.",
+      "needs": [
+        "Your customers would use your service daily if it were on their phone.",
+        "Your team works in the field and needs live data on the go.",
+        "You want push notifications, bookings or loyalty in one app."
+      ],
+      "builds": [
+        {
+          "title": "Android and iOS app",
+          "text": "One codebase, two stores, so you reach every phone without paying twice."
+        },
+        {
+          "title": "Login and accounts",
+          "text": "Secure sign-in, profiles and roles for customers and staff."
+        },
+        {
+          "title": "Notifications and payments",
+          "text": "Push alerts, in-app payments and maps, where your use case needs them."
+        },
+        {
+          "title": "Admin panel",
+          "text": "A web dashboard to manage users, content and orders behind the app."
+        },
+        {
+          "title": "Store publishing",
+          "text": "We prepare and submit the app to Google Play and the App Store."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Define the core",
+          "text": "We agree the few things the app must do brilliantly first."
+        },
+        {
+          "title": "Design the flow",
+          "text": "Phone-first screens you can tap through before we build."
+        },
+        {
+          "title": "Build and test",
+          "text": "Weekly builds on real devices that you can install and try."
+        },
+        {
+          "title": "Publish and support",
+          "text": "Store launch, then fixes and updates as people use it."
+        }
+      ],
+      "examples": [
+        "Customer app",
+        "Delivery or field staff app",
+        "Booking and loyalty app"
+      ],
+      "faq": [
+        {
+          "q": "Do I need both Android and iOS?",
+          "a": "Usually yes, and we build both from one codebase. We will tell you if one is enough."
+        },
+        {
+          "q": "Who pays the store fees?",
+          "a": "[To confirm: store developer accounts are in your name and paid by you.]"
+        },
+        {
+          "q": "Can the app work offline?",
+          "a": "Yes, for features that need it. We decide this in the planning stage."
+        }
+      ],
+      "timeline": "[X to Y weeks]"
+    },
+    {
+      "key": "systems",
+      "slug": "management-systems",
+      "name": "Management systems",
+      "problem": "We run the business on spreadsheets, paper and WhatsApp.",
+      "short": "We replace the mess with one system built around your process.",
+      "image": "/3d/systems.png",
+      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(80,170,255,.45),transparent 55%),linear-gradient(160deg,#1238A8,#08104A)",
+      "heroChips": [
+        "Stock updated",
+        "Report ready"
+      ],
+      "h1Html": "One system for the work you now do in <em>spreadsheets and chat</em>.",
+      "lead": "Management systems built around your process: stock, billing, staff, customers and reports in one place.",
+      "needs": [
+        "You track stock, billing or staff by hand.",
+        "Your data lives in many files and many heads.",
+        "You cannot see how the business is doing without asking around."
+      ],
+      "builds": [
+        {
+          "title": "A system around your process",
+          "text": "We copy how you really work, not a generic template, then remove the manual steps."
+        },
+        {
+          "title": "Roles and access",
+          "text": "Owner, manager and staff each see and do only what they should."
+        },
+        {
+          "title": "Reports you can act on",
+          "text": "Daily and monthly numbers on one screen, with exports when you need them."
+        },
+        {
+          "title": "Your data, imported",
+          "text": "We move your existing spreadsheets in, so you do not start from zero."
+        },
+        {
+          "title": "Training for your team",
+          "text": "A walkthrough and a short guide, so people actually use it."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Study how you work",
+          "text": "We sit with your team and map each step, delay and workaround."
+        },
+        {
+          "title": "Design the system",
+          "text": "Screens and data agreed in writing before any code."
+        },
+        {
+          "title": "Build in stages",
+          "text": "The most painful part first, so value arrives early."
+        },
+        {
+          "title": "Move over and train",
+          "text": "Import your data, train your team, then switch off the old way."
+        }
+      ],
+      "examples": [
+        "Inventory and billing",
+        "Staff and attendance",
+        "Clinic, school or shop management",
+        "Reports"
+      ],
+      "faq": [
+        {
+          "q": "Can you import our existing data?",
+          "a": "Yes. We clean and import it from spreadsheets or other systems during the build."
+        },
+        {
+          "q": "What if our process changes?",
+          "a": "The system is built to change. New features can be added later, in stages."
+        },
+        {
+          "q": "Is our data safe?",
+          "a": "We use secure hosting, access roles and regular backups. [To confirm: exact setup per project.]"
+        }
+      ],
+      "timeline": "[X to Y weeks]"
+    },
+    {
+      "key": "marketing",
+      "slug": "digital-marketing",
+      "name": "Digital marketing",
+      "problem": "We have a good service, but not enough enquiries.",
+      "short": "We get you found online and turn visits into conversations.",
+      "image": "/3d/marketing.png",
+      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(60,220,240,.45),transparent 55%),linear-gradient(160deg,#0E5FD8,#08235F)",
+      "heroChips": [
+        "New enquiry",
+        "Google listing live"
+      ],
+      "h1Html": "Digital marketing that brings <em>enquiries</em>, not just visits.",
+      "lead": "We get you found online and turn attention into real conversations, with plain reporting on what worked.",
+      "needs": [
+        "You have a good service but no steady flow of enquiries.",
+        "Your website or Google listing is not bringing in customers.",
+        "You are spending on ads or posts and cannot tell what works."
+      ],
+      "builds": [
+        {
+          "title": "Search and website fixes",
+          "text": "We improve your site and content so the right people find you on Google."
+        },
+        {
+          "title": "Google Business Profile",
+          "text": "A complete, active listing that wins local searches and calls."
+        },
+        {
+          "title": "Content and social",
+          "text": "Posts and short videos that show what you do and why you can be trusted."
+        },
+        {
+          "title": "Paid ads",
+          "text": "Focused campaigns with a clear budget and one goal: enquiries."
+        },
+        {
+          "title": "Tracking and monthly report",
+          "text": "A simple report in plain language, so you see what is working."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Audit",
+          "text": "We look at your site, listing, competitors and customers."
+        },
+        {
+          "title": "Plan",
+          "text": "A focused plan and budget, with one goal per channel."
+        },
+        {
+          "title": "Run",
+          "text": "We create, publish and manage the work every week."
+        },
+        {
+          "title": "Report",
+          "text": "A monthly review of enquiries, cost and what we change next."
+        }
+      ],
+      "examples": [
+        "SEO",
+        "Google Business Profile",
+        "Social media content",
+        "Paid ads"
+      ],
+      "faq": [
+        {
+          "q": "Can you guarantee rankings?",
+          "a": "No honest agency can. We promise a clear plan, steady work and plain reporting."
+        },
+        {
+          "q": "How long until we see results?",
+          "a": "[To confirm: typical first signals appear in X to Y weeks, depending on the channel.]"
+        },
+        {
+          "q": "Do we control the ad budget?",
+          "a": "Yes. Ad accounts stay in your name and you set the budget."
+        }
+      ],
+      "timeline": "[X to Y weeks]"
+    },
+    {
+      "key": "consulting",
+      "slug": "tech-consulting-automation",
+      "name": "Tech consulting and automation",
+      "problem": "Something is slow and costly, and we do not know the fix.",
+      "short": "We find the bottleneck and automate or rebuild it.",
+      "image": "/3d/consulting.png",
+      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(150,110,255,.5),transparent 55%),linear-gradient(160deg,#3F2DB5,#120F55)",
+      "heroChips": [
+        "Task automated",
+        "Hours saved"
+      ],
+      "h1Html": "Find the bottleneck. <em>Automate</em> it.",
+      "lead": "Clear advice on what to build, buy or automate, and the engineering to do it when you are ready.",
+      "needs": [
+        "You know a process is slow or costly, but not how to fix it.",
+        "You are comparing tools or vendors and want an honest opinion.",
+        "Your team repeats the same manual work every day."
+      ],
+      "builds": [
+        {
+          "title": "A short business review",
+          "text": "We study how the business runs today and where time and money leak."
+        },
+        {
+          "title": "A written recommendation",
+          "text": "Options, costs and our honest advice, in plain language."
+        },
+        {
+          "title": "Automation of repeated work",
+          "text": "Scripts and integrations that remove copy-and-paste tasks."
+        },
+        {
+          "title": "Build-or-buy advice",
+          "text": "Whether to use an existing tool, customise one, or build your own."
+        },
+        {
+          "title": "A roadmap",
+          "text": "A step-by-step plan if you want to build with us later, or with anyone."
+        }
+      ],
+      "steps": [
+        {
+          "title": "Listen",
+          "text": "A free call about what hurts and what it costs."
+        },
+        {
+          "title": "Review",
+          "text": "We study the process, tools and people involved."
+        },
+        {
+          "title": "Recommend",
+          "text": "A written plan with options, costs and priorities."
+        },
+        {
+          "title": "Automate",
+          "text": "If you choose, we build the fixes ourselves."
+        }
+      ],
+      "examples": [
+        "Workflow review",
+        "Automation between tools",
+        "Build or buy advice"
+      ],
+      "faq": [
+        {
+          "q": "Do we have to hire you to build it?",
+          "a": "No. The recommendation is yours to use with us or with anyone else."
+        },
+        {
+          "q": "How long is the review?",
+          "a": "[To confirm: typically X to Y days, depending on the size of the business.]"
+        },
+        {
+          "q": "What does it cost?",
+          "a": "The free call is free. Review and build are priced in writing after we understand the scope."
+        }
+      ],
+      "timeline": "[X to Y weeks]"
+    }
+  ],
+  "how": [
+    {
+      "name": "Discover",
+      "time": "1 call + 2 to 3 days",
+      "lead": "A free call to understand the problem and what it costs you.",
+      "we": [
+        "Hold a free call about your goals and users.",
+        "Ask what is slow, costly or missing today."
+      ],
+      "get": [
+        "A short written summary of the problem.",
+        "An honest yes or no on whether we can help."
+      ],
+      "need": [
+        "Time for one call.",
+        "Examples of how you work today."
+      ]
+    },
+    {
+      "name": "Plan",
+      "time": "[X to Y days]",
+      "lead": "Scope, price and timeline, agreed in writing before we build.",
+      "we": [
+        "List every feature and set priorities.",
+        "Sketch the main screens."
+      ],
+      "get": [
+        "Scope, price and timeline in one document.",
+        "Screen sketches to react to."
+      ],
+      "need": [
+        "Approval of scope and price.",
+        "A deposit to begin [terms to confirm]."
+      ]
+    },
+    {
+      "name": "Build",
+      "time": "[X to Y weeks]",
+      "lead": "Short cycles. You see a working demo every time.",
+      "we": [
+        "Design, build and test each part.",
+        "Share a working demo every cycle."
+      ],
+      "get": [
+        "A demo link [weekly].",
+        "Updates in the channel you prefer."
+      ],
+      "need": [
+        "Feedback within [2 days] of each demo.",
+        "Content and accounts we ask for."
+      ]
+    },
+    {
+      "name": "Launch",
+      "time": "[X to Y days]",
+      "lead": "Tested, live and handed over with a walkthrough.",
+      "we": [
+        "Final testing on phones and desktop.",
+        "Set up hosting, domain and backups."
+      ],
+      "get": [
+        "Your product, live.",
+        "Admin access and a short walkthrough."
+      ],
+      "need": [
+        "Final sign-off.",
+        "Domain or store accounts, if needed."
+      ]
+    },
+    {
+      "name": "Support",
+      "time": "[X weeks included]",
+      "lead": "We stay to fix issues and help you improve.",
+      "we": [
+        "Fix issues found after launch.",
+        "Answer questions from your team."
+      ],
+      "get": [
+        "A direct contact for problems.",
+        "Options to add features or a care plan."
+      ],
+      "need": [
+        "Tell us what you notice in real use."
+      ]
+    }
+  ],
+  "workingTerms": [
+    {
+      "title": "Fixed and written down",
+      "text": "You approve scope and price before we write any code. Changes are agreed first."
+    },
+    {
+      "title": "It is yours",
+      "text": "You receive the code, designs and accounts when the project is paid for. [To confirm]"
+    },
+    {
+      "title": "One clear channel",
+      "text": "We talk where it suits you: WhatsApp, email or calls. We reply within [24 hours]."
+    },
+    {
+      "title": "Paid in stages",
+      "text": "A deposit to start, then payments at agreed milestones. [Terms to confirm]"
+    }
+  ],
+  "why": [
+    {
+      "icon": "target",
+      "title": "We start with the problem, not the technology.",
+      "text": "Before we suggest anything, we work out what is holding your business back and what it costs. Sometimes the answer is software. Sometimes it is not."
+    },
+    {
+      "icon": "chart",
+      "title": "We measure success by your numbers.",
+      "text": "Enquiries, orders, hours saved. We agree what better looks like at the start, so we both know when it has worked."
+    },
+    {
+      "icon": "team",
+      "title": "The people who plan it are the people who build it.",
+      "text": "You talk to the engineers and the designer doing the work. Nothing is lost in a handover, and you get straight answers."
+    }
+  ],
+  "team": [
+    {
+      "name": "Subbaiah S",
+      "role": "Full-Stack Developer",
+      "photo": "/photos/subbaiah.jpg"
+    },
+    {
+      "name": "Madeswaran M",
+      "role": "Full-Stack Developer",
+      "photo": "/photos/madeswaran.jpg"
+    },
+    {
+      "name": "Parthesh S",
+      "role": "UI/UX Designer",
+      "photo": "/photos/parthesh.jpg"
+    },
+    {
+      "name": "Harish S",
+      "role": "Technical Lead",
+      "photo": "/photos/harish.jpg"
+    }
+  ],
+  "tools": [
+    "React",
+    "Next.js",
+    "Node.js",
+    "PostgreSQL",
+    "React Native",
+    "TypeScript",
+    "Figma",
+    "Tailwind CSS"
+  ],
+  "marquee": [
+    "Web applications",
+    "Mobile apps",
+    "Management systems",
+    "Digital marketing",
+    "Tech consulting",
+    "Automation"
+  ]
+}
