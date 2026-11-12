@@ -1,0 +1,417 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"><style>
+body{margin:0;background:#060A22}
+.pg{container-type:inline-size;container-name:pg;--bg:#060A22;--ink:#0B1230;--tx:#EAF0FF;--mu:#A3B3DC;position:relative;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;font-size:17px;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.pg *{box-sizing:border-box}
+.pg a{color:inherit;text-decoration:none}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.wrap{max-width:1240px;margin:0 auto;padding:0 40px;position:relative}
+.sec{position:relative;overflow:hidden}
+.light{background:#EDF1FF;color:var(--ink)}
+.light .mu,.mu.l{color:#56628C}
+.mu{color:var(--mu)}
+.grad{background:linear-gradient(90deg,#6F96FF,#B08BFF 55%,#FF8A4C);-webkit-background-clip:text;background-clip:text;color:transparent}
+.light .grad{background:linear-gradient(90deg,#2F54E8,#7C4DFF 58%,#F73F09);-webkit-background-clip:text;background-clip:text;color:transparent}
+.h1{font-weight:800;letter-spacing:-0.038em;line-height:1.02;font-size:clamp(38px,5.5cqw,76px);margin:0}
+.h2{font-weight:800;letter-spacing:-0.032em;line-height:1.06;font-size:clamp(30px,3.8cqw,52px);margin:0}
+.lead{font-size:clamp(17px,1.5cqw,20px);line-height:1.6;color:var(--mu);margin:0}
+.light .lead{color:#56628C}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font:500 12.5px 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#9DBAFF;background:rgba(79,123,255,.14);border:1px solid rgba(110,150,255,.35);padding:8px 15px;border-radius:999px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:#22D3EE;box-shadow:0 0 12px 2px #22D3EE}
+.light .eyebrow{color:#3552DC;background:rgba(79,123,255,.1);border-color:rgba(79,123,255,.3)}
+.pg .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:56px;padding:0 30px;border-radius:16px;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);color:#fff;font:700 16px 'Plus Jakarta Sans',sans-serif;border:0;white-space:nowrap;box-shadow:0 12px 32px -6px rgba(90,110,255,.65),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .2s,box-shadow .2s;cursor:pointer}
+.pg .btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px -6px rgba(90,110,255,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.pg .btn.ghost{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.22);box-shadow:none;backdrop-filter:blur(8px)}
+.pg .btn.ghost:hover{background:rgba(255,255,255,.12)}
+.pg .btn.white{background:#fff;color:#2339B8;box-shadow:0 14px 34px -10px rgba(0,0,40,.5)}
+.pg .btn.dk{background:#0B1230;box-shadow:0 14px 30px -10px rgba(11,18,48,.6)}
+.pg .btn.sm{height:46px;padding:0 22px;font-size:15px;border-radius:14px}
+.glass{background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.12);border-radius:26px;backdrop-filter:blur(12px)}
+.blob{position:absolute;border-radius:50%;filter:blur(100px);pointer-events:none}
+.gridbg{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(130,160,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(130,160,255,.07) 1px,transparent 1px);background-size:60px 60px;-webkit-mask-image:radial-gradient(ellipse 75% 75% at 60% 35%,#000 25%,transparent 80%);mask-image:radial-gradient(ellipse 75% 75% at 60% 35%,#000 25%,transparent 80%)}
+/* header */
+.hd{position:relative;z-index:6}
+.hdin{display:flex;align-items:center;justify-content:space-between;gap:24px;height:92px}
+.brand{display:flex;align-items:center;gap:12px;font:800 20px 'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;color:#fff}
+.brand img{width:44px;height:44px;border-radius:12px;display:block;box-shadow:0 8px 24px -6px rgba(245,60,6,.5)}
+.nav{display:flex;align-items:center;gap:6px;font-size:15px;font-weight:600;color:#C9D6FF}
+.nav>a,.nav>.dd>a{display:block;padding:10px 16px;border-radius:12px}
+.nav>a:hover,.nav>.dd>a:hover,.nav a.on{background:rgba(255,255,255,.08);color:#fff}
+.nav .btn{margin-left:10px}
+.dd{position:relative}
+.menu{position:absolute;top:100%;left:0;padding-top:12px;display:none;width:380px;z-index:20}
+.dd:hover .menu,.dd:focus-within .menu{display:block}
+.mi{background:rgba(14,20,64,.96);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:8px;box-shadow:0 40px 80px rgba(0,0,30,.6);backdrop-filter:blur(16px)}
+.mi a{display:flex;gap:14px;align-items:center;padding:10px 12px;border-radius:14px;color:#EAF0FF}
+.mi a:hover{background:rgba(255,255,255,.08)}
+.mi img{width:44px;height:44px;object-fit:contain;flex:none}
+.mi b{display:block;font-weight:700;font-size:15px}
+.mi span{display:block;font-size:13px;color:#A3B3DC;line-height:1.35;margin-top:1px;font-weight:400}
+.burger{display:none}
+@container pg (max-width:900px){.nav{display:none}.burger{display:block}.wrap{padding:0 22px}.hdin{height:74px}}
+/* hero */
+.herogrid{display:grid;grid-template-columns:1.02fr 1fr;gap:24px 40px;align-items:center}
+@container pg (max-width:900px){.herogrid{grid-template-columns:1fr}}
+.h3d{position:relative}
+.h3d>img.main{display:block;width:118%;max-width:none;margin:-3% -9% -5% -9%;animation:floaty 7s ease-in-out infinite;filter:drop-shadow(0 40px 60px rgba(40,60,220,.45))}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+.chip{position:absolute;display:flex;align-items:center;gap:10px;padding:10px 16px 10px 10px;border-radius:16px;font-size:14px;font-weight:700;color:#fff;background:rgba(14,22,80,.72);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(14px);box-shadow:0 20px 40px -10px rgba(0,0,40,.6);animation:floaty 6s ease-in-out infinite;white-space:nowrap}
+.chip b{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#4F7BFF,#22D3EE);font-size:15px}
+.h3d.sv>img.main{width:100%;margin:0}
+@container pg (max-width:900px){.h3d .chip{display:none}.h3d>img.main{width:112%;margin:0 -6%}}
+.trust{display:flex;flex-wrap:wrap;gap:12px 26px;font-size:14.5px;font-weight:600;color:#C9D6FF}
+.trust span{display:flex;align-items:center;gap:9px}
+.trust svg{flex:none}
+/* marquee */
+.mq{overflow:hidden;border-block:1px solid rgba(255,255,255,.1);background:linear-gradient(90deg,rgba(79,123,255,.12),rgba(139,92,246,.12))}
+.mqt{display:flex;gap:48px;width:max-content;padding:24px 0;animation:mq 36s linear infinite}
+.mqt span{font:800 24px 'Plus Jakarta Sans',sans-serif;letter-spacing:-0.02em;color:#DCE5FF;white-space:nowrap;display:flex;align-items:center;gap:48px}
+.mqt span::after{content:'\2726';color:#22D3EE;font-size:18px}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:22px}
+.pg a.bc,.pg a.ocard{color:#fff}
+.bc{position:relative;overflow:hidden;border-radius:34px;padding:34px;color:#fff;min-height:500px;display:flex;flex-direction:column;justify-content:flex-end;grid-column:span 2;transition:transform .35s,box-shadow .35s;box-shadow:0 34px 60px -34px rgba(20,30,130,.7);border:1px solid rgba(255,255,255,.14)}
+.bc.w3{grid-column:span 3;min-height:470px}
+.bc:hover{transform:translateY(-8px);box-shadow:0 44px 70px -30px rgba(20,30,160,.8)}
+.bc .ic{position:absolute;right:6px;top:10px;height:230px;width:auto;max-width:78%;transition:transform .5s;filter:drop-shadow(0 30px 36px rgba(0,0,30,.5))}
+.bc.w3 .ic{height:270px;top:14px}
+.bc:hover .ic{transform:translateY(-10px) scale(1.05) rotate(-2deg)}
+.bc .num{font:500 13px 'JetBrains Mono',monospace;letter-spacing:.1em;color:rgba(255,255,255,.65)}
+.bc h3{margin:8px 0 8px;font-size:30px;line-height:1.1;font-weight:800;letter-spacing:-0.03em}
+.bc p{margin:0;color:rgba(255,255,255,.78);font-size:16px;max-width:380px;line-height:1.5}
+.bc .go{margin-top:22px;display:flex;align-items:center;gap:12px;font-weight:700;font-size:15px}
+.bc .go i{width:42px;height:42px;border-radius:50%;background:#fff;color:#1a2a8a;display:flex;align-items:center;justify-content:center;font-style:normal;transition:transform .3s}
+.bc:hover .go i{transform:translateX(6px)}
+@container pg (max-width:900px){.bento{grid-template-columns:1fr}.bc,.bc.w3{grid-column:auto;min-height:480px}.bc .ic,.bc.w3 .ic{height:230px}}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:36px 24px;position:relative}
+@container pg (min-width:901px){.steps::before{content:'';position:absolute;left:22px;right:0;top:22px;height:2px;background:linear-gradient(90deg,#4F7BFF,#8B5CF6 55%,#FF7A2E 95%,transparent);opacity:.7}}
+.sp{position:relative}
+.sp .b{position:relative;z-index:1;width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);display:flex;align-items:center;justify-content:center;font:700 15px 'JetBrains Mono',monospace;box-shadow:0 0 0 6px rgba(79,123,255,.18),0 10px 30px -4px rgba(90,110,255,.7);animation:ring 6s infinite}
+.sp:nth-child(2) .b{animation-delay:1.2s}.sp:nth-child(3) .b{animation-delay:2.4s}.sp:nth-child(4) .b{animation-delay:3.6s}.sp:nth-child(5) .b{animation-delay:4.8s}
+@keyframes ring{0%,18%,100%{box-shadow:0 0 0 6px rgba(79,123,255,.18),0 10px 30px -4px rgba(90,110,255,.7)}8%{box-shadow:0 0 0 14px rgba(79,123,255,.32),0 10px 30px -4px rgba(90,110,255,.9)}}
+.sp h3{margin:22px 0 8px;font-size:24px;font-weight:800;letter-spacing:-0.02em}
+.sp p{margin:0;color:var(--mu);font-size:15.5px}
+/* white cards */
+.cards3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:22px}
+.wc{background:#fff;border-radius:28px;padding:34px;box-shadow:0 30px 60px -36px rgba(30,50,160,.4);border:1px solid rgba(79,123,255,.12);transition:transform .3s}
+.wc:hover{transform:translateY(-6px)}
+.wc .ico{width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 28px -10px rgba(90,110,255,.8)}
+.wc h3{margin:22px 0 10px;font-size:24px;line-height:1.2;font-weight:800;letter-spacing:-0.025em;color:var(--ink)}
+.wc p{margin:0;color:#56628C;font-size:16px}
+/* team */
+.tm{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:22px}
+.tc{position:relative;border-radius:30px;overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:0 30px 60px -30px rgba(40,60,220,.6);transition:transform .35s}
+.tc:hover{transform:translateY(-8px)}
+.tc img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;background:#10185a}
+.tc::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(6,10,40,.92));pointer-events:none}
+.tc .cap{position:absolute;left:18px;right:18px;bottom:16px;z-index:1}
+.tc .nm{font-weight:800;font-size:19px;letter-spacing:-0.02em;color:#fff}
+.tc .rl{font:500 12.5px 'JetBrains Mono',monospace;color:#9DBAFF;margin-top:2px}
+/* cta + form */
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px 72px;align-items:center}
+@container pg (max-width:900px){.fgrid{grid-template-columns:1fr}}
+.fcard{background:#fff;color:var(--ink);border-radius:30px;padding:38px;box-shadow:0 50px 90px -30px rgba(0,0,60,.6)}
+.fcard label{display:block;margin-bottom:20px}
+.fcard label span{display:block;font-size:13.5px;font-weight:700;margin-bottom:8px;color:#2A3568}
+.fcard input,.fcard textarea{display:block;width:100%;border:1.5px solid #D6DDF5;border-radius:14px;padding:15px 16px;font:500 16px 'Plus Jakarta Sans',sans-serif;background:#F6F8FF;color:var(--ink);outline:none}
+.fcard textarea{height:108px;resize:none}
+/* footer */
+.ft{background:#04061A;color:#8E9CC8;font-size:15px;border-top:1px solid rgba(255,255,255,.08)}
+.ftg{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;padding:68px 0 40px}
+@container pg (max-width:900px){.ftg{grid-template-columns:1fr 1fr}.ftg>div:first-child{grid-column:1/-1}}
+.ft h4{margin:0 0 14px;font:600 12px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase;color:#6471A3}
+.ft a{display:block;padding:4px 0;color:#C0CBEE}
+.ft a:hover{color:#fff}
+.ft a.brand{display:flex;padding:0;color:#fff}
+.ftb{border-top:1px solid rgba(255,255,255,.08);padding:22px 0;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13.5px}
+/* service page */
+.crumb{font:500 13px 'JetBrains Mono',monospace;color:#8FA3D8}
+.crumb a:hover{color:#fff}
+.sh{display:grid;grid-template-columns:1.05fr .95fr;gap:40px 56px;align-items:center}
+@container pg (max-width:900px){.sh{grid-template-columns:1fr}}
+.facts3{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:18px;margin-top:80px}
+.facts3>div{padding:24px 28px}
+.facts3 .k{font:500 12px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#8FA3D8}
+.facts3 .v{font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-top:6px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tags span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:5px 13px;border-radius:999px;font-size:14px;font-weight:600;color:#DCE5FF}
+.nd{position:relative}
+.nd .n{font-weight:800;font-size:64px;line-height:1;letter-spacing:-0.04em;background:linear-gradient(135deg,#4F7BFF,#B08BFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nd p{margin:14px 0 0;font-size:21px;line-height:1.35;font-weight:700;letter-spacing:-0.015em;color:var(--ink)}
+.feat{display:grid;grid-template-columns:repeat(6,1fr);gap:20px}
+.fc{grid-column:span 2;padding:32px}
+.fc.w{grid-column:span 3}
+.fc .ck{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#4F7BFF,#22D3EE);display:flex;align-items:center;justify-content:center;margin-bottom:20px;box-shadow:0 10px 24px -8px rgba(34,211,238,.6)}
+.fc h3{margin:0 0 8px;font-size:23px;font-weight:800;letter-spacing:-0.025em}
+.fc p{margin:0;color:var(--mu);font-size:16px}
+@container pg (max-width:900px){.feat{grid-template-columns:1fr}.fc,.fc.w{grid-column:auto}}
+.stg{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(230px,100%),1fr));gap:34px 26px;position:relative}
+@container pg (min-width:901px){.stg::before{content:'';position:absolute;left:24px;right:24px;top:24px;height:2px;background:linear-gradient(90deg,#4F7BFF,#B08BFF 60%,#22D3EE);opacity:.55}}
+.sq .b{position:relative;z-index:1;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);color:#fff;display:flex;align-items:center;justify-content:center;font:700 15px 'JetBrains Mono',monospace;box-shadow:0 0 0 7px #EDF1FF,0 12px 26px -6px rgba(90,110,255,.8)}
+.sq h3{margin:22px 0 8px;font-size:21px;font-weight:800;letter-spacing:-0.02em;color:var(--ink)}
+.sq p{margin:0;color:#56628C;font-size:15.5px}
+details{margin-bottom:14px;border-radius:22px;background:linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.12);padding:0 28px}
+summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 0;font-size:19px;font-weight:700;letter-spacing:-0.015em}
+summary::-webkit-details-marker{display:none}
+summary::after{content:'+';flex:none;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font:400 22px 'Plus Jakarta Sans',sans-serif}
+details[open] summary::after{content:'\2212';background:linear-gradient(135deg,#4F7BFF,#7C4DFF)}
+details p{margin:0 0 26px;max-width:680px;color:var(--mu)}
+.oc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr));gap:20px}
+.ocard{position:relative;border-radius:28px;padding:26px;min-height:230px;color:#fff;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;border:1px solid rgba(255,255,255,.14);transition:transform .3s}
+.ocard:hover{transform:translateY(-6px)}
+.ocard{min-height:290px}
+.ocard img{position:absolute;right:10px;top:12px;height:140px;width:auto;max-width:70%;filter:drop-shadow(0 18px 24px rgba(0,0,30,.5))}
+.ocard b{font-size:21px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;display:block}
+.ocard span{font-size:14px;color:rgba(255,255,255,.75);margin-top:6px;display:block}
+/* overview rows */
+.zz{display:grid;grid-template-columns:1fr 1fr;gap:40px 72px;align-items:center;padding:56px 0}
+.zz+.zz{border-top:1px solid rgba(79,123,255,.18)}
+.zimg{position:relative;border-radius:36px;padding:30px;display:flex;align-items:center;justify-content:center;min-height:340px;overflow:hidden;border:1px solid rgba(255,255,255,.16);box-shadow:0 40px 70px -40px rgba(30,40,170,.8)}
+.zimg img{width:82%;max-height:340px;object-fit:contain;filter:drop-shadow(0 30px 40px rgba(0,0,30,.5));transition:transform .5s}
+.zz:hover .zimg img{transform:translateY(-8px) scale(1.04)}
+.zz h2{margin:14px 0 12px;font-size:clamp(30px,3.2cqw,44px);font-weight:800;letter-spacing:-0.03em;line-height:1.08;color:var(--ink)}
+.zz ul{margin:20px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
+.zz li{display:flex;gap:12px;align-items:flex-start;font-weight:600;color:#26305F}
+.zz li svg{flex:none;margin-top:3px}
+@container pg (max-width:900px){.zz{grid-template-columns:1fr}.zz .zimg{order:0!important}}
+.tbl{background:#fff;border-radius:28px;padding:8px 32px;box-shadow:0 30px 60px -36px rgba(30,50,160,.4);border:1px solid rgba(79,123,255,.12)}
+.trow{display:grid;grid-template-columns:1.1fr 1.3fr 1.5fr .8fr 40px;gap:24px;padding:24px 0;border-bottom:1px solid #E3E8FA;align-items:start;color:var(--ink)}
+.trow:last-child{border-bottom:0}
+.trow.h{padding:18px 0;font:600 12px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#6471A3}
+.trow b{font-weight:800;font-size:18px;letter-spacing:-0.02em}
+.trow div{font-size:15.5px;color:#3A4572}
+.trow .go{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);color:#fff;display:flex;align-items:center;justify-content:center}
+@container pg (max-width:900px){.trow{grid-template-columns:1fr;gap:6px}.trow.h{display:none}.tbl{padding:8px 22px}}
+/* how page */
+.tl{position:relative;display:flex;flex-direction:column;gap:26px}
+@container pg (min-width:901px){.tl::before{content:'';position:absolute;left:27px;top:20px;bottom:20px;width:2px;background:linear-gradient(180deg,#4F7BFF,#B08BFF,#22D3EE);opacity:.55}}
+.ts{display:grid;grid-template-columns:56px 1fr;gap:28px;align-items:start}
+.ts .b{position:relative;z-index:1;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#4F7BFF,#7C4DFF);display:flex;align-items:center;justify-content:center;font:700 16px 'JetBrains Mono',monospace;box-shadow:0 0 0 8px #060A22,0 12px 30px -6px rgba(90,110,255,.8)}
+.ts .card{padding:34px}
+.ts h2{margin:0;font-size:32px;font-weight:800;letter-spacing:-0.03em}
+.tm2{font:500 13px 'JetBrains Mono',monospace;color:#9DBAFF;background:rgba(79,123,255,.14);border:1px solid rgba(110,150,255,.3);padding:5px 13px;border-radius:999px}
+.hc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr));gap:26px;margin-top:26px}
+.hc .lb{font:600 12px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#22D3EE}
+.hc ul{margin:10px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;font-size:15.5px;color:#D2DCFA}
+.hc li{padding-left:18px;position:relative}
+.hc li::before{content:'';position:absolute;left:0;top:.62em;width:7px;height:7px;border-radius:50%;background:linear-gradient(135deg,#4F7BFF,#22D3EE)}
+@container pg (max-width:900px){.ts{grid-template-columns:1fr;gap:14px}.ts .card{padding:26px}}
+.chip2{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);padding:9px 18px;border-radius:999px;font-weight:700;font-size:15px;margin:0 8px 10px 0;color:#E4EBFF}
+@media (prefers-reduced-motion:reduce){.pg *{animation:none!important}}
+
+.pg{--or:#FF5A1F;--or2:#F73F09}
+.eyebrow i{background:#FF7A3D;box-shadow:0 0 12px 2px rgba(255,90,31,.85)}
+.mqt span::after{color:#FF7A3D}
+.tc .rl{color:#FFB48A}
+.nav>a{position:relative}
+.nav a.on::after{content:'';position:absolute;left:16px;right:16px;bottom:3px;height:3px;border-radius:2px;background:linear-gradient(90deg,#FF7A2E,#F73F09)}
+.hd.lt .brand{color:#0B1230}
+.hd.lt .nav{color:#33406F}
+.hd.lt .nav>a:hover,.hd.lt .nav a.on{background:rgba(11,18,48,.06);color:#0B1230}
+.hd.lt .nav .btn{color:#fff}
+/* bento with scenes */
+.bc{min-height:560px}
+.bc.w3{min-height:540px}
+.bc .sc{position:absolute;left:0;right:0;top:0;width:100%;height:58%;object-fit:contain;object-position:center top;transition:transform .5s;filter:drop-shadow(0 20px 24px rgba(0,0,30,.25))}
+.bc:hover .sc{transform:translateY(-6px) scale(1.03)}
+.bc .num{color:rgba(255,255,255,.8)}
+.bc .tl2{display:flex;gap:8px;margin-bottom:14px}
+.bc .tl2 span{width:30px;height:30px;border-radius:9px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 14px -6px rgba(0,0,30,.5)}
+@container pg (max-width:900px){.bc,.bc.w3{min-height:520px}.bc .sc{height:54%}}
+/* service hero card + zigzag with scenes */
+.svcard{border-radius:34px;overflow:hidden;border:1px solid rgba(255,255,255,.18);box-shadow:0 50px 80px -40px rgba(0,0,0,.7);aspect-ratio:4/3;position:relative}
+.svcard img{display:block;width:100%;height:100%;object-fit:contain}
+.zimg{padding:0!important;min-height:0!important;aspect-ratio:4/3;display:block!important}
+.zimg img{width:100%!important;max-height:none!important;height:100%;object-fit:contain;filter:none!important}
+.zz:hover .zimg img{transform:scale(1.03)}
+.ocard{min-height:340px}
+.ocard img{position:absolute;left:0;right:0;top:0;width:100%!important;max-width:none!important;height:56%!important;object-fit:contain;filter:drop-shadow(0 14px 18px rgba(0,0,30,.3))!important}
+.svpills{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:40px}
+.pg a.svp{display:inline-flex;align-items:center;gap:10px;padding:11px 20px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);font-weight:700;font-size:15px;color:#fff;transition:background .2s,transform .2s}
+.pg a.svp:hover{background:rgba(255,255,255,.16);transform:translateY(-2px)}
+.svp i{width:11px;height:11px;border-radius:50%;background:var(--c);box-shadow:0 0 10px var(--c)}
+.tools{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+.tools span{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #DCE3F8;border-radius:12px;padding:7px 12px 7px 9px;font-weight:700;font-size:13.5px;color:#26305F;box-shadow:0 8px 16px -10px rgba(30,50,160,.5)}
+/* feel section */
+.fr{position:relative;display:grid;grid-template-columns:1fr 1.15fr;border-radius:28px;overflow:hidden;border:1px solid rgba(255,255,255,.12);margin-bottom:20px;box-shadow:0 30px 60px -36px rgba(0,0,30,.8)}
+.fl{position:relative;padding:34px 56px 34px 38px;background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03))}
+.fl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--c)}
+.fl .t,.fa .t{font:600 12px 'JetBrains Mono',monospace;letter-spacing:.14em;text-transform:uppercase}
+.fl .t{color:#FF9A66}
+.fl q{display:block;margin-top:14px;font-size:clamp(20px,1.9cqw,26px);line-height:1.3;font-weight:700;letter-spacing:-.02em;color:#fff;quotes:'\201C' '\201D'}
+.fa{padding:34px 38px 34px 64px;background:#fff;color:#0B1230}
+.fa .t{color:#0F8F5F}
+.fa h3{margin:12px 0 0;font-size:clamp(20px,1.9cqw,26px);line-height:1.3;font-weight:800;letter-spacing:-.025em}
+.fa .row{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:22px}
+.fa .lg{display:flex;gap:8px}
+.fa .lg span{width:38px;height:38px;border-radius:11px;background:#F4F6FE;border:1px solid #E3E8FA;display:flex;align-items:center;justify-content:center}
+.pg .fa a.lk{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:var(--c);font-size:15.5px}
+.fm{position:absolute;left:calc(46.5% - 24px);top:50%;width:48px;height:48px;margin-top:-24px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 6px #0A1030,0 14px 26px -6px rgba(0,0,0,.6);z-index:2}
+@container pg (max-width:900px){.fr{grid-template-columns:1fr}.fm{display:none}.fl{padding:28px 26px 28px 30px}.fa{padding:28px 26px}}
+/* journey */
+.cream{background:linear-gradient(180deg,#FFF6EA,#FFEAD3);color:#0B1230}
+.cream .eyebrow{color:#C2410C;background:rgba(247,63,9,.08);border-color:rgba(247,63,9,.3)}
+.cream .lead{color:#7A5B45}
+.cream .grad,.hl .grad{background:linear-gradient(90deg,#2F54E8,#7C4DFF 58%,#F73F09);-webkit-background-clip:text;background-clip:text;color:transparent}
+.pth{display:flex;align-items:flex-start;margin:44px 0 52px}
+.pn{display:flex;flex-direction:column;align-items:center;gap:10px;flex:none;width:100px;text-align:center;font-weight:700;font-size:14px;color:#7A5B45}
+.pn i{width:38px;height:38px;border-radius:50%;background:#fff;border:2.5px solid #F2D6B8;display:flex;align-items:center;justify-content:center;font:700 13px 'JetBrains Mono',monospace;font-style:normal;color:#B58D68}
+.pn.dn i{background:linear-gradient(135deg,#FF7A2E,#F73F09);border-color:transparent;color:#fff;box-shadow:0 10px 20px -6px rgba(247,63,9,.7)}
+.pn.cur i{outline:6px solid rgba(247,63,9,.18)}
+.pn.cur{color:#0B1230}
+.pl{flex:1;height:3px;margin-top:18px;background:#F2D6B8;border-radius:2px}
+.pl.dn{background:linear-gradient(90deg,#FF7A2E,#F73F09)}
+.jc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px}
+.pg a.jcard{position:relative;display:flex;flex-direction:column;gap:12px;background:#fff;border-radius:26px;padding:30px;color:#0B1230;box-shadow:0 26px 50px -30px rgba(120,50,0,.45);border:1px solid rgba(247,63,9,.12);transition:transform .3s}
+.pg a.jcard:hover{transform:translateY(-6px)}
+.pg a.jcard.nx{background:linear-gradient(135deg,#FF7A2E,#F73F09);color:#fff;border:0;box-shadow:0 30px 56px -24px rgba(247,63,9,.85)}
+.jcard .tg{font:600 12px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:#C2410C}
+.jcard.nx .tg{color:rgba(255,255,255,.9)}
+.jcard h3{margin:0;font-size:23px;line-height:1.25;font-weight:800;letter-spacing:-.025em}
+.jcard .go{margin-top:auto;padding-top:14px;display:flex;align-items:center;gap:10px;font-weight:800}
+.jcard .go i{width:40px;height:40px;border-radius:50%;background:#FFEAD9;color:#F73F09;display:flex;align-items:center;justify-content:center;font-style:normal}
+.jcard.nx .go i{background:#fff}
+@container pg (max-width:900px){.pn{width:62px;font-size:11.5px}.pn i{width:32px;height:32px}.pl{margin-top:15px}}
+/* footer */
+.ft{position:relative}
+.ft::before{content:'';position:absolute;left:0;right:0;top:0;height:3px;background:linear-gradient(90deg,#FF7A2E,#F73F09 28%,#7C4DFF 68%,#22D3EE)}
+.fcta{display:flex;justify-content:space-between;align-items:center;gap:26px;flex-wrap:wrap;padding:52px 0 46px;border-bottom:1px solid rgba(255,255,255,.09)}
+.fcta h3{margin:0;font-size:clamp(26px,2.6cqw,36px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.15}
+.fcta p{margin:8px 0 0;color:#8E9CC8}
+.fb{display:flex;gap:12px;flex-wrap:wrap}
+.pg .ft a.fbtn{display:inline-flex;align-items:center;gap:12px;padding:0 24px;height:58px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#fff;font-weight:700;font-size:16px;transition:background .2s,transform .2s}
+.pg .ft a.fbtn:hover{background:rgba(255,255,255,.13);transform:translateY(-2px)}
+.pg .ft a.fbtn.or{background:linear-gradient(135deg,#FF7A2E,#F73F09);border-color:transparent;box-shadow:0 14px 30px -10px rgba(247,63,9,.7)}
+.ftg2{display:grid;grid-template-columns:1.4fr .9fr .9fr 1.3fr;gap:44px;padding:56px 0 44px}
+@container pg (max-width:900px){.ftg2{grid-template-columns:1fr 1fr}.ftg2>div:first-child,.ftg2>div:last-child{grid-column:1/-1}}
+.soc{display:flex;gap:12px;margin-top:24px}
+.pg .ft a.sb{width:50px;height:50px;padding:0;border-radius:15px;display:flex;align-items:center;justify-content:center;transition:transform .2s;box-shadow:0 12px 22px -10px rgba(0,0,0,.7)}
+.pg .ft a.sb:hover{transform:translateY(-3px)}
+.pg .ft a.ci{display:flex;gap:14px;align-items:center;padding:8px 0;color:#DCE5FF;font-weight:600}
+.ci .ib{width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;flex:none}
+.ci small{display:block;font-weight:500;color:#7F8DBA;font-size:12.5px;line-height:1.2}
+.ft h4::before{content:'';display:inline-block;width:14px;height:3px;border-radius:2px;background:#FF5A1F;vertical-align:middle;margin-right:10px}
+/* contact extras */
+.who{display:flex;align-items:center;gap:16px;margin-top:34px;color:#fff}
+.who .av{display:flex}
+.who .av img{width:50px;height:50px;border-radius:50%;object-fit:cover;object-position:top;border:3px solid #5A3FE8;margin-left:-14px;background:#10185a}
+.who .av img:first-child{margin-left:0}
+.who span{font-size:15px;font-weight:600;color:rgba(255,255,255,.9);line-height:1.4}
+.callrow{margin-top:26px;display:flex;gap:12px;flex-wrap:wrap}
+.pg a.cl{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:14px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700;font-size:15px}
+.fcard select{display:block;width:100%;border:1.5px solid #D6DDF5;border-radius:14px;padding:15px 16px;font:500 16px 'Plus Jakarta Sans',sans-serif;background:#F6F8FF;color:#56628C;outline:none}
+.fcard .rq{color:#E11D48}
+.fcard .opt{font-weight:500;color:#8A94BD}
+/* how page (light) */
+.hl{background:linear-gradient(180deg,#FFF6EA 0%,#EDF1FF 100%);color:#0B1230;position:relative;overflow:hidden}
+.hl .h1{color:#0B1230}
+.hl .lead{color:#56628C}
+.hl .eyebrow{color:#C2410C;background:rgba(247,63,9,.08);border-color:rgba(247,63,9,.3)}
+.rib{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:48px}
+.pg a.rb{display:flex;align-items:center;gap:12px;background:#fff;border-radius:999px;padding:8px 22px 8px 8px;box-shadow:0 16px 32px -16px rgba(30,40,120,.55);font-weight:800;color:#0B1230;font-size:15.5px;line-height:1.2;transition:transform .2s}
+.pg a.rb:hover{transform:translateY(-3px)}
+.rb i{width:42px;height:42px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font:700 14px 'JetBrains Mono',monospace;font-style:normal;flex:none}
+.rb small{display:block;font-weight:600;color:#6B7699;font-size:12.5px}
+.stg2{background:var(--t);position:relative}
+.stg2 .gr{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px 72px;align-items:start;padding:104px 0}
+.stg2 .lft{position:sticky;top:30px}
+.big{font:800 clamp(100px,13cqw,190px)/.85 'Plus Jakarta Sans',sans-serif;letter-spacing:-.05em;color:var(--c);opacity:.2}
+.stg2 h2{margin:6px 0 16px;font-size:clamp(34px,3.6cqw,50px);font-weight:800;letter-spacing:-.035em;line-height:1.05;color:#0B1230}
+.fe{display:inline-flex;align-items:center;gap:10px;background:var(--c);color:#fff;border-radius:999px;padding:9px 18px;font-weight:800;font-size:15px;box-shadow:0 12px 24px -10px var(--c)}
+.stg2 .pr{margin:18px 0 0;color:#4A5680;font-size:18px;max-width:420px}
+.sc3{display:flex;flex-direction:column;gap:16px}
+.sbox{background:#fff;border-radius:24px;padding:26px 30px;display:grid;grid-template-columns:130px 1fr;gap:12px 20px;border:1px solid rgba(11,18,48,.05);box-shadow:0 26px 50px -34px rgba(30,40,120,.5);border-left:6px solid var(--c)}
+.sbox .lb{font:700 12px 'JetBrains Mono',monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--c);padding-top:4px}
+.sbox ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;font-size:16.5px;color:#26305F;font-weight:500}
+.sbox li{padding-left:24px;position:relative}
+.sbox li::before{content:'';position:absolute;left:0;top:.5em;width:9px;height:9px;border-radius:50%;background:var(--c)}
+@container pg (max-width:900px){.stg2 .gr{grid-template-columns:1fr;padding:72px 0}.stg2 .lft{position:static}.sbox{grid-template-columns:1fr}}
+.fc1{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:20px}
+.fc1 .it{background:#fff;border-radius:26px;padding:30px;box-shadow:0 26px 50px -34px rgba(30,40,120,.5);border:1px solid rgba(79,123,255,.12)}
+.fc1 .it .n{width:44px;height:44px;border-radius:14px;color:#fff;display:flex;align-items:center;justify-content:center;font:700 16px 'JetBrains Mono',monospace}
+.fc1 .it h3{margin:20px 0 8px;font-size:22px;font-weight:800;letter-spacing:-.025em;color:#0B1230}
+.fc1 .it p{margin:0;color:#56628C;font-size:16px}
+.chip2.lc2{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(79,123,255,.2);color:#1B2559;padding:9px 18px 9px 12px}
+.pg .chip2.lc{background:#fff;border:1px solid rgba(79,123,255,.2);color:#1B2559}</style></head><body><div class="pg">
+<section class="sec"><div class="gridbg"></div><div class="blob" style="width:560px;height:560px;right:-120px;top:-60px;background:#3B5BFF;opacity:.5"></div><div class="blob" style="width:460px;height:460px;left:-180px;top:260px;background:#7C4DFF;opacity:.32"></div><div class="blob" style="width:380px;height:380px;right:260px;bottom:-200px;background:#22D3EE;opacity:.22"></div><header class="hd"><div class="wrap hdin">
+<a class="brand" href="index.html" aria-label="SMPH.Tech home"><img src="../assets/shared/logo-tile-720.png" alt="SMPH.Tech logo"><span>SMPH.Tech</span></a>
+<nav class="nav"><a href="index.html">Home</a><a href="services.html" class=on>Services</a><a href="how-we-work.html">How we work</a><a href="about.html">About</a><a class="btn sm" href="index.html#contact">Book a free call</a></nav>
+<svg class="burger" width="30" height="30" viewBox="0 0 30 30" aria-label="Menu"><path d="M5 10h20M5 15h20M5 20h20" stroke="#EAF0FF" stroke-width="2.2" stroke-linecap="round"/></svg>
+</div></header>
+<div class="wrap" style="padding-top:28px;padding-bottom:110px">
+<div class="crumb"><a href="index.html">Home</a> &nbsp;/&nbsp; <a href="services.html">Services</a> &nbsp;/&nbsp; Tech consulting and automation</div>
+<div class="sh" style="margin-top:36px">
+<div>
+<h1 class="h1" style="font-size:clamp(36px,4.8cqw,66px)">Find the bottleneck. <em>Automate</em> it.</h1>
+<p class="lead" style="margin-top:26px;max-width:520px">Clear advice on what to build, buy or automate, and the engineering to do it when you are ready.</p>
+<div style="margin-top:36px;display:flex;gap:14px;flex-wrap:wrap"><a class="btn" href="index.html#contact">Talk about this <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a><a class="btn ghost" href="#build">What you get</a></div>
+</div>
+<div class="svcard" style="background:radial-gradient(120% 90% at 90% 0%,rgba(190,160,255,.55),transparent 55%),linear-gradient(160deg,#8A5CFF,#2A1A86)"><img src="../assets/scenes/consulting.png" alt="Tech consulting and automation illustration with the tools we use"></div>
+</div>
+<div class="facts3">
+<div class="glass"><div class="k">How we start</div><div class="v">A free call, no obligation</div></div>
+<div class="glass"><div class="k">Price</div><div class="v">Quoted in writing after the free call</div></div>
+<div class="glass"><div class="k">Examples</div><div class="tags"><span>Workflow review</span><span>Automation between tools</span><span>Build or buy advice</span></div></div>
+</div></div></section>
+
+<section class="sec light"><div class="wrap" style="padding-top:120px;padding-bottom:120px">
+<span class="eyebrow"><i></i>You might need this if</span>
+<h2 class="h2" style="margin:24px 0 56px;max-width:760px">Does any of this sound <span class="grad">familiar</span>?</h2>
+<div class="cards3" style="gap:44px"><div class="nd"><div class="n">01</div><p>You know a process is slow or costly, but not how to fix it.</p></div><div class="nd"><div class="n">02</div><p>You are comparing tools or vendors and want an honest opinion.</p></div><div class="nd"><div class="n">03</div><p>Your team repeats the same manual work every day.</p></div></div>
+</div></section>
+
+<section id="build" class="sec"><div class="blob" style="width:520px;height:520px;left:-160px;top:100px;background:#3B5BFF;opacity:.28"></div><div class="blob" style="width:420px;height:420px;right:-120px;bottom:-60px;background:#7C4DFF;opacity:.28"></div>
+<div class="wrap" style="padding-top:120px;padding-bottom:120px">
+<span class="eyebrow"><i></i>What we build</span>
+<h2 class="h2" style="margin:24px 0 40px;max-width:760px">Everything you <span class="grad">get</span>.</h2>
+<div class="tools" style="margin:0 0 44px"><span style="font-weight:600;color:#A3B3DC;background:none;border:0;box-shadow:none;padding-left:0">Built with tools such as</span><span><svg width="20" height="20" viewBox="0 0 24 24" aria-label="Zapier" role="img"><path fill="#FF4F00" d="M4.157 0A4.151 4.151 0 0 0 0 4.161v15.678A4.151 4.151 0 0 0 4.157 24h15.682A4.152 4.152 0 0 0 24 19.839V4.161A4.152 4.152 0 0 0 19.839 0H4.157Zm10.61 8.761h.03a.577.577 0 0 1 .23.038.585.585 0 0 1 .201.124.63.63 0 0 1 .162.431.612.612 0 0 1-.162.435.58.58 0 0 1-.201.128.58.58 0 0 1-.23.042.529.529 0 0 1-.235-.042.585.585 0 0 1-.332-.328.559.559 0 0 1-.038-.235.613.613 0 0 1 .17-.431.59.59 0 0 1 .405-.162Zm2.853 1.572c.03.004.061.004.095.004.325-.011.646.064.937.219.238.144.431.355.552.609.128.279.189.582.185.888v.193a2 2 0 0 1 0 .219h-2.498c.003.227.075.45.204.642a.78.78 0 0 0 .646.265.714.714 0 0 0 .484-.136.642.642 0 0 0 .23-.318l.915.257a1.398 1.398 0 0 1-.28.537c-.14.159-.321.284-.521.355a2.234 2.234 0 0 1-.836.136 1.923 1.923 0 0 1-1.001-.245 1.618 1.618 0 0 1-.665-.703 2.221 2.221 0 0 1-.227-1.036 1.95 1.95 0 0 1 .48-1.398 1.9 1.9 0 0 1 1.3-.488Zm-9.607.023c.162.004.325.026.48.079.207.065.4.174.563.314.26.302.393.692.366 1.088v2.276H8.53l-.109-.711h-.065c-.064.163-.155.31-.272.439a1.122 1.122 0 0 1-.374.264 1.023 1.023 0 0 1-.453.083 1.334 1.334 0 0 1-.866-.264.965.965 0 0 1-.329-.801.993.993 0 0 1 .076-.431 1.02 1.02 0 0 1 .242-.363 1.478 1.478 0 0 1 1.043-.303h.952v-.181a.696.696 0 0 0-.136-.454.553.553 0 0 0-.438-.154.695.695 0 0 0-.378.086.48.48 0 0 0-.193.254l-.99-.144a1.26 1.26 0 0 1 .257-.563c.14-.174.321-.302.533-.378.261-.091.54-.136.82-.129.053-.003.106-.007.163-.007Zm4.384.007c.174 0 .347.038.506.114.182.083.34.211.458.374.257.423.377.911.351 1.406a2.53 2.53 0 0 1-.355 1.448 1.148 1.148 0 0 1-1.009.517c-.204 0-.401-.045-.582-.136a1.052 1.052 0 0 1-.48-.457 1.298 1.298 0 0 1-.114-.234h-.045l.004 1.784h-1.059v-4.713h.904l.117.805h.057c.068-.208.177-.401.328-.56a1.129 1.129 0 0 1 .843-.344h.076v-.004Zm7.559.084h.903l.113.805h.053a1.37 1.37 0 0 1 .235-.484.813.813 0 0 1 .313-.242.82.82 0 0 1 .39-.076h.234v1.051h-.401a.662.662 0 0 0-.313.008.623.623 0 0 0-.272.155.663.663 0 0 0-.174.26.683.683 0 0 0-.027.314v1.875h-1.054v-3.666Zm-17.515.003h3.262v.896L3.73 13.104l.034.113h1.973l.042.9H2.4v-.9l1.931-1.754-.045-.117H2.441v-.896Zm11.815 0h1.055v3.659h-1.055V10.45Zm3.443.684.019.016a.69.69 0 0 0-.351.045.756.756 0 0 0-.287.204c-.11.155-.174.336-.189.522h1.545c-.034-.526-.257-.787-.74-.787h.003Zm-5.718.163c-.026 0-.057 0-.083.004a.78.78 0 0 0-.31.053.746.746 0 0 0-.257.189 1.016 1.016 0 0 0-.204.695v.064c-.015.257.057.507.204.711a.634.634 0 0 0 .253.196.638.638 0 0 0 .314.061.644.644 0 0 0 .578-.265c.14-.223.204-.48.189-.74a1.216 1.216 0 0 0-.181-.711.677.677 0 0 0-.503-.257Zm-4.509 1.266a.464.464 0 0 0-.268.102.373.373 0 0 0-.114.276c0 .053.008.106.027.155a.375.375 0 0 0 .087.132.576.576 0 0 0 .397.11v.004a.863.863 0 0 0 .563-.182.573.573 0 0 0 .211-.457v-.14h-.903Z"/></svg>Zapier</span><span><svg width="20" height="20" viewBox="0 0 24 24" aria-label="n8n" role="img"><path fill="#FF91AC" d="M4.8 16.8c.45 0 .6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4H9c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6s.6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4h1.2c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6s.6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4h1.2c.45 0 .6-.15.6-.6s-.15-.6-.6-.6h-1.2c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H15c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H7.8c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H.6c-.45 0-.6.15-.6.6s.15.6.6.6h1.2c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6"/></svg>n8n</span><span><svg width="20" height="20" viewBox="0 0 24 24" aria-label="Make" role="img"><path fill="#6D00CC" d="M13.38 3.498c-.27 0-.511.19-.566.465L9.85 18.986a.578.578 0 0 0 .453.678l4.095.826a.58.58 0 0 0 .682-.455l2.963-15.021a.578.578 0 0 0-.453-.678l-4.096-.826a.589.589 0 0 0-.113-.012zm-5.876.098a.576.576 0 0 0-.516.318L.062 17.697a.575.575 0 0 0 .256.774l3.733 1.877a.578.578 0 0 0 .775-.258l6.926-13.781a.577.577 0 0 0-.256-.776L7.762 3.658a.571.571 0 0 0-.258-.062zm11.74.115a.576.576 0 0 0-.576.576v15.426c0 .318.258.578.576.578h4.178a.58.58 0 0 0 .578-.578V4.287a.578.578 0 0 0-.578-.576Z"/></svg>Make</span><span><svg width="20" height="20" viewBox="0 0 24 24" aria-label="Python" role="img"><path fill="#3776AB" d="M11.858 0c-.978.005-1.913.088-2.736.234C6.7.662 6.26 1.558 6.26 3.21v2.182h5.725v.727H4.111c-1.664 0-3.121 1-3.577 2.903-.526 2.181-.549 3.542 0 5.82.407 1.694 1.379 2.902 3.043 2.902h1.969v-2.616c0-1.89 1.635-3.557 3.576-3.557h5.72c1.591 0 2.862-1.31 2.862-2.91v-5.45c0-1.553-1.309-2.718-2.863-2.977A18 18 0 0 0 11.858 0M8.762 1.755c.591 0 1.074.491 1.074 1.095 0 .601-.483 1.087-1.074 1.087A1.08 1.08 0 0 1 7.688 2.85c0-.604.48-1.095 1.074-1.095m9.656 4.364v2.543c0 1.971-1.671 3.63-3.577 3.63H9.122c-1.566 0-2.862 1.34-2.862 2.91v5.452c0 1.551 1.349 2.464 2.862 2.91 1.813.532 3.55.628 5.72 0 1.44-.418 2.862-1.258 2.862-2.91V18.47h-5.719v-.727h8.582c1.664 0 2.284-1.16 2.862-2.903.598-1.793.573-3.518 0-5.819-.41-1.656-1.196-2.903-2.862-2.903zm-3.216 13.807a1.08 1.08 0 0 1 1.074 1.088c0 .604-.48 1.094-1.074 1.094-.592 0-1.075-.49-1.075-1.094 0-.601.483-1.088 1.075-1.088"/></svg>Python</span></div>
+<div class="feat"><div class="glass fc w"><div class="ck"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>A short business review</h3><p>We study how the business runs today and where time and money leak.</p></div><div class="glass fc w"><div class="ck"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>A written recommendation</h3><p>Options, costs and our honest advice, in plain language.</p></div><div class="glass fc"><div class="ck"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Automation of repeated work</h3><p>Scripts and integrations that remove copy-and-paste tasks.</p></div><div class="glass fc"><div class="ck"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Build-or-buy advice</h3><p>Whether to use an existing tool, customise one, or build your own.</p></div><div class="glass fc"><div class="ck"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2.5 7.5l3 3 6-7" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>A roadmap</h3><p>A step-by-step plan if you want to build with us later, or with anyone.</p></div></div>
+</div></section>
+
+<section class="sec light"><div class="wrap" style="padding-top:120px;padding-bottom:120px">
+<span class="eyebrow"><i></i>How it works</span>
+<h2 class="h2" style="margin:24px 0 64px;max-width:760px">Four steps, <span class="grad">no surprises</span>.</h2>
+<div class="stg"><div class="sq"><div class="b">01</div><h3>Listen</h3><p>A free call about what hurts and what it costs.</p></div><div class="sq"><div class="b">02</div><h3>Review</h3><p>We study the process, tools and people involved.</p></div><div class="sq"><div class="b">03</div><h3>Recommend</h3><p>A written plan with options, costs and priorities.</p></div><div class="sq"><div class="b">04</div><h3>Automate</h3><p>If you choose, we build the fixes ourselves.</p></div></div>
+<a class="btn dk" href="how-we-work.html" style="margin-top:60px">Our full process <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+</div></section>
+
+<section class="sec"><div class="wrap" style="padding-top:120px;padding-bottom:120px;max-width:980px">
+<span class="eyebrow"><i></i>Questions</span>
+<h2 class="h2" style="margin:24px 0 48px">Before you ask.</h2>
+<details><summary>Do we have to hire you to build it?</summary><p>No. The recommendation is yours to use with us or with anyone else.</p></details><details><summary>How long is the review?</summary><p>[To confirm: typically X to Y days, depending on the size of the business.]</p></details><details><summary>What does it cost?</summary><p>The free call is free. Review and build are priced in writing after we understand the scope.</p></details>
+</div></section>
+
+<section class="sec light"><div class="wrap" style="padding-top:110px;padding-bottom:110px">
+<span class="eyebrow"><i></i>More ways we help</span>
+<h2 class="h2" style="margin:24px 0 48px">Other services.</h2>
+<div class="oc"><a class="ocard" href="service-web.html" style="background:radial-gradient(120% 90% at 90% 0%,rgba(130,170,255,.5),transparent 55%),linear-gradient(160deg,#2F55E6,#141B6E)"><img src="../assets/scenes/web.png" alt=""><b>Web applications</b><span>We build web apps that take that work off your team.</span></a><a class="ocard" href="service-mobile.html" style="background:radial-gradient(120% 90% at 90% 0%,rgba(110,240,200,.45),transparent 55%),linear-gradient(160deg,#10B58A,#064A46)"><img src="../assets/scenes/mobile.png" alt=""><b>Mobile apps</b><span>We build Android and iOS apps they will use every day.</span></a><a class="ocard" href="service-systems.html" style="background:radial-gradient(120% 90% at 90% 0%,rgba(255,200,120,.55),transparent 55%),linear-gradient(160deg,#FF8A3D,#B5300B)"><img src="../assets/scenes/systems.png" alt=""><b>Management systems</b><span>We replace the mess with one system built around your process.</span></a><a class="ocard" href="service-marketing.html" style="background:radial-gradient(120% 90% at 90% 0%,rgba(255,150,200,.5),transparent 55%),linear-gradient(160deg,#E8338B,#5E1470)"><img src="../assets/scenes/marketing.png" alt=""><b>Digital marketing</b><span>We get you found online and turn visits into conversations.</span></a></div></div></section>
+<section class="sec cream"><div class="wrap" style="padding-top:104px;padding-bottom:110px">
+<span class="eyebrow"><i></i>Your path</span>
+<h2 class="h2" style="margin-top:24px;max-width:760px">Keep going. Each page answers <span class="grad">one</span> question.</h2>
+<p class="lead" style="margin-top:18px">You are on step 2 of 5. Most people who see all of it know exactly what they want to ask us.</p>
+<div class="pth"><div class="pn dn"><i>1</i>Home</div><div class="pl dn"></div><div class="pn dn cur"><i>2</i>Services</div><div class="pl"></div><div class="pn "><i>3</i>How we work</div><div class="pl"></div><div class="pn "><i>4</i>About</div><div class="pl"></div><div class="pn "><i>5</i>Talk to us</div></div>
+<div class="jc"><a class="jcard nx" href="how-we-work.html"><div class="tg">Up next</div><h3>What happens after you book a call? No surprises.</h3><div class="go"><i><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>See the five stages</div></a><a class="jcard" href="about.html"><div class="tg">Step 4 of 5</div><h3>Who will actually build it? Meet the four of us.</h3><div class="go"><i><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Meet the team</div></a><a class="jcard" href="index.html#contact"><div class="tg">Step 5 of 5</div><h3>Ready? Tell us what is slowing you. We reply with next steps.</h3><div class="go"><i><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></i>Book a free call</div></a></div></div></section>
+<section class="sec" style="background:linear-gradient(135deg,#2646DE,#6C3DF0 62%,#8A3CF0)">
+<div class="gridbg" style="opacity:.8"></div><div class="blob" style="width:420px;height:420px;left:-120px;bottom:-200px;background:#22D3EE;opacity:.35"></div><div class="blob" style="width:360px;height:360px;right:-80px;top:-140px;background:#fff;opacity:.18"></div>
+<div class="wrap" style="padding-top:100px;padding-bottom:100px;text-align:center">
+<h2 class="h2" style="max-width:800px;margin:0 auto;color:#fff">Let us look at your problem.</h2>
+<p class="lead" style="margin:22px auto 0;max-width:520px;color:rgba(255,255,255,.85)">Book a free call. We will tell you honestly if this is the right fix.</p>
+<div style="margin-top:36px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center"><a class="btn white" href="index.html#contact">Book a free call <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div></section>
+<footer class="ft"><div class="wrap">
+<div class="fcta"><div><h3>Ready when you are.</h3><p>Call us, or tell us the problem and we will reply with next steps.</p></div>
+<div class="fb"><a class="fbtn or" href="tel:+919566831192"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.800.7a2 2 0 0 1 1.700 2z"/></svg> Call +91 95668 31192</a><a class="fbtn" href="mailto:smph.tech@gmail.com"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg> smph.tech@gmail.com</a></div></div>
+<div class="ftg2">
+<div><a class="brand" href="index.html"><img src="../assets/shared/logo-tile-720.png" alt="SMPH.Tech logo"><span>SMPH.Tech</span></a><p style="margin:18px 0 0;max-width:340px">We engineer growth for businesses: software, systems and marketing that remove what holds you back.</p>
+<div class="soc"><a class="sb" href="https://www.instagram.com/smph.tech/" aria-label="SMPH.Tech on Instagram" style="background:linear-gradient(45deg,#FEDA75,#FA7E1E 30%,#D62976 60%,#962FBF 80%,#4F5BD5)"><svg width="26" height="26" viewBox="0 0 24 24" aria-label="Instagram" role="img"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a><a class="sb" href="https://whatsapp.com/channel/0029Vb9H9qI7oQheRpgygP00" aria-label="SMPH.Tech WhatsApp channel" style="background:#25D366"><svg width="28" height="28" viewBox="0 0 24 24" aria-label="WhatsApp" role="img"><path fill="#fff" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a></div></div>
+<div><h4>Services</h4><a href="service-web.html">Web applications</a><a href="service-mobile.html">Mobile apps</a><a href="service-systems.html">Management systems</a><a href="service-marketing.html">Digital marketing</a><a href="service-consulting.html">Tech consulting and automation</a></div>
+<div><h4>Explore</h4><a href="index.html">Home</a><a href="services.html">Services</a><a href="how-we-work.html">How we work</a><a href="about.html">About</a><a href="index.html#contact">Book a free call</a></div>
+<div><h4>Get in touch</h4>
+<a class="ci" href="tel:+919566831192"><span class="ib"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.800.7a2 2 0 0 1 1.700 2z"/></svg></span><span><small>Call us</small>+91 95668 31192</span></a>
+<a class="ci" href="mailto:smph.tech@gmail.com"><span class="ib"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 8 8 6 8-6"/></svg></span><span><small>Email</small>smph.tech@gmail.com</span></a>
+<a class="ci" href="https://www.instagram.com/smph.tech/"><span class="ib"><svg width="18" height="18" viewBox="0 0 24 24" aria-label="Instagram" role="img"><path fill="#FF5FA2" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></span><span><small>Instagram</small>@smph.tech</span></a>
+<a class="ci" href="https://whatsapp.com/channel/0029Vb9H9qI7oQheRpgygP00"><span class="ib"><svg width="18" height="18" viewBox="0 0 24 24" aria-label="WhatsApp" role="img"><path fill="#25D366" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></span><span><small>WhatsApp channel</small>Join for updates</span></a></div>
+</div>
+<div class="ftb"><span>&copy; 2026 SMPH.Tech &nbsp;&middot;&nbsp; Engineering for business growth</span><span>Replies within [24 hours]</span></div>
+</div></footer></div></body></html>

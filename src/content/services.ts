@@ -1,21 +1,31 @@
 import { content } from './index';
+import { SERVICE_VISUALS } from './site';
 
-export type Service = ContentService;
 type ContentService = (typeof content.services)[number];
 
-export const SERVICES: readonly Service[] = content.services;
+/** A service: its copy (content.json) plus its colours, scene image and tools (site.ts). */
+export type Service = ContentService & {
+  anchor: string;
+  accent: string;
+  /** Darker accent for text and for fills that carry white text. */
+  text: string;
+  gradient: string;
+  scene: string;
+  tools: string[];
+};
+
+export const SERVICES: readonly Service[] = content.services.map((s) => {
+  const v = SERVICE_VISUALS[s.slug];
+  if (!v)
+    throw new Error(`No visuals for service "${s.slug}" in SERVICE_VISUALS (src/content/site.ts)`);
+  return { ...s, ...v };
+});
 
 export const getService = (slug: string): Service | undefined =>
   SERVICES.find((s) => s.slug === slug);
 
 export const serviceHref = (slug: string) => `/services/${slug}`;
 
-/** Natural size of each 3D render, so next/image can reserve space. */
-export const IMAGE_SIZE: Record<string, { w: number; h: number }> = {
-  '/3d/hero.png': { w: 1600, h: 1158 },
-  '/3d/web.png': { w: 900, h: 732 },
-  '/3d/mobile.png': { w: 700, h: 856 },
-  '/3d/systems.png': { w: 900, h: 493 },
-  '/3d/marketing.png': { w: 900, h: 797 },
-  '/3d/consulting.png': { w: 900, h: 737 },
-};
+/** The scene PNGs are all 1600x1200 (4:3). */
+export const SCENE_SIZE = { w: 1600, h: 1200 } as const;
+export const HERO_SIZE = { w: 1600, h: 1158 } as const;

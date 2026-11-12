@@ -4,9 +4,6 @@
     "tagline": "We engineer growth for businesses: software, systems and marketing that remove what holds you back."
   },
   "placeholders": {
-    "email": "[EMAIL]",
-    "instagram": "[INSTAGRAM HANDLE]",
-    "youtube": "[YOUTUBE CHANNEL]",
     "replyTime": "[24 hours]"
   },
   "services": [
@@ -16,12 +13,6 @@
       "name": "Web applications",
       "problem": "Customers have to call or message us just to book, order or pay.",
       "short": "We build web apps that take that work off your team.",
-      "image": "/3d/web.png",
-      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(110,150,255,.55),transparent 55%),linear-gradient(160deg,#1E32B8,#0A1250)",
-      "heroChips": [
-        "Booking confirmed",
-        "Payment received"
-      ],
       "h1Html": "Web applications that take work <em>off your team</em>.",
       "lead": "Booking, ordering, payments, customer accounts and admin tools, built around how your business actually runs.",
       "needs": [
@@ -88,8 +79,7 @@
           "q": "Who owns the code?",
           "a": "[To confirm: code and designs are handed to you when the project is paid for.]"
         }
-      ],
-      "timeline": "[X to Y weeks]"
+      ]
     },
     {
       "key": "mobile",
@@ -97,12 +87,6 @@
       "name": "Mobile apps",
       "problem": "Our customers and our staff live on their phones.",
       "short": "We build Android and iOS apps they will use every day.",
-      "image": "/3d/mobile.png",
-      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(170,120,255,.55),transparent 55%),linear-gradient(160deg,#5A3CF0,#170F5E)",
-      "heroChips": [
-        "Push notification sent",
-        "Live on both stores"
-      ],
       "h1Html": "Mobile apps your customers will <em>actually open</em>.",
       "lead": "Android and iOS apps from one codebase, with the features your customers and staff need every day.",
       "needs": [
@@ -168,8 +152,7 @@
           "q": "Can the app work offline?",
           "a": "Yes, for features that need it. We decide this in the planning stage."
         }
-      ],
-      "timeline": "[X to Y weeks]"
+      ]
     },
     {
       "key": "systems",
@@ -177,12 +160,6 @@
       "name": "Management systems",
       "problem": "We run the business on spreadsheets, paper and WhatsApp.",
       "short": "We replace the mess with one system built around your process.",
-      "image": "/3d/systems.png",
-      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(80,170,255,.45),transparent 55%),linear-gradient(160deg,#1238A8,#08104A)",
-      "heroChips": [
-        "Stock updated",
-        "Report ready"
-      ],
       "h1Html": "One system for the work you now do in <em>spreadsheets and chat</em>.",
       "lead": "Management systems built around your process: stock, billing, staff, customers and reports in one place.",
       "needs": [
@@ -249,8 +226,7 @@
           "q": "Is our data safe?",
           "a": "We use secure hosting, access roles and regular backups. [To confirm: exact setup per project.]"
         }
-      ],
-      "timeline": "[X to Y weeks]"
+      ]
     },
     {
       "key": "marketing",
@@ -258,12 +234,6 @@
       "name": "Digital marketing",
       "problem": "We have a good service, but not enough enquiries.",
       "short": "We get you found online and turn visits into conversations.",
-      "image": "/3d/marketing.png",
-      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(60,220,240,.45),transparent 55%),linear-gradient(160deg,#0E5FD8,#08235F)",
-      "heroChips": [
-        "New enquiry",
-        "Google listing live"
-      ],
       "h1Html": "Digital marketing that brings <em>enquiries</em>, not just visits.",
       "lead": "We get you found online and turn attention into real conversations, with plain reporting on what worked.",
       "needs": [
@@ -330,8 +300,7 @@
           "q": "Do we control the ad budget?",
           "a": "Yes. Ad accounts stay in your name and you set the budget."
         }
-      ],
-      "timeline": "[X to Y weeks]"
+      ]
     },
     {
       "key": "consulting",
@@ -339,12 +308,6 @@
       "name": "Tech consulting and automation",
       "problem": "Something is slow and costly, and we do not know the fix.",
       "short": "We find the bottleneck and automate or rebuild it.",
-      "image": "/3d/consulting.png",
-      "cardGradient": "radial-gradient(120% 90% at 90% 0%,rgba(150,110,255,.5),transparent 55%),linear-gradient(160deg,#3F2DB5,#120F55)",
-      "heroChips": [
-        "Task automated",
-        "Hours saved"
-      ],
       "h1Html": "Find the bottleneck. <em>Automate</em> it.",
       "lead": "Clear advice on what to build, buy or automate, and the engineering to do it when you are ready.",
       "needs": [
@@ -410,14 +373,12 @@
           "q": "What does it cost?",
           "a": "The free call is free. Review and build are priced in writing after we understand the scope."
         }
-      ],
-      "timeline": "[X to Y weeks]"
+      ]
     }
   ],
   "how": [
     {
       "name": "Discover",
-      "time": "1 call + 2 to 3 days",
       "lead": "A free call to understand the problem and what it costs you.",
       "we": [
         "Hold a free call about your goals and users.",
@@ -434,7 +395,6 @@
     },
     {
       "name": "Plan",
-      "time": "[X to Y days]",
       "lead": "Scope, price and timeline, agreed in writing before we build.",
       "we": [
         "List every feature and set priorities.",
@@ -451,7 +411,6 @@
     },
     {
       "name": "Build",
-      "time": "[X to Y weeks]",
       "lead": "Short cycles. You see a working demo every time.",
       "we": [
         "Design, build and test each part.",
@@ -468,7 +427,6 @@
     },
     {
       "name": "Launch",
-      "time": "[X to Y days]",
       "lead": "Tested, live and handed over with a walkthrough.",
       "we": [
         "Final testing on phones and desktop.",
@@ -485,7 +443,6 @@
     },
     {
       "name": "Support",
-      "time": "[X weeks included]",
       "lead": "We stay to fix issues and help you improve.",
       "we": [
         "Fix issues found after launch.",
@@ -557,16 +514,6 @@
       "photo": "/photos/harish.jpg"
     }
   ],
-  "tools": [
-    "React",
-    "Next.js",
-    "Node.js",
-    "PostgreSQL",
-    "React Native",
-    "TypeScript",
-    "Figma",
-    "Tailwind CSS"
-  ],
   "marquee": [
     "Web applications",
     "Mobile apps",
@@ -577,7 +524,8 @@
   ],
   "cta": {
     "book": "Book a free call",
-    "talk": "Talk about this"
+    "talk": "Talk about this",
+    "seenAll": "You have seen it all. Let us talk."
   },
   "home": {
     "meta": {
@@ -638,14 +586,16 @@
         "Free first call",
         "Scope and price in writing",
         "Reply within [24 hours]"
-      ]
+      ],
+      "who": "You will talk to the people who actually build it."
     }
   },
   "service": {
     "breadcrumbRoot": "Services",
     "secondary": "What you get",
     "facts": {
-      "timeline": "Typical timeline",
+      "start": "How we start",
+      "startValue": "A free call, no obligation",
       "price": "Price",
       "priceValue": "Quoted in writing after the free call",
       "examples": "Examples"
@@ -672,10 +622,11 @@
       "h2": "Other services."
     },
     "cta": {
-      "h2": "Tell us what you want to fix.",
-      "lead": "Book a free call. We will tell you honestly if we can help.",
-      "secondary": "See services"
-    }
+      "h2": "Let us look at your problem.",
+      "lead": "Book a free call. We will tell you honestly if this is the right fix."
+    },
+    "breadcrumbHome": "Home",
+    "builtWith": "Built with tools such as"
   },
   "howPage": {
     "meta": {
@@ -684,7 +635,7 @@
     },
     "hero": {
       "eyebrow": "How we work",
-      "h1": "Five stages. You always know which <grad>one</grad> you are in.",
+      "h1": "Five stages. You always know <grad>where</grad> you are.",
       "lead": "Every project follows the same path. At each stage you know what we do, what you receive and what we need from you."
     },
     "labels": {
@@ -700,7 +651,27 @@
       "h2": "Start with a free call.",
       "lead": "Tell us what you want to fix. We reply within [24 hours] with next steps.",
       "secondary": "See services"
-    }
+    },
+    "firstCall": {
+      "eyebrow": "Your first call",
+      "h2": "Nervous about the first step? It is just a <grad>conversation</grad>.",
+      "lead": "It is free, and you do not have to commit to anything.",
+      "cards": [
+        {
+          "title": "You describe the problem",
+          "text": "In your own words. Tell us what is slow, costly or missing."
+        },
+        {
+          "title": "We ask what it costs you",
+          "text": "Time, money, missed customers. So we fix what matters most."
+        },
+        {
+          "title": "You get an honest answer",
+          "text": "A written summary, and a clear yes or no on whether we can help."
+        }
+      ]
+    },
+    "feelPrefix": "You feel:"
   },
   "about": {
     "meta": {
@@ -728,9 +699,9 @@
       "note": "[To confirm]"
     },
     "share": {
-      "eyebrow": "Where we share our work",
-      "h2": "Watch how we <grad>think</grad>.",
-      "lead": "We record how we plan and build software and post it on Instagram and YouTube. See how we work before you hire us."
+      "eyebrow": "Stay in touch",
+      "h2": "See how we <grad>think</grad>.",
+      "lead": "Follow us on Instagram and join our WhatsApp channel to see how we plan and build, and to get updates from us."
     },
     "cta": {
       "h2": "Tell us what you want to fix.",
@@ -762,15 +733,16 @@
     },
     "mobile": {
       "label": "Mobile number",
-      "placeholder": "e.g. 98765 43210"
+      "placeholder": "+91 98765 43210"
     },
     "email": {
       "label": "Email",
-      "placeholder": "name@example.com"
+      "placeholder": "you@company.com"
     },
     "service": {
       "label": "Service",
-      "placeholder": "Select a service (optional)",
+      "optional": "(optional)",
+      "placeholder": "Select a service",
       "options": [
         "Web applications",
         "Mobile apps",
@@ -790,18 +762,33 @@
     "failure": "Sorry, your message did not go through. Please email us directly at"
   },
   "footer": {
+    "ready": {
+      "h": "Ready when you are.",
+      "p": "Call us, or tell us the problem and we will reply with next steps.",
+      "call": "Call"
+    },
     "about": "We engineer growth for businesses: software, systems and marketing that remove what holds you back.",
     "services": "Services",
-    "company": "Company",
-    "follow": "Follow",
-    "contact": "Contact",
+    "explore": "Explore",
+    "touch": "Get in touch",
+    "labels": {
+      "call": "Call us",
+      "email": "Email",
+      "instagram": "Instagram",
+      "whatsapp": "WhatsApp channel",
+      "whatsappLine": "Join for updates"
+    },
+    "copy": "Engineering for business growth",
     "replies": "Replies within [24 hours]"
   },
   "nav": {
+    "home": "Home",
     "services": "Services",
     "how": "How we work",
     "about": "About",
-    "book": "Book a free call"
+    "book": "Book a free call",
+    "call": "Call",
+    "menu": "Menu"
   },
   "servicesPage": {
     "meta": {
@@ -811,45 +798,85 @@
     "hero": {
       "eyebrow": "Services",
       "h1": "Five ways we remove what holds your business <grad>back</grad>.",
-      "lead": "Every service starts from a problem we hear again and again. Find yours and see exactly what you get."
+      "lead": "Every service starts from a problem we hear again and again. Find yours and see exactly what you get.",
+      "pillsLabel": "Jump to a service"
     },
     "explore": "Explore",
-    "compare": {
-      "eyebrow": "Compare",
-      "h2": "Side by side.",
-      "columns": [
-        "Service",
-        "Best when",
-        "What you get",
-        "Timeline"
-      ],
-      "rows": {
-        "web-applications": {
-          "bestWhen": "Customers or staff need to do something online.",
-          "get": "A web app with logins, payments and an admin panel."
-        },
-        "mobile-apps": {
-          "bestWhen": "Your customers or team need it on their phone.",
-          "get": "An Android and iOS app, published and supported."
-        },
-        "management-systems": {
-          "bestWhen": "You run on spreadsheets, paper and chat.",
-          "get": "One system with roles, reports and your data imported."
-        },
-        "digital-marketing": {
-          "bestWhen": "You have a good offer but too few enquiries.",
-          "get": "A plan, execution and a monthly report you can read."
-        },
-        "tech-consulting-automation": {
-          "bestWhen": "You know what hurts, not what to fix.",
-          "get": "A written review, options and automation of repeated work."
-        }
-      }
-    },
     "cta": {
       "h2": "Not sure which one you need?",
       "lead": "Describe the problem on a free call. We will tell you which service fits, or if none does.",
       "secondary": "See how we work"
+    },
+    "feel": {
+      "eyebrow": "How it feels",
+      "h2": "Which of these sounds like <grad>your</grad> week?",
+      "lead": "Pick the sentence you have said out loud. Each one has a fix.",
+      "today": "Today you say",
+      "after": "After we fix it",
+      "rows": {
+        "web-applications": {
+          "today": "Every booking means a call, a message and a reminder.",
+          "after": "Customers book and pay by themselves. Your team just sees the list."
+        },
+        "mobile-apps": {
+          "today": "Customers keep asking if we have an app.",
+          "after": "Your business sits on their home screen, one tap away."
+        },
+        "management-systems": {
+          "today": "I am never sure which sheet has the latest numbers.",
+          "after": "One screen shows orders, stock and payments, always current."
+        },
+        "digital-marketing": {
+          "today": "Our work is good, but nobody finds us.",
+          "after": "People search, find you, and message you."
+        },
+        "tech-consulting-automation": {
+          "today": "We repeat the same tasks every day, and nobody likes it.",
+          "after": "The repeat work runs by itself. Your team does the thinking."
+        }
+      }
+    }
+  },
+  "journey": {
+    "eyebrow": "Your path",
+    "h2": "Keep going. Each page answers <grad>one</grad> question.",
+    "lead": "You are on step {n} of 5. Most people who see all of it know exactly what they want to ask us.",
+    "nodes": [
+      "Home",
+      "Services",
+      "How we work",
+      "About",
+      "Talk to us"
+    ],
+    "upNext": "Up next",
+    "step": "Step {n} of 5",
+    "cards": {
+      "services": {
+        "hook": "Which of our five fixes matches your problem?",
+        "go": "See the services"
+      },
+      "how": {
+        "hook": "What happens after you book a call? No surprises.",
+        "go": "See the five stages"
+      },
+      "about": {
+        "hook": "Who will actually build it? Meet the four of us.",
+        "go": "Meet the team"
+      },
+      "talk": {
+        "hook": "Ready? Tell us what is slowing you. We reply with next steps.",
+        "go": "Book a free call"
+      }
+    },
+    "pill": {
+      "upNext": "Up next:",
+      "dismiss": "Dismiss",
+      "labels": {
+        "services": "Services",
+        "how": "How we work",
+        "about": "About",
+        "talk": "Book a free call"
+      }
     }
   }
 }
