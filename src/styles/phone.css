@@ -372,16 +372,22 @@
   .pth {
     margin: 26px 0 26px;
   }
-  .pn {
-    width: 58px;
+  .pn a {
     font-size: 11px;
   }
-  .pn i {
+  .pn .dot {
     width: 32px;
     height: 32px;
   }
-  .pl {
-    margin-top: 15px;
+  .pth::before,
+  .pth .fill {
+    top: 16px;
+  }
+  .lead-d {
+    display: none;
+  }
+  .lead-p {
+    display: inline;
   }
   .jc {
     display: flex;
@@ -406,7 +412,7 @@
   .jcard h3 {
     font-size: 19px;
   }
-  .jcard:hover {
+  .pg a.jcard.is-active {
     transform: none;
   }
   /* the carousel starts with the next step */
@@ -450,6 +456,24 @@
     padding: 11px 14px;
     font-size: 14px;
     flex: 1 1 100%;
+  }
+  /* email pills with a Copy button: the pair is the full-width row, the pill takes what is left */
+  .callrow > .cpw,
+  .fcta .fb > .cpw {
+    display: flex;
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .pg .cpw > a.cl,
+  .pg .ft .cpw > a.fbtn {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .cpb {
+    min-height: 44px;
   }
   /* footer */
   .fcta {

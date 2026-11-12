@@ -40,21 +40,21 @@ export function pageKeyFor(pathname: string): PageKey | null {
   return null;
 }
 
-/** A progress node is filled if it is the current step, earlier than it, or already visited. */
-export function nodeDone(key: StepKey, current: PageKey, visited: ReadonlySet<PageKey>): boolean {
-  if (stepNumber(key) <= stepNumber(current)) return true;
-  return key !== 'talk' && visited.has(key);
-}
-
-/** The line between two neighbouring nodes is filled when both of them are. */
-export function lineDone(
-  leftIndex: number,
+/** A node shows the "visited" state if the visitor has seen that page. The current page and "Talk to us" never do. */
+export function isVisitedNode(
+  key: StepKey,
   current: PageKey,
   visited: ReadonlySet<PageKey>,
 ): boolean {
-  const a = STEPS[leftIndex];
-  const b = STEPS[leftIndex + 1];
-  return !!a && !!b && nodeDone(a, current, visited) && nodeDone(b, current, visited);
+  return key !== current && key !== 'talk' && visited.has(key);
+}
+
+/** Centre of node `i` as a percentage of the track: five equal columns, so 10, 30, 50, 70, 90. */
+export const nodeCentre = (i: number): number => 10 + 20 * i;
+
+/** The orange line between the current node and the active one: where it starts and how long it is (percent). */
+export function fillSpan(current: number, active: number): { from: number; len: number } {
+  return { from: nodeCentre(Math.min(current, active)), len: 20 * Math.abs(active - current) };
 }
 
 export const allVisited = (visited: ReadonlySet<PageKey>): boolean =>

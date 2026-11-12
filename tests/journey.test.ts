@@ -3,9 +3,10 @@ import {
   STEPS,
   allVisited,
   cardsFor,
-  lineDone,
+  fillSpan,
+  isVisitedNode,
   nextOf,
-  nodeDone,
+  nodeCentre,
   pageKeyFor,
   stepNumber,
   talkHref,
@@ -70,40 +71,36 @@ describe('pageKeyFor', () => {
   );
 });
 
-describe('progress nodes', () => {
-  it('fills the current step and everything before it', () => {
-    const v = set();
-    expect(STEPS.map((k) => nodeDone(k, 'home', v))).toEqual([true, false, false, false, false]);
-    expect(STEPS.map((k) => nodeDone(k, 'services', v))).toEqual([true, true, false, false, false]);
-    expect(STEPS.map((k) => nodeDone(k, 'how', v))).toEqual([true, true, true, false, false]);
-    expect(STEPS.map((k) => nodeDone(k, 'about', v))).toEqual([true, true, true, true, false]);
-  });
-  it('also fills pages that were visited earlier', () => {
-    expect(nodeDone('about', 'home', set('about'))).toBe(true);
-    expect(nodeDone('how', 'home', set('about'))).toBe(false);
-  });
-  it('never fills "Talk to us" from visits', () => {
-    expect(nodeDone('talk', 'home', set('home', 'services', 'how', 'about'))).toBe(false);
-  });
-  it('fills a line only when both of its nodes are filled', () => {
-    expect([0, 1, 2, 3].map((i) => lineDone(i, 'services', set()))).toEqual([
+describe('path nodes', () => {
+  it('marks only visited pages, never the current page or "Talk to us"', () => {
+    const v = set('home', 'services', 'how', 'about');
+    expect(STEPS.map((k) => isVisitedNode(k, 'services', v))).toEqual([
       true,
       false,
-      false,
+      true,
+      true,
       false,
     ]);
-    expect([0, 1, 2, 3].map((i) => lineDone(i, 'home', set('about')))).toEqual([
+    expect(STEPS.map((k) => isVisitedNode(k, 'home', set()))).toEqual([
+      false,
       false,
       false,
       false,
       false,
     ]);
-    expect([0, 1, 2, 3].map((i) => lineDone(i, 'home', set('services', 'how')))).toEqual([
-      true,
-      true,
-      false,
-      false,
-    ]);
+  });
+  it('does not mark a page that was never visited, however far along the path it is', () => {
+    expect(isVisitedNode('home', 'about', set('about'))).toBe(false);
+    expect(isVisitedNode('home', 'about', set('home'))).toBe(true);
+  });
+  it('centres the five nodes in equal columns', () => {
+    expect(STEPS.map((_, i) => nodeCentre(i))).toEqual([10, 30, 50, 70, 90]);
+  });
+  it('runs the line from the current node to the active one, in either direction', () => {
+    expect(fillSpan(1, 2)).toEqual({ from: 30, len: 20 });
+    expect(fillSpan(1, 4)).toEqual({ from: 30, len: 60 });
+    expect(fillSpan(3, 1)).toEqual({ from: 30, len: 40 });
+    expect(fillSpan(2, 2)).toEqual({ from: 50, len: 0 });
   });
 });
 

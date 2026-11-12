@@ -232,57 +232,127 @@
   background-clip: text;
   color: transparent;
 }
+/* "Your path" tracker (V6). Five nodes, one per page; the orange line runs from the current node
+   to the active one (--from / --len are set by JourneyTracker). */
 .pth {
-  display: flex;
-  align-items: flex-start;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   margin: 44px 0 52px;
+  padding: 0;
+  list-style: none;
+}
+.pth::before,
+.pth .fill {
+  content: '';
+  position: absolute;
+  top: 19px;
+  height: 3px;
+  border-radius: 2px;
+}
+.pth::before {
+  left: 10%;
+  right: 10%;
+  background: #f2d6b8;
+}
+.pth .fill {
+  background: linear-gradient(90deg, #ff7a2e, #f73f09);
+  left: var(--from, 10%);
+  width: var(--len, 0%);
+  transition:
+    left 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .pn {
+  position: relative;
+  z-index: 1;
+}
+.pn a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  flex: none;
-  width: 100px;
+  gap: 8px;
   text-align: center;
+  color: #7a5b45;
   font-weight: 700;
   font-size: 14px;
-  color: #7a5b45;
+  text-decoration: none;
 }
-.pn i {
+.pn .dot {
+  position: relative;
+  isolation: isolate;
+  overflow: visible;
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #fff;
-  border: 2.5px solid #f2d6b8;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #fff;
+  border: 2.5px solid #f2d6b8;
+  color: #8a6a4f;
   font: 700 13px var(--font-mono);
-  font-style: normal;
-  color: #b58d68;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.25s,
+    border-color 0.25s,
+    color 0.25s,
+    box-shadow 0.3s;
 }
-.pn.dn i {
+.pn .nm {
+  transition: color 0.25s;
+}
+.pn .here {
+  font: 600 10px var(--font-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #0b1230;
+  margin-top: -4px;
+}
+/* the orange fill is a pseudo-element so it can fade; gradients cannot be transitioned */
+.pn .dot::before {
+  content: '';
+  position: absolute;
+  inset: -2.5px;
+  border-radius: 50%;
   background: linear-gradient(135deg, #ff7a2e, #f73f09);
-  border-color: transparent;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+.pn.is-active .dot::before {
+  opacity: 1;
+}
+/* visited: pale orange fill, orange outline and number */
+.pn.is-visited .dot {
+  background: #ffe9da;
+  border-color: #ff9a66;
+  color: #a82f08;
+}
+/* current page: solid navy */
+.pn.is-current .dot {
+  background: #0b1230;
+  border-color: #0b1230;
   color: #fff;
-  box-shadow: 0 10px 20px -6px rgba(247, 63, 9, 0.7);
 }
-.pn.cur i {
-  outline: 6px solid rgba(247, 63, 9, 0.18);
-}
-.pn.cur {
+.pn.is-current .nm {
   color: #0b1230;
 }
-.pl {
-  flex: 1;
-  height: 3px;
-  margin-top: 18px;
-  background: #f2d6b8;
-  border-radius: 2px;
+/* active (card pointed at, focused or in view): solid orange, bigger, ring and glow.
+   The number is dark ink, not white, so it passes AA on the orange. */
+.pn.is-active .dot {
+  border-color: transparent;
+  color: #0b1230;
+  transform: scale(1.18);
+  box-shadow:
+    0 0 0 6px rgba(247, 63, 9, 0.18),
+    0 12px 22px -6px rgba(247, 63, 9, 0.65);
 }
-.pl.dn {
-  background: linear-gradient(90deg, #ff7a2e, #f73f09);
+.pn.is-active .nm {
+  color: #0b1230;
+}
+.lead-p {
+  display: none;
 }
 .jc {
   display: grid;
@@ -300,10 +370,21 @@
   color: #0b1230;
   box-shadow: 0 26px 50px -30px rgba(120, 50, 0, 0.45);
   border: 1px solid rgba(247, 63, 9, 0.12);
-  transition: transform 0.3s;
+  outline-offset: 4px;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.3s,
+    border-color 0.3s;
 }
-.pg a.jcard:hover {
+.pg a.jcard.is-active {
   transform: translateY(-6px);
+}
+.pg a.jcard:not(.nx).is-active {
+  border-color: rgba(247, 63, 9, 0.45);
+  box-shadow: 0 30px 56px -26px rgba(247, 63, 9, 0.55);
+}
+.jcard.is-active .go i {
+  transform: translateX(4px);
 }
 .pg a.jcard.nx {
   background: linear-gradient(135deg, #ff7a2e, #f73f09);
@@ -336,6 +417,7 @@
   font-weight: 800;
 }
 .jcard .go i {
+  transition: transform 0.3s;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -738,16 +820,16 @@
   .fa {
     padding: 28px 26px;
   }
-  .pn {
-    width: 62px;
+  .pn a {
     font-size: 11.5px;
   }
-  .pn i {
+  .pn .dot {
     width: 32px;
     height: 32px;
   }
-  .pl {
-    margin-top: 15px;
+  .pth::before,
+  .pth .fill {
+    top: 16px;
   }
   .ftg2 {
     grid-template-columns: 1fr 1fr;
@@ -765,5 +847,16 @@
   }
   .sbox {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pn .dot,
+  .pn .dot::before,
+  .pn .nm,
+  .pth .fill,
+  .pg a.jcard,
+  .jcard .go i {
+    transition: none;
   }
 }

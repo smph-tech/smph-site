@@ -1,41 +1,21 @@
-'use client';
-
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ArrowIcon } from './icons';
 import { Eyebrow } from './Eyebrow';
+import { JourneyTracker } from './JourneyTracker';
 import { Reveal } from './Reveal';
 import { Rich } from './Rich';
-import { useVisited } from './VisitedProvider';
 import { content } from '@/content';
 import type { PageKey } from '@/content/site';
-import {
-  HREF,
-  STEPS,
-  cardsFor,
-  lineDone,
-  nextOf,
-  nodeDone,
-  stepNumber,
-  talkHref,
-} from '@/lib/journey';
-import { cx } from '@/lib/cx';
+import { nextOf, stepNumber } from '@/lib/journey';
 import { padVars } from '@/lib/pad';
 
 const J = content.journey;
-type CardKey = keyof typeof J.cards;
 
 /**
- * "Your path": a five-step progress line and cards for the pages still ahead.
- * Steps up to this page, and pages the visitor has already seen, are filled.
+ * "Your path": five nodes (one per page) and a card for each page still ahead. Pointing at, focusing
+ * or swiping to a card lights its node and runs an orange line to it (see JourneyTracker).
  * Sits above the closing band on every page.
  */
 export function Journey({ current }: { current: PageKey }) {
-  const pathname = usePathname();
-  const { visited } = useVisited();
-  const n = stepNumber(current);
-  const next = nextOf(current);
-
+  const n = String(stepNumber(current));
   return (
     <section className="sec cream">
       <div className="wrap" style={{ ...padVars(104, 110) }}>
@@ -45,54 +25,11 @@ export function Journey({ current }: { current: PageKey }) {
             <Rich text={J.h2} />
           </h2>
           <p className="lead" style={{ marginTop: 18 }}>
-            {J.lead.replace('{n}', String(n))}
+            <span className="lead-d">{J.lead.replace('{n}', n)}</span>
+            <span className="lead-p">{J.leadPhone.replace('{n}', n)}</span>
           </p>
 
-          <ol className="pth" aria-label="Your path through the site">
-            {STEPS.map((key, i) => {
-              const done = nodeDone(key, current, visited);
-              return (
-                <li key={key} style={{ display: 'contents' }}>
-                  <div
-                    className={cx('pn', done && 'dn', key === current && 'cur')}
-                    aria-current={key === current ? 'step' : undefined}
-                  >
-                    <i aria-hidden="true">{i + 1}</i>
-                    {J.nodes[i]}
-                    <span className="sr-only">{done ? ' (seen)' : ''}</span>
-                  </div>
-                  {i < STEPS.length - 1 ? (
-                    <div
-                      className={cx('pl', lineDone(i, current, visited) && 'dn')}
-                      aria-hidden="true"
-                    />
-                  ) : null}
-                </li>
-              );
-            })}
-          </ol>
-
-          <div className="jc">
-            {cardsFor(current).map((key) => {
-              const card = J.cards[key as CardKey];
-              const isNext = key === next;
-              const href = key === 'talk' ? talkHref(pathname) : HREF[key];
-              return (
-                <Link key={key} href={href} className={cx('jcard', isNext && 'nx')}>
-                  <div className="tg">
-                    {isNext ? J.upNext : J.step.replace('{n}', String(stepNumber(key)))}
-                  </div>
-                  <h3>{card.hook}</h3>
-                  <div className="go">
-                    <i>
-                      <ArrowIcon />
-                    </i>
-                    {card.go}
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <JourneyTracker current={current} next={nextOf(current)} />
         </Reveal>
       </div>
     </section>

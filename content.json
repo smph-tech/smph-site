@@ -845,7 +845,9 @@
   "journey": {
     "eyebrow": "Your path",
     "h2": "Keep going. Each page answers <grad>one</grad> question.",
-    "lead": "You are on step {n} of 5. Most people who see all of it know exactly what they want to ask us.",
+    "lead": "You are on step {n} of 5. Point at a card to see where it sits on the path.",
+    "leadPhone": "You are on step {n} of 5. Swipe the cards to follow the path.",
+    "here": "You are here",
     "nodes": [
       "Home",
       "Services",
