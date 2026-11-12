@@ -37,10 +37,16 @@
   --cyan: #22d3ee;
 
   /* Start colour #3B66F0 (reference: #4F7BFF) so white text is 4.5:1 or better: 4.8:1 at the blue end, 4.8:1 at the violet end. */
+  /* Logo colours. Used sparingly: eyebrow dot, highlight words, ticks, footer, active nav, Your path. */
+  --orange-1: #ff7a2e;
+  --orange-2: #f73f09;
+  --orange-soft: #ff5a1f;
+  --cream: #fff6ea;
+
   --grad-primary: linear-gradient(135deg, #3b66f0, #7c4dff);
   --grad-cta: linear-gradient(135deg, #2646de, #6c3df0 62%, #8a3cf0);
-  --grad-text-dark: linear-gradient(90deg, #6f96ff, #b08bff 55%, #34dbf2);
-  --grad-text-light: linear-gradient(90deg, #2f54e8, #7c4dff 60%, #0c93b0);
+  --grad-text-dark: linear-gradient(90deg, #6f96ff, #b08bff 55%, #ff8a4c);
+  --grad-text-light: linear-gradient(90deg, #2f54e8, #7c4dff 58%, #f73f09);
   --grad-glass: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.025));
 
   --shadow-btn: 0 12px 32px -6px rgba(90, 110, 255, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
