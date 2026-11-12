@@ -1,4 +1,5 @@
 import { formatIST } from './sheet-row';
+import { BRAND } from '@/content/site';
 
 export const escapeHtml = (s: string) =>
   s
@@ -29,7 +30,7 @@ export function ownerEmail(i: OwnerEmailInput) {
   const subject = `New enquiry: ${oneLine(i.name)} (${service})`;
 
   const text = [
-    `New enquiry from the SMPH.Tech website`,
+    `New enquiry from the ${BRAND} website`,
     ``,
     `Name: ${i.name}`,
     `Mobile: ${i.mobile}`,
@@ -50,7 +51,7 @@ export function ownerEmail(i: OwnerEmailInput) {
 <div style="max-width:600px;margin:0 auto;padding:24px">
 <div style="background:#fff;border-radius:16px;padding:28px;border:1px solid #D6DDF5">
 <h1 style="margin:0 0 4px;font-size:20px;color:#0B1230">New enquiry</h1>
-<p style="margin:0 0 20px;color:#56628C;font-size:14px">From the SMPH.Tech website</p>
+<p style="margin:0 0 20px;color:#56628C;font-size:14px">From the ${BRAND} website</p>
 <table style="border-collapse:collapse;font-size:15px">
 ${row('Name', escapeHtml(i.name))}
 ${row('Mobile', escapeHtml(i.mobile))}
@@ -72,7 +73,7 @@ export function autoReplyEmail(name: string, replyTime: string | null) {
   const first = oneLine(name).split(' ')[0] || 'there';
   const when = replyTime ? `within ${replyTime}` : 'as soon as we can';
   const subject = 'We have your message';
-  const text = `Hi ${first},\n\nThanks for getting in touch. We have your message and will reply ${when}.\n\nSMPH.Tech`;
-  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#0B1230;line-height:1.55"><p>Hi ${escapeHtml(first)},</p><p>Thanks for getting in touch. We have your message and will reply ${escapeHtml(when)}.</p><p>SMPH.Tech</p></div>`;
+  const text = `Hi ${first},\n\nThanks for getting in touch. We have your message and will reply ${when}.\n\n${BRAND}`;
+  const html = `<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#0B1230;line-height:1.55"><p>Hi ${escapeHtml(first)},</p><p>Thanks for getting in touch. We have your message and will reply ${escapeHtml(when)}.</p><p>${BRAND}</p></div>`;
   return { subject, text, html };
 }

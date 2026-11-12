@@ -1,5 +1,5 @@
 /**
- * SMPH.Tech enquiries: Google Apps Script web app.
+ * smph.tech enquiries: Google Apps Script web app.
  *
  * Paste this whole file into the Apps Script editor of the Google Sheet (Extensions > Apps Script),
  * set the Script Property SECRET, then Deploy > New deployment > Web app

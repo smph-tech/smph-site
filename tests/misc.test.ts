@@ -238,7 +238,7 @@ describe('processEnquiry', () => {
     expect((await processEnquiry(data, { saveRow: ok(), send })).email).toBe('ok');
     expect(send.mock.calls[0]?.[0]).toMatchObject({
       transport: 'smtp',
-      from: 'SMPH.Tech <me@gmail.com>',
+      from: 'smph.tech <me@gmail.com>',
     });
   });
 });

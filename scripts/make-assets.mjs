@@ -58,7 +58,7 @@ h1{margin:0;font-weight:800;font-size:96px;line-height:1.02;letter-spacing:-.038
 <div class="grid"></div>
 <div class="b" style="width:560px;height:560px;right:-120px;top:-120px;background:#3B5BFF;opacity:.5"></div>
 <div class="b" style="width:460px;height:460px;left:-180px;bottom:-200px;background:#7C4DFF;opacity:.35"></div>
-<div class="wrap"><div class="brand"><img src="data:image/png;base64,${logo}">SMPH.Tech</div>
+<div class="wrap"><div class="brand"><img src="data:image/png;base64,${logo}">smph.tech</div>
 <h1>We engineer <span class="g">growth</span> for your business.</h1>
 <div class="m">Software, systems and marketing</div></div></body></html>`;
 const browser = await chromium.launch();

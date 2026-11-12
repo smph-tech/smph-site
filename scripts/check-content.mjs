@@ -49,6 +49,16 @@ for (const f of [...htmlFiles, ...srcFiles]) {
       fail(`${path.relative(root, f)} matches ${re}`);
     }
 }
+// V5: the brand is always lowercase "smph.tech" (src, content.json and every built page).
+for (const f of [...htmlFiles, ...srcFiles]) {
+  const t = await readFile(f, 'utf8');
+  for (const m of t.matchAll(/smph\.tech/gi)) {
+    if (m[0] !== 'smph.tech') {
+      fail(`${path.relative(root, f)} spells the brand "${m[0]}" (must be "smph.tech")`);
+      break;
+    }
+  }
+}
 // nav / link text must not be Work, Projects, Portfolio
 for (const f of htmlFiles) {
   const t = await readFile(f, 'utf8');
@@ -59,7 +69,11 @@ for (const f of htmlFiles) {
     fail(`${path.basename(f)} links to a work/projects page`);
   if (/href="[^"]*\.html/.test(t)) fail(`${path.basename(f)} links to a .html file`);
 }
-console.log(failed ? '' : 'PASS  no banned content, no work/projects links, no .html links');
+console.log(
+  failed
+    ? ''
+    : 'PASS  no banned content, lowercase brand everywhere, no work/projects links, no .html links',
+);
 
 // placeholders
 const found = new Map();

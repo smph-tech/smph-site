@@ -1,3 +1,5 @@
+import { BRAND } from '@/content/site';
+
 /** Server-side configuration, read from the environment on every call. */
 
 export type AppsScriptConfig = { url: string; secret: string };
@@ -44,7 +46,7 @@ export function mailConfig(): { enabled: false } | { enabled: true; value: MailC
       console.warn('[contact] RESEND_API_KEY is set but CONTACT_TO_EMAIL is not; email is off.');
       return { enabled: false };
     }
-    const from = env('CONTACT_FROM_EMAIL') ?? 'SMPH.Tech <onboarding@resend.dev>';
+    const from = env('CONTACT_FROM_EMAIL') ?? `${BRAND} <onboarding@resend.dev>`;
     return { enabled: true, value: { transport: 'resend', to, from, resendKey, autoReply } };
   }
 
@@ -53,7 +55,7 @@ export function mailConfig(): { enabled: false } | { enabled: true; value: MailC
   const pass = env('SMTP_PASS');
   if (!to || !host || !user || !pass) return { enabled: false };
   // Gmail and most SMTP servers only send as the account that logs in.
-  const from = env('CONTACT_FROM_EMAIL') ?? `SMPH.Tech <${user}>`;
+  const from = env('CONTACT_FROM_EMAIL') ?? `${BRAND} <${user}>`;
   const port = Number(env('SMTP_PORT') ?? 587);
   return {
     enabled: true,
