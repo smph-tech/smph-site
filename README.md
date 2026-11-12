@@ -17,17 +17,17 @@ pnpm dev                        # http://localhost:3000
 
 If `pnpm` is missing, run `corepack enable pnpm` (Node 18+), or use `npm install` and `npm run <script>` instead.
 
-| Script                                                           | What it does                                                                                                             |
-| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm dev`                                                       | Dev server                                                                                                               |
-| `pnpm build` / `pnpm start`                                      | Production build and server                                                                                              |
-| `pnpm typecheck`                                                 | TypeScript, strict                                                                                                       |
-| `pnpm lint`                                                      | ESLint                                                                                                                   |
-| `pnpm test`                                                      | Unit tests (zod schema, sheet-row sanitiser, rate limit, email, enquiry logic)                                           |
-| `pnpm assets`                                                    | Regenerates favicon, app icons, Apple touch icon and `public/og.png` from the logo tile                                  |
-| `pnpm shots`                                                     | Full-page screenshots of every route next to its design reference, with a pixel-diff (needs a running server, see below) |
-| `pnpm e2e phone` / `links` / `ui` / `form-success` / `form-fail` | Playwright click-tests (needs a running server)                                                                          |
-| `pnpm check:content`                                             | After a build: fails on banned words/links and on any `[placeholder]` missing from `CONFIRM.md`                          |
+| Script                                                                                         | What it does                                                                                                             |
+| ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm dev`                                                                                     | Dev server                                                                                                               |
+| `pnpm build` / `pnpm start`                                                                    | Production build and server                                                                                              |
+| `pnpm typecheck`                                                                               | TypeScript, strict                                                                                                       |
+| `pnpm lint`                                                                                    | ESLint                                                                                                                   |
+| `pnpm test`                                                                                    | Unit tests (zod schema, sheet-row sanitiser, rate limit, email, enquiry logic)                                           |
+| `pnpm assets`                                                                                  | Regenerates favicon, app icons, Apple touch icon and `public/og.png` from the logo tile                                  |
+| `pnpm shots`                                                                                   | Full-page screenshots of every route next to its design reference, with a pixel-diff (needs a running server, see below) |
+| `pnpm e2e phone` / `links` / `ui` / `tracker` / `contact-links` / `form-success` / `form-fail` | Playwright click-tests (needs a running server)                                                                          |
+| `pnpm check:content`                                                                           | After a build: fails on banned words/links and on any `[placeholder]` missing from `CONFIRM.md`                          |
 
 Playwright scripts need Chromium once: `pnpm exec playwright install chromium`.
 
@@ -180,11 +180,13 @@ design-handoff/          original reference HTML and assets
 
 ## How visitors are led through the site
 
-Every main page ends with a **Your path** section (cream background) above the closing band: a five-step progress line
-(Home, Services, How we work, About, Talk to us) and cards for the pages still ahead, with the next one highlighted as **Up next**.
-The order and the card logic are in [`src/lib/journey.ts`](src/lib/journey.ts) and are unit tested.
+Every main page ends with a **Your path** section (cream background) above the closing band: five nodes, one per page
+(Home, Services, How we work, About, Talk to us), and a card for each page that is not the current one. The next page is the
+**Up next** card. The order and the card logic are in [`src/lib/journey.ts`](src/lib/journey.ts) and are unit tested; the
+behaviour is in [`src/components/JourneyTracker.tsx`](src/components/JourneyTracker.tsx).
 
-- **Visited tracking** (`useVisited`): the pages a visitor has seen are kept in `localStorage` (`smph-visited`). They fill the path nodes and show a small orange dot under the nav item. Once all four main pages have been seen, the closing band on the next page says "You have seen it all. Let us talk." Nothing blocks or pops up, and the site works with storage blocked.
+- **Tracker:** each card carries `data-i`, the index of its node (0 Home, 1 Services, 2 How we work, 3 About, 4 Talk to us). One node is `.is-active` at a time: the one for the card the visitor points at (mouse only, `pointerType === 'mouse'`, no `(hover: hover)` gate), focuses, or, on a phone, has swiped into view. It defaults to "Up next", so the tracker is never idle. An orange line runs from the current node to the active one (`--from` and `--len` on `.pth`). The current page is a solid navy node with "You are here"; visited pages are pale orange.
+- **Visited tracking** (`useVisited`): the pages a visitor has seen are kept in `localStorage` (`smph-visited`). They give the path nodes their visited state. The top nav shows no dots; only the active page is marked. Once all four main pages have been seen, the closing band on the next page says "You have seen it all. Let us talk." Nothing blocks or pops up, and the site works with storage blocked.
 - **"Up next" pill:** desktop only (901px and up; it is not rendered on phones or tablets). After about 70% scroll, a small pill slides in at the bottom left. The x dismisses it for the rest of the session. Hidden on `/contact` and `/thank-you`.
 - **On phones** the "Your path" cards are a swipeable carousel with the next step first, and nothing sticky is shown except the WhatsApp button.
 - No popups, countdowns, fake scarcity or fake social proof.
@@ -195,6 +197,14 @@ The order and the card logic are in [`src/lib/journey.ts`](src/lib/journey.ts) a
 - The home hero shows the picture first on phones and tablets using CSS `order` (the H1 stays first in the HTML).
 - **WhatsApp button:** [`src/components/WhatsAppFab.tsx`](src/components/WhatsAppFab.tsx), on every page except `/thank-you`. The number is `SITE.whatsappNumber` in `src/content/site.ts` and the message is `whatsapp.message` in `content.json`. It is rendered in `layout.tsx` outside `.pg`: `.pg` is a size container, which makes it the containing block for `position: fixed`, so a button inside it would scroll with the page.
 - **Brand:** the name is always lowercase, `BRAND = 'smph.tech'` in `site.ts`. `pnpm check:content` fails if any other spelling appears in `src/`, `content.json` or a built page.
+
+## Email and phone links
+
+[`src/components/ContactLinks.tsx`](src/components/ContactLinks.tsx) is the only place the address and number are rendered as links (footer, contact band, menu, form error).
+
+- **Email:** the `href` is always `mailto:` (right-click copy, screen readers, phones). On a desktop (`(hover: hover) and (pointer: fine)`), where a `mailto:` often opens nothing, a click opens Gmail compose in a new tab instead. A **Copy** button beside the address copies it for people on Outlook or another mail app, and a 2-second toast says "Email copied".
+- **Phone:** touch devices dial with `tel:`; on a desktop a click copies the number and the toast says "Number copied". WhatsApp links stay on `wa.me`.
+- The toast is one `role="status"` element ([`Toaster.tsx`](src/components/Toaster.tsx)), fed by `showToast()` in `src/lib/toast.ts`.
 
 ## Accessibility and motion
 

@@ -1,4 +1,4 @@
-// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [phone|links|ui|pages|footer|journey|visited|pill|nav|form-ui|form-success|form-script|form-fail]
+// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [phone|links|ui|pages|footer|journey|visited|pill|nav|tracker|contact-links|form-ui|form-success|form-script|form-fail]
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE ?? 'http://localhost:3100';
@@ -225,7 +225,9 @@ async function nav() {
     `menu buttons are full width (${widths})`,
   );
   ok(
-    (await mp.locator('dialog.mm a[href="mailto:smph.tech@gmail.com"]').count()) === 1,
+    (await mp
+      .locator('dialog.mm a[href="mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech"]')
+      .count()) === 1,
     'menu shows the email',
   );
   ok(
@@ -292,6 +294,50 @@ async function nav() {
   );
   ok(!overflow, 'no horizontal scroll at 390px');
   await m.close();
+  // V6: no dot under any nav item, desktop or menu; the active page keeps its underline
+  const dn = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const dp = await dn.newPage();
+  await dp.goto(BASE + '/', { waitUntil: 'networkidle' });
+  await dp.goto(BASE + '/services', { waitUntil: 'networkidle' });
+  await dp.goto(BASE + '/about', { waitUntil: 'networkidle' });
+  ok(
+    (await dp
+      .locator(
+        'header nav.nav [class*="dot"], header nav.nav .vd, header nav.nav i, header nav.nav b',
+      )
+      .count()) === 0,
+    'header nav has no dot element',
+  );
+  const marks = await dp.$$eval('header nav.nav a', (as) =>
+    as.map((a) => {
+      const cs = getComputedStyle(a, '::after');
+      const dot = parseFloat(cs.width) <= 8 && parseFloat(cs.height) <= 8 && cs.content !== 'none';
+      return { on: a.classList.contains('on'), dot };
+    }),
+  );
+  ok(
+    marks.every((m) => !m.dot),
+    'no ::after dot on any nav item',
+  );
+  ok(
+    marks.filter((m) => m.on).length === 1 &&
+      (await dp.locator('header nav.nav a.on').innerText()) === 'About' &&
+      (await dp.locator('header nav.nav a.on').getAttribute('aria-current')) === 'page',
+    'the active page is still marked (About)',
+  );
+  const under = await dp
+    .locator('header nav.nav a.on')
+    .evaluate((a) => parseFloat(getComputedStyle(a, '::after').height));
+  ok(under === 3, `the active underline is the only indicator (${under}px tall)`);
+  const mp2 = await dn.newPage();
+  await mp2.setViewportSize({ width: 390, height: 844 });
+  await mp2.goto(BASE + '/services', { waitUntil: 'networkidle' });
+  await mp2.locator('header.hd > .hdin > .burger').click();
+  ok(
+    (await mp2.locator('dialog.mm [class*="dot"], dialog.mm .vd').count()) === 0,
+    'the menu has no visited-dot element',
+  );
+  await dn.close();
 }
 
 async function ui() {
@@ -360,7 +406,8 @@ async function pages() {
     'contact band shows four team photos and the "people who build it" line',
   );
   ok(
-    (await hrefs(page, '.callrow a')).join() === 'tel:+919566831192,mailto:smph.tech@gmail.com',
+    (await hrefs(page, '.callrow a')).join() ===
+      'tel:+919566831192,mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech',
     'contact band has the phone and email pills',
   );
   ok(
@@ -914,14 +961,14 @@ async function phone() {
           '92px',
         `${name}: textarea is 92px`,
       );
-      const cl = await page.$$eval('.callrow a.cl', (as) =>
+      const cl = await page.$$eval('.callrow > a.cl, .callrow > .cpw', (as) =>
         as.map((a) => Math.round(a.getBoundingClientRect().width)),
       );
       ok(
         cl.length === 2 && cl.every((x) => x >= w - 60),
         `${name}: contact pills are stacked, full width`,
       );
-      const fb = await page.$$eval('.fcta .fbtn', (as) =>
+      const fb = await page.$$eval('.fcta .fb > a.fbtn, .fcta .fb > .cpw', (as) =>
         as.map((a) => Math.round(a.getBoundingClientRect().width)),
       );
       ok(
@@ -1031,7 +1078,7 @@ async function footer() {
     const all = await hrefs(page, 'footer a');
     ok(
       all.includes('tel:+919566831192') &&
-        all.includes('mailto:smph.tech@gmail.com') &&
+        all.includes('mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech') &&
         all.includes('https://www.instagram.com/smph.tech/') &&
         all.includes('https://whatsapp.com/channel/0029Vb9H9qI7oQheRpgygP00'),
       `${r}: footer has tel, mailto, Instagram, WhatsApp channel`,
@@ -1097,7 +1144,8 @@ async function footer() {
   );
   await page.goto(BASE + '/contact');
   ok(
-    (await hrefs(page, '.callrow a')).join() === 'tel:+919566831192,mailto:smph.tech@gmail.com',
+    (await hrefs(page, '.callrow a')).join() ===
+      'tel:+919566831192,mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech',
     '/contact has phone and email pills',
   );
   await ctx.close();
@@ -1138,11 +1186,15 @@ async function journey() {
       `${route}: the highlighted card says Up next`,
     );
     const nodes = await page.$$eval('section.cream .pn', (ns) =>
-      ns.map((n) => [n.classList.contains('dn'), n.classList.contains('cur')]),
+      ns.map((n) => [
+        n.classList.contains('is-current'),
+        n.querySelector('a')?.getAttribute('aria-current'),
+      ]),
     );
     ok(
-      nodes[step - 1][1] === true && nodes.slice(0, step).every((n) => n[0]),
-      `${route}: nodes up to step ${step} are filled, the current one is ringed`,
+      nodes.length === 5 &&
+        nodes.every(([cur, ac], i) => (i === step - 1 ? cur && ac === 'page' : !cur && !ac)),
+      `${route}: five nodes, only step ${step} is the current page (aria-current)`,
     );
     ok(
       await page
@@ -1191,18 +1243,9 @@ async function visited() {
   );
   ok(JSON.parse(await stored()).join() === 'home,services', 'a service page counts as Services');
   ok(
-    (await page.locator('header .nav a[href="/"] .vd').count()) === 1,
-    'a small orange dot appears under the visited Home item',
+    (await page.locator('header .nav a[href="/"] .vd').count()) === 0,
+    'visiting a page no longer puts a dot under its nav item',
   );
-  ok(
-    (await page.locator('header .nav a[href="/how-we-work"] .vd').count()) === 0,
-    'no dot under pages not yet visited',
-  );
-  const dot = await page
-    .locator('header .nav .vd')
-    .first()
-    .evaluate((e) => getComputedStyle(e).backgroundColor);
-  ok(dot === 'rgb(255, 122, 46)', `the dot is logo orange (${dot})`);
   // path nodes fill for visited pages too: visit About, then go to Home; About stays filled
   await page.goto(BASE + '/about', { waitUntil: 'networkidle' });
   await page.waitForFunction(() =>
@@ -1211,11 +1254,11 @@ async function visited() {
   await page.goto(BASE + '/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(300);
   const nodes = await page.$$eval('section.cream .pn', (ns) =>
-    ns.map((n) => n.classList.contains('dn')),
+    ns.map((n) => n.classList.contains('is-visited')),
   );
   ok(
-    JSON.stringify(nodes) === JSON.stringify([true, true, false, true, false]),
-    `visited pages fill their path nodes (${nodes})`,
+    JSON.stringify(nodes) === JSON.stringify([false, true, false, true, false]),
+    `visited pages (services, about) show the visited state; the current page and unseen ones do not (${nodes})`,
   );
   // CTA line only after all four have been seen
   await page.goto(BASE + '/services', { waitUntil: 'networkidle' });
@@ -1577,7 +1620,9 @@ async function formFail() {
   ok(
     /did not go through/.test(t) &&
       /smph\.tech@gmail\.com/.test(t) &&
-      (await page.locator('.fail a[href="mailto:smph.tech@gmail.com"]').count()) === 1,
+      (await page
+        .locator('.fail a[href="mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech"]')
+        .count()) === 1,
     `failure state shows the email as a mailto link (${t})`,
   );
   ok(!(await page.locator('button[type=submit]').isDisabled()), 'submit re-enabled after failure');
@@ -1588,6 +1633,416 @@ async function formFail() {
   await ctx.close();
 }
 
+/** V6: the "Your path" tracker. Hover, focus and swipe light the node that matches the card. */
+async function tracker() {
+  const info = (page) =>
+    page.evaluate(() => {
+      const pth = document.querySelector('.pth');
+      const cs = getComputedStyle(pth);
+      return {
+        active: [...document.querySelectorAll('.pn.is-active')].map((n) => n.dataset.i).join(','),
+        cards: [...document.querySelectorAll('.jcard.is-active')].map((n) => n.dataset.i).join(','),
+        len: cs.getPropertyValue('--len').trim(),
+        from: cs.getPropertyValue('--from').trim(),
+      };
+    });
+
+  // ---- desktop, mouse ----
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await ctx.newPage();
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  await page.locator('.pth').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(700);
+  let r = await info(page);
+  ok(
+    r.active === '1' && r.cards === '1',
+    `home: "Up next" (Services) is active by default (${r.active})`,
+  );
+  ok(
+    r.from === '10%' && r.len === '20%',
+    `the line runs Home to Services by default (${r.from}, ${r.len})`,
+  );
+  const all = await page.$$eval('.jcard', (cs) => cs.map((c) => c.dataset.i));
+  ok(all.join() === '1,2,3,4', `each card carries its node index (${all})`);
+  for (const i of [2, 3, 4, 1]) {
+    await page.locator(`.jcard[data-i="${i}"]`).hover();
+    await page.waitForTimeout(500);
+    r = await info(page);
+    ok(
+      r.active === String(i) && r.cards === String(i),
+      `hovering card ${i} lights node ${i} (only that one)`,
+    );
+    ok(r.from === '10%' && r.len === `${20 * i}%`, `the line grows to node ${i} (${r.len})`);
+    const lift = await page
+      .locator(`.jcard[data-i="${i}"]`)
+      .evaluate((e) => new DOMMatrix(getComputedStyle(e).transform).m42);
+    ok(lift === -6, `card ${i} lifts 6px (${lift})`);
+  }
+  // hover a node: same thing
+  await page.locator('.pn[data-i="3"]').hover();
+  await page.waitForTimeout(500);
+  r = await info(page);
+  ok(r.active === '3' && r.cards === '3', 'hovering a node lights it and its card');
+  // the current node ignores hover
+  await page.locator('.pn[data-i="0"]').hover();
+  await page.waitForTimeout(400);
+  r = await info(page);
+  ok(r.active === '1', 'hovering the current node does nothing; "Up next" stays active');
+  await page.mouse.move(5, 5);
+  await page.waitForTimeout(500);
+  r = await info(page);
+  ok(r.active === '1' && r.cards === '1' && r.len === '20%', 'moving away resets to "Up next"');
+
+  // visual states
+  const st = await page.evaluate(() => {
+    const dot = (i) => {
+      const e = document.querySelector(`.pn[data-i="${i}"] .dot`);
+      const cs = getComputedStyle(e);
+      return {
+        bg: cs.backgroundColor,
+        bd: cs.borderTopColor,
+        color: cs.color,
+        tf: cs.transform,
+        sh: cs.boxShadow,
+        before: getComputedStyle(e, '::before').opacity,
+      };
+    };
+    return {
+      cur: dot(0),
+      active: dot(1),
+      idle: dot(3),
+      here: document.querySelectorAll('.pn .here').length,
+      hereIn: document.querySelector('.pn.is-current .here')?.textContent,
+    };
+  });
+  ok(st.cur.bg === 'rgb(11, 18, 48)', `current page: solid navy dot (${st.cur.bg})`);
+  ok(st.here === 1 && st.hereIn === 'You are here', 'only the current node says "You are here"');
+  ok(
+    st.active.before === '1' && /1\.18/.test(st.active.tf) && st.active.sh !== 'none',
+    `active node: orange fill, scaled 1.18, ring and glow (${st.active.tf})`,
+  );
+  ok(st.idle.before === '0' && st.idle.tf === 'none', 'idle node: no fill, not scaled');
+  const lead = await page.locator('section.cream .lead').innerText();
+  ok(
+    lead === 'You are on step 1 of 5. Point at a card to see where it sits on the path.',
+    `desktop subtitle (${lead})`,
+  );
+
+  // keyboard: focus and blur do the same as hover
+  await page.locator('.jcard[data-i="3"]').focus();
+  await page.waitForTimeout(400);
+  r = await info(page);
+  ok(r.active === '3' && r.len === '60%', 'focusing a card lights its node');
+  await page.locator('.jcard[data-i="3"]').blur();
+  await page.waitForTimeout(400);
+  r = await info(page);
+  ok(r.active === '1', 'blurring the card goes back to "Up next"');
+
+  // a11y
+  ok(
+    (await page.locator('ol.pth[aria-label="Your path through the site"]').count()) === 1 &&
+      (await page.locator('ol.pth > li.pn a').count()) === 5 &&
+      (await page.locator('.pn.is-current a[aria-current="page"]').count()) === 1,
+    'nodes are links in a labelled list; the current one has aria-current="page"',
+  );
+  ok(
+    await page.$$eval('.pn a, .jcard', (as) =>
+      as.every((a) => a.tagName === 'A' && a.getAttribute('href')),
+    ),
+    'nodes and cards are real links',
+  );
+
+  // middle page: the line can run in both directions from the current node
+  await page.goto(BASE + '/how-we-work', { waitUntil: 'networkidle' });
+  await page.locator('.pth').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(600);
+  r = await info(page);
+  ok(
+    r.active === '3' && r.from === '50%' && r.len === '20%',
+    `how-we-work: default is About (${r.from}, ${r.len})`,
+  );
+  await page.locator('.jcard[data-i="1"]').hover();
+  await page.waitForTimeout(500);
+  r = await info(page);
+  ok(
+    r.active === '1' && r.from === '30%' && r.len === '20%',
+    `hovering Services runs the line backwards (${r.from}, ${r.len})`,
+  );
+  await ctx.close();
+
+  // reduced motion: no transitions
+  const rm = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: 'reduce',
+  });
+  const rp = await rm.newPage();
+  await rp.goto(BASE + '/', { waitUntil: 'networkidle' });
+  const tr = await rp.evaluate(() => [
+    getComputedStyle(document.querySelector('.pth .fill')).transitionDuration,
+    getComputedStyle(document.querySelector('.pn .dot')).transitionDuration,
+    getComputedStyle(document.querySelector('.jcard')).transitionDuration,
+  ]);
+  ok(
+    tr.every((d) => d === '0s'),
+    `reduced motion: no transitions (${tr})`,
+  );
+  await rm.close();
+
+  // ---- phone, touch ----
+  for (const [route, width] of [
+    ['/', 390],
+    ['/about', 390],
+    ['/services', 360],
+  ]) {
+    const mc = await browser.newContext({
+      viewport: { width, height: 844 },
+      isMobile: true,
+      hasTouch: true,
+      deviceScaleFactor: 2,
+    });
+    const m = await mc.newPage();
+    await m.goto(BASE + route, { waitUntil: 'networkidle' });
+    await m.locator('.pth').scrollIntoViewIfNeeded();
+    await m.waitForTimeout(600);
+    const order = await m.$$eval('.jcard', (cs) =>
+      cs
+        .map((c) => ({ i: c.dataset.i, left: c.getBoundingClientRect().left }))
+        .sort((a, b) => a.left - b.left)
+        .map((c) => c.i),
+    );
+    const lead = await m.locator('section.cream .lead').innerText();
+    ok(
+      /Swipe the cards to follow the path\.$/.test(lead),
+      `${route} @${width}: phone subtitle (${lead})`,
+    );
+    r = await info(m);
+    ok(
+      r.active === order[0],
+      `${route} @${width}: first visible card is active by default (${r.active})`,
+    );
+    const scrollTo = async (k) => {
+      await m.evaluate((k) => {
+        const rail = document.querySelector('.jc');
+        const w = rail.querySelector('.jcard').getBoundingClientRect().width + 12;
+        rail.scrollTo({ left: k * w, behavior: 'instant' });
+      }, k);
+      await m.waitForTimeout(400);
+    };
+    for (let k = 1; k < order.length - 1; k++) {
+      await scrollTo(k);
+      r = await info(m);
+      ok(
+        r.active === order[k],
+        `${route} @${width}: scrolled ${k} card(s), node ${order[k]} is active (${r.active})`,
+      );
+      ok(r.len !== '0%', `${route} @${width}: the line is drawn (${r.len})`);
+    }
+    await scrollTo(99);
+    r = await info(m);
+    ok(
+      r.active === order[order.length - 1] && r.cards === r.active,
+      `${route} @${width}: at the end of the rail the last card is active (${r.active})`,
+    );
+    await scrollTo(0);
+    r = await info(m);
+    ok(r.active === order[0], `${route} @${width}: scrolling back lights the first card again`);
+    const overflow = await m.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+    ok(!overflow, `${route} @${width}: no horizontal page scroll`);
+    // a tap is not a hover: tapping a node must not leave things stuck active without navigating state
+    await mc.close();
+  }
+}
+
+/** V6: the email and phone links work on desktops without a mail app; Copy and toast; nothing covers the footer. */
+async function contactLinks() {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: BASE });
+  await ctx.route('https://mail.google.com/**', (route) =>
+    route.fulfill({ status: 200, contentType: 'text/html', body: '<title>gmail</title>' }),
+  );
+  const page = await ctx.newPage();
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  ok(
+    await page.evaluate(() => matchMedia('(hover: hover) and (pointer: fine)').matches),
+    'desktop test browser reports (hover: hover) and (pointer: fine)',
+  );
+  const mails = await page.$$eval('a[href^="mailto:"]', (as) =>
+    as.map((a) => a.getAttribute('href')),
+  );
+  ok(
+    mails.length >= 3 &&
+      mails.every((h) => h === 'mailto:smph.tech@gmail.com?subject=Enquiry%20from%20smph.tech'),
+    `every email link keeps its mailto: href (${mails.length} on home)`,
+  );
+  const gmail =
+    /^https:\/\/mail\.google\.com\/mail\/\?view=cm&fs=1&to=smph\.tech%40gmail\.com&su=Enquiry%20from%20smph\.tech$/;
+  const count = await page.locator('a[href^="mailto:"]:visible').count();
+  for (let i = 0; i < count; i++) {
+    const link = page.locator('a[href^="mailto:"]:visible').nth(i);
+    await link.scrollIntoViewIfNeeded();
+    const hit = await link.evaluate((a) => {
+      const r = a.getBoundingClientRect();
+      const el = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+      return !!el && a.contains(el);
+    });
+    ok(hit, `email link ${i + 1}: nothing sits on top of it`);
+    const [popup] = await Promise.all([
+      page.waitForEvent('popup', { timeout: 4000 }).catch(() => null),
+      link.click(),
+    ]);
+    ok(!!popup, `email link ${i + 1}: a click opens a new tab`);
+    if (popup) {
+      ok(
+        gmail.test(popup.url()),
+        `email link ${i + 1}: it is Gmail compose with recipient and subject (${popup.url()})`,
+      );
+      await popup.close();
+    }
+    ok(page.url() === BASE + '/', `email link ${i + 1}: this page did not navigate`);
+  }
+
+  // copy button + toast
+  const cp = page.locator('footer .cpb').first();
+  await cp.scrollIntoViewIfNeeded();
+  ok((await cp.innerText()) === 'Copy', 'a Copy button sits next to the footer email');
+  await cp.click();
+  await page.waitForSelector('.toast.on');
+  ok((await page.locator('.toast').innerText()) === 'Email copied', 'toast says "Email copied"');
+  ok(
+    (await page.evaluate(() => navigator.clipboard.readText())) === 'smph.tech@gmail.com',
+    'the address is on the clipboard',
+  );
+  ok(
+    (await page.locator('.toast[role="status"][aria-live="polite"]').count()) === 1,
+    'the toast is announced politely',
+  );
+  await page.waitForTimeout(2600);
+  ok((await page.locator('.toast.on').count()) === 0, 'the toast goes away after 2 seconds');
+
+  // phone: desktop copies and toasts, never navigates
+  const tels = await page.$$eval('a[href^="tel:"]', (as) => as.map((a) => a.getAttribute('href')));
+  ok(
+    tels.length >= 2 && tels.every((h) => h === 'tel:+919566831192'),
+    `phone links keep tel: href (${tels.length})`,
+  );
+  const tel = page.locator('footer a[href^="tel:"]').first();
+  await tel.scrollIntoViewIfNeeded();
+  await tel.click();
+  await page.waitForSelector('.toast.on');
+  ok(
+    (await page.locator('.toast').innerText()) === 'Number copied',
+    'desktop phone click shows "Number copied"',
+  );
+  ok(
+    (await page.evaluate(() => navigator.clipboard.readText())) === '+919566831192',
+    'the number is on the clipboard',
+  );
+  ok(page.url() === BASE + '/', 'desktop phone click does not navigate');
+  const wa = await page.$$eval('a[href*="wa.me"]', (as) =>
+    as.map((a) => a.getAttribute('href').split('?')[0]),
+  );
+  ok(
+    wa.length >= 1 && wa.every((h) => h === 'https://wa.me/919566831192'),
+    'WhatsApp links stay on wa.me',
+  );
+
+  // contact page: the failure state and the band use the same component
+  await page.goto(BASE + '/contact', { waitUntil: 'networkidle' });
+  ok(
+    (await page.locator('.callrow a[href^="mailto:"]').count()) === 1,
+    '/contact: call row email link present',
+  );
+  const [pp] = await Promise.all([
+    page.waitForEvent('popup', { timeout: 4000 }).catch(() => null),
+    page.locator('.callrow a[href^="mailto:"]').click(),
+  ]);
+  ok(!!pp && gmail.test(pp.url()), '/contact: call row email opens Gmail compose');
+  if (pp) await pp.close();
+  await ctx.close();
+
+  // touch: plain mailto and tel, no interception
+  const mc = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const m = await mc.newPage();
+  await m.goto(BASE + '/', { waitUntil: 'networkidle' });
+  ok(
+    !(await m.evaluate(() => matchMedia('(hover: hover) and (pointer: fine)').matches)),
+    'phone: no fine hover pointer',
+  );
+  const prevented = await m.evaluate(() => {
+    const out = {};
+    window.addEventListener('click', (e) => {
+      const a = e.target.closest?.('a[href]');
+      if (a) {
+        out[a.getAttribute('href').split(':')[0]] = e.defaultPrevented;
+        e.preventDefault(); // keep the test page from leaving
+      }
+    });
+    document.querySelector('footer a[href^="mailto:"]').click();
+    document.querySelector('footer a[href^="tel:"]').click();
+    return out;
+  });
+  ok(
+    prevented.mailto === false && prevented.tel === false,
+    `phone: mailto: and tel: are left alone (${JSON.stringify(prevented)})`,
+  );
+  ok((await m.locator('.toast.on').count()) === 0, 'phone: no toast on call or mail links');
+  await mc.close();
+
+  // the floating WhatsApp button never covers a footer link, at any width, at the bottom of the page
+  for (const [w, h] of [
+    [1440, 900],
+    [1024, 768],
+    [768, 1024],
+    [640, 900],
+    [390, 844],
+    [360, 740],
+  ]) {
+    const c = await browser.newContext({ viewport: { width: w, height: h } });
+    const p = await c.newPage();
+    for (const route of ['/', '/services', '/contact']) {
+      await p.goto(BASE + route, { waitUntil: 'networkidle' });
+      await p.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      await p.waitForTimeout(300);
+      const covered = await p.evaluate(() => {
+        const bad = [];
+        for (const el of document.querySelectorAll('footer a, footer button, footer .ftb span')) {
+          const r = el.getBoundingClientRect();
+          if (r.width === 0 || r.bottom < 0 || r.top > innerHeight) continue;
+          for (const [fx, fy] of [
+            [0.5, 0.5],
+            [0.9, 0.5],
+            [0.1, 0.5],
+            [0.5, 0.15],
+            [0.5, 0.85],
+          ]) {
+            const e = document.elementFromPoint(r.left + r.width * fx, r.top + r.height * fy);
+            if (e && !el.contains(e) && !e.contains(el)) {
+              bad.push(
+                (el.textContent || el.getAttribute('aria-label') || el.className)
+                  .trim()
+                  .slice(0, 28) +
+                  ' <- ' +
+                  (e.className || e.tagName),
+              );
+              break;
+            }
+          }
+        }
+        return bad;
+      });
+      ok(
+        covered.length === 0,
+        `${route} @${w}x${h}: nothing covers footer links or the legal line (${covered.join('; ') || 'clear'})`,
+      );
+    }
+    await c.close();
+  }
+}
+
 const run = {
   phone,
   nav,
@@ -1596,6 +2051,8 @@ const run = {
   journey,
   visited,
   pill,
+  tracker,
+  'contact-links': contactLinks,
   links,
   ui,
   'form-ui': formUi,
