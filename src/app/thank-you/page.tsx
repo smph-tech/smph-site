@@ -4,6 +4,7 @@ import { Eyebrow } from '@/components/Eyebrow';
 import { Rich } from '@/components/Rich';
 import { content } from '@/content';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 const T = content.thanks;
 
@@ -19,8 +20,8 @@ export default function ThankYouPage() {
     <section className="sec" style={{ minHeight: '70vh' }}>
       <HeroBackdrop />
       <div
-        className="wrap hero-pad"
-        style={{ paddingTop: 'calc(var(--hd) + 80px)', paddingBottom: 130, textAlign: 'center' }}
+        className="wrap hero-pad hw"
+        style={{ ...padVars('calc(var(--hd) + 80px)', 130), textAlign: 'center' }}
       >
         <Eyebrow>{T.eyebrow}</Eyebrow>
         <h1 className="h1" style={{ margin: '28px auto 0', maxWidth: 820 }}>
@@ -30,6 +31,7 @@ export default function ThankYouPage() {
           <Rich text={T.lead} />
         </p>
         <div
+          className="btnrow"
           style={{
             marginTop: 38,
             display: 'flex',

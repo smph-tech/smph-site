@@ -84,118 +84,6 @@ html {
   color: #fff;
 }
 
-/* mobile menu: a native modal <dialog>, so it traps focus and closes on Escape */
-.mm {
-  margin: 0 0 0 auto;
-  padding: 0;
-  width: min(420px, 100vw);
-  max-width: 100vw;
-  height: 100dvh;
-  max-height: 100dvh;
-  border: 0;
-  background: #0a1040;
-  color: #eaf0ff;
-  font-family: var(--font-sans);
-  box-shadow: -30px 0 80px rgba(0, 0, 30, 0.6);
-  overflow-y: auto;
-}
-.mm::backdrop {
-  background: rgba(3, 5, 25, 0.7);
-  backdrop-filter: blur(4px);
-}
-.mm-in {
-  padding: 22px 22px 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.mm-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 52px;
-  margin-bottom: 14px;
-}
-.mm button.mm-x {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  color: #fff;
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
-.mm a {
-  color: inherit;
-  text-decoration: none;
-}
-.mm .mm-l {
-  display: block;
-  padding: 14px 16px;
-  border-radius: 14px;
-  font-size: 18px;
-  font-weight: 700;
-}
-.mm .mm-l:hover,
-.mm .mm-l[aria-current='page'] {
-  background: rgba(255, 255, 255, 0.08);
-}
-.mm .mm-h {
-  margin: 14px 16px 4px;
-  font: 600 12px var(--font-mono);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: #8fa3d8;
-}
-.mm .mm-s {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 10px 12px;
-  border-radius: 14px;
-}
-.mm .mm-s:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-.mm .mm-s img {
-  width: 44px;
-  height: 44px;
-  object-fit: contain;
-  flex: none;
-}
-.mm .mm-s b {
-  display: block;
-  font-size: 15px;
-  font-weight: 700;
-}
-.mm .mm-s > span {
-  color: inherit;
-}
-.mm .mm-s span span {
-  display: block;
-  font-size: 13px;
-  color: #a3b3dc;
-  line-height: 1.35;
-  margin-top: 1px;
-}
-.mm .btn {
-  margin-top: 18px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 56px;
-  padding: 0 30px;
-  border-radius: 16px;
-  background: var(--grad-primary);
-  color: #fff;
-  font: 700 16px var(--font-sans);
-  box-shadow: var(--shadow-btn);
-}
-
 /* placeholders stay visible; this only makes them findable */
 [data-placeholder] {
   font-style: inherit;
@@ -483,114 +371,6 @@ html:has(dialog.mm[open]) {
   bottom: 3px;
 }
 
-/* ---- V4: full-screen mobile menu ---- */
-.mm {
-  width: 100vw;
-  max-width: 100vw;
-  height: 100dvh;
-  max-height: 100dvh;
-  margin: 0;
-  background: #070b2b;
-  box-shadow: none;
-}
-.mm-in {
-  min-height: 100%;
-  padding: 22px 22px 40px;
-  gap: 4px;
-}
-.mm-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  margin-top: 18px;
-}
-.mm .mm-l {
-  font-size: 30px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  padding: 16px 16px;
-}
-.mm .mm-l[aria-current='page'] {
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: inset 4px 0 0 var(--orange-1);
-}
-.mm .mm-tel {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin: 22px 0 0;
-  padding: 16px;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  font-weight: 700;
-  font-size: 18px;
-}
-.mm .mm-tel small {
-  display: block;
-  font: 500 12px var(--font-mono);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #ffb48a;
-}
-.mm .btn {
-  margin-top: 14px;
-}
-
-/* ---- V4: sticky bar for phones (outside .pg, so it styles itself) ---- */
-.sbar,
-.sbar-sp {
-  display: none;
-}
-@media (max-width: 900px) {
-  .sbar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 40;
-    display: flex;
-    gap: 10px;
-    padding: 10px 14px calc(10px + env(safe-area-inset-bottom));
-    background: rgba(6, 10, 34, 0.92);
-    backdrop-filter: blur(14px);
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    font-family: var(--font-sans);
-  }
-  .sbar a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    height: 52px;
-    border-radius: 14px;
-    font-weight: 700;
-    font-size: 16px;
-    color: #fff;
-    text-decoration: none;
-  }
-  .sbar .sb-call {
-    flex: 0 0 auto;
-    padding: 0 22px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.24);
-  }
-  .sbar .sb-book {
-    flex: 1;
-    background: var(--grad-primary);
-    box-shadow: 0 10px 26px -8px rgba(90, 110, 255, 0.7);
-  }
-  .sbar a:focus-visible {
-    outline: 2px solid #22d3ee;
-    outline-offset: 3px;
-  }
-  .sbar-sp {
-    display: block;
-    height: calc(72px + env(safe-area-inset-bottom));
-    background: #04061a;
-  }
-}
-
 /* ---- V4: "Up next" pill ---- */
 .upnext {
   position: fixed;
@@ -658,13 +438,6 @@ html:has(dialog.mm[open]) {
   outline: 2px solid #22d3ee;
   outline-offset: 2px;
 }
-@media (max-width: 900px) {
-  .upnext {
-    bottom: calc(72px + 14px + env(safe-area-inset-bottom));
-    left: 14px;
-    max-width: calc(100vw - 28px);
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .upnext,
   .upnext[data-shown='true'] {
@@ -729,4 +502,176 @@ html:has(dialog.mm[open]) {
 }
 .ft .fcta-h::before {
   display: none;
+}
+
+/* ---- V5: full-screen mobile menu (matches design-handoff-v5 PHONE-menu-open-390) ---- */
+.mm {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #060a22;
+  color: #eaf0ff;
+  font-family: var(--font-sans);
+  overflow-y: auto;
+}
+.mm::backdrop {
+  background: #060a22;
+}
+.mm-in {
+  position: relative;
+  min-height: 100%;
+  overflow: hidden;
+}
+.mm-top,
+.mm-body {
+  position: relative;
+  z-index: 2;
+}
+/* the header inside the menu keeps the page header's height (74px tablet, 64px phone) */
+.mm .hdin {
+  height: 74px;
+}
+.mm .burger {
+  display: block;
+  background: none;
+  border: 0;
+  color: #eaf0ff;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  padding: 7px;
+  margin: -6px;
+  border-radius: 12px;
+}
+.mm-body {
+  padding-top: 12px;
+  padding-bottom: 40px;
+}
+.mm .btn {
+  display: inline-flex;
+}
+.mm-contact {
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: #a3b3dc;
+  font-size: 15px;
+}
+.mm-contact > a:first-child {
+  flex: 1;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.mm-contact .sb {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+@container pg (max-width:640px) {
+  .mm .hdin {
+    height: 64px;
+  }
+}
+
+/* ---- V5: floating WhatsApp button. Outside .pg, so it styles itself and is fixed to the screen ---- */
+a.wafab {
+  position: fixed;
+  right: 24px;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  z-index: 80; /* above the page, below the menu overlay (a modal <dialog> sits in the top layer) */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* DOM order is label, then icon: the label sits to the icon's left and the icon stays at the screen edge */
+  flex-direction: row;
+  color: inherit;
+  text-decoration: none;
+  font-family: var(--font-sans);
+}
+.wafab .wi {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 14px 30px -6px rgba(37, 211, 102, 0.7),
+    0 0 0 6px rgba(37, 211, 102, 0.2);
+  animation: wapulse 2.6s infinite;
+}
+@keyframes wapulse {
+  0%,
+  100% {
+    box-shadow:
+      0 14px 30px -6px rgba(37, 211, 102, 0.7),
+      0 0 0 6px rgba(37, 211, 102, 0.22);
+  }
+  50% {
+    box-shadow:
+      0 14px 30px -6px rgba(37, 211, 102, 0.7),
+      0 0 0 15px rgba(37, 211, 102, 0);
+  }
+}
+.wafab .wl {
+  background: #fff;
+  color: #0b1230;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 9px 14px;
+  border-radius: 12px;
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 30, 0.5);
+  opacity: 0;
+  transform: translateX(8px);
+  transition:
+    opacity 0.2s,
+    transform 0.2s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.wafab:hover .wl,
+.wafab:focus-visible .wl {
+  opacity: 1;
+  transform: none;
+}
+a.wafab:focus-visible {
+  outline: 0;
+}
+a.wafab:focus-visible .wi {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  a.wafab {
+    right: 14px;
+    bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+  .wafab .wi {
+    width: 54px;
+    height: 54px;
+  }
+  .wafab .wl {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wafab .wi {
+    animation: none;
+  }
+  .wafab .wl {
+    transition: none;
+  }
 }

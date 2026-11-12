@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { BookButton } from './BookButton';
-import { PhoneIcon } from './icons';
+import { HeroBackdrop } from './Backdrop';
+import { ArrowIcon, PhoneIcon } from './icons';
+import { TechLogo } from './Tools';
 import { useVisited } from './VisitedProvider';
 import { NAV } from '@/content/pages';
 import { SITE, type PageKey } from '@/content/site';
@@ -85,42 +87,74 @@ export function Header({ light }: { light?: boolean }) {
         </button>
       </div>
 
+      {/* Full-screen menu: a native modal <dialog>, so focus is trapped, Esc closes it, and focus
+          returns to the burger. Page scroll is locked by CSS (html:has(dialog.mm[open])). */}
       <dialog ref={dialogRef} className="mm" aria-label="Menu">
         <div className="mm-in">
+          <HeroBackdrop />
           <div className="mm-top">
-            <Logo />
-            <button type="button" className="mm-x" aria-label="Close menu" onClick={close}>
-              <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-                <path
-                  d="M4 4l12 12M16 4L4 16"
-                  stroke="#fff"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </button>
+            <div className="wrap hdin">
+              <Logo />
+              <button type="button" className="burger" aria-label="Close menu" onClick={close}>
+                <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+                  <path
+                    d="M7 7l16 16M23 7L7 23"
+                    stroke="#EAF0FF"
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
-          <nav aria-label="Menu" className="mm-nav">
-            {ITEMS.map((i) => (
-              <Link
-                key={i.key}
-                className="mm-l"
-                href={i.href}
-                aria-current={current === i.key ? 'page' : undefined}
-                onClick={close}
+          <div className="wrap mm-body">
+            <nav className="mnav" aria-label="Menu">
+              {ITEMS.map((i) => (
+                <Link
+                  key={i.key}
+                  href={i.href}
+                  className={current === i.key ? 'on' : undefined}
+                  aria-current={current === i.key ? 'page' : undefined}
+                  onClick={close}
+                >
+                  <span>{i.label}</span>
+                  <ArrowIcon />
+                </Link>
+              ))}
+            </nav>
+            <BookButton arrow style={{ width: '100%', marginTop: 30 }}>
+              {NAV.book}
+            </BookButton>
+            <a className="btn ghost" href={SITE.phoneTel} style={{ width: '100%', marginTop: 12 }}>
+              <PhoneIcon /> {NAV.call} {SITE.phone}
+            </a>
+            <div className="mm-contact">
+              <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+              <a
+                className="sb"
+                href={SITE.instagramUrl}
+                aria-label="Instagram"
+                style={{
+                  background:
+                    'linear-gradient(45deg,#FEDA75,#FA7E1E 30%,#D62976 60%,#962FBF 80%,#4F5BD5)',
+                }}
+                target="_blank"
+                rel="noopener noreferrer"
               >
-                {i.label}
-              </Link>
-            ))}
-          </nav>
-          <a className="mm-tel" href={SITE.phoneTel}>
-            <PhoneIcon size={20} />
-            <span>
-              <small>Call us</small>
-              {SITE.phone}
-            </span>
-          </a>
-          <BookButton>{NAV.book}</BookButton>
+                <TechLogo name="Instagram" size={24} decorative white />
+              </a>
+              <a
+                className="sb"
+                href={SITE.whatsappChannelUrl}
+                aria-label="WhatsApp channel"
+                style={{ background: '#25D366' }}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <TechLogo name="WhatsApp" size={26} decorative white />
+              </a>
+            </div>
+          </div>
         </div>
       </dialog>
     </header>

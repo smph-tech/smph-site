@@ -27,7 +27,8 @@ export function ServiceBentoCard({
         alt={`${service.name} illustration with the tools we use`}
         width={SCENE_SIZE.w}
         height={SCENE_SIZE.h}
-        sizes={wide ? '(max-width: 900px) 100vw, 580px' : '(max-width: 900px) 100vw, 380px'}
+        // phone: two cards per row (45vw); tablet: two columns; desktop: the card's own width
+        sizes={`(max-width: 640px) 45vw, (max-width: 900px) 46vw, ${wide ? 580 : 380}px`}
       />
       <div className="num">{String(index + 1).padStart(2, '0')}</div>
       <h3>{service.name}</h3>

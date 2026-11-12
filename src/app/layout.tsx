@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
-import { StickyBar } from '@/components/StickyBar';
 import { UpNextPill } from '@/components/UpNextPill';
+import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { VisitedProvider } from '@/components/VisitedProvider';
 import { SITE } from '@/content/site';
 import { content } from '@/content';
@@ -76,8 +76,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Footer />
           </div>
           {/* Outside .pg so position: fixed is relative to the screen, not the page container */}
-          <StickyBar />
-          <UpNextPill />
+          <aside aria-label="Quick actions">
+            <WhatsAppFab />
+            <UpNextPill />
+          </aside>
         </VisitedProvider>
         <script
           type="application/ld+json"

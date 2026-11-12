@@ -1,11 +1,12 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { HeroBackdrop, Blob } from '@/components/Backdrop';
 import { BookButton } from '@/components/BookButton';
 import { Button } from '@/components/Button';
 import { ContactSection } from '@/components/ContactSection';
 import { Eyebrow } from '@/components/Eyebrow';
 import { Journey } from '@/components/Journey';
-import { TickOrange } from '@/components/icons';
+import { ArrowIcon, TickOrange } from '@/components/icons';
 import { Marquee } from '@/components/Marquee';
 import { ProcessSteps } from '@/components/ProcessSteps';
 import { Reveal } from '@/components/Reveal';
@@ -18,6 +19,7 @@ import { HOME, CTA } from '@/content/pages';
 import { SERVICES } from '@/content/services';
 import { SITE } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 export const metadata = pageMetadata({
   title: `${SITE.name} | ${HOME.meta.title}`,
@@ -38,10 +40,7 @@ export default function HomePage() {
     <>
       <section className="sec" style={{ background: 'var(--bg)' }}>
         <HeroBackdrop />
-        <div
-          className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 40px)', paddingBottom: 110 }}
-        >
+        <div className="wrap hero-pad hw" style={{ ...padVars('calc(var(--hd) + 40px)', 110) }}>
           <div className="herogrid">
             <div>
               <Eyebrow>{h.eyebrow}</Eyebrow>
@@ -51,7 +50,10 @@ export default function HomePage() {
               <p className="lead" style={{ marginTop: 26, maxWidth: 540 }}>
                 {h.lead}
               </p>
-              <div style={{ marginTop: 38, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <div
+                className="btnrow"
+                style={{ marginTop: 38, display: 'flex', gap: 14, flexWrap: 'wrap' }}
+              >
                 <BookButton arrow>{CTA.book}</BookButton>
                 <Button href="#services" variant="ghost">
                   {h.secondary}
@@ -96,7 +98,7 @@ export default function HomePage() {
       <Marquee />
 
       <section id="services" className="sec light">
-        <div className="wrap" style={{ paddingTop: 128, paddingBottom: 128 }}>
+        <div className="wrap" style={{ ...padVars(128, 128) }}>
           <Reveal>
             <SectionHeading
               style={{ maxWidth: 760 }}
@@ -108,6 +110,19 @@ export default function HomePage() {
               {SERVICES.map((s, i) => (
                 <ServiceBentoCard key={s.slug} service={s} index={i} wide={i < 2} />
               ))}
+              {/* Phone and tablet only (hidden on desktop by CSS): the sixth card of the 2-column grid */}
+              <Link className="bc cta6" href="#contact">
+                <div className="ct">
+                  <b>{HOME.services.notSure.title}</b>
+                  <span>{HOME.services.notSure.text}</span>
+                </div>
+                <div className="go">
+                  <i>
+                    <ArrowIcon />
+                  </i>
+                  {HOME.services.notSure.go}
+                </div>
+              </Link>
             </div>
           </Reveal>
         </div>
@@ -115,7 +130,7 @@ export default function HomePage() {
 
       <section className="sec">
         <Blob size={500} color="#3B5BFF" opacity={0.28} pos={{ left: '20%', top: -200 }} />
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <Eyebrow>{HOME.process.eyebrow}</Eyebrow>
             <h2 className="h2" style={{ marginTop: 24, maxWidth: 760 }}>
@@ -130,7 +145,7 @@ export default function HomePage() {
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <Eyebrow>{HOME.think.eyebrow}</Eyebrow>
             <h2 className="h2" style={{ margin: '24px 0 60px', maxWidth: 780 }}>
@@ -143,9 +158,10 @@ export default function HomePage() {
 
       <section className="sec">
         <Blob size={480} color="#7C4DFF" opacity={0.3} pos={{ right: -100, top: 60 }} />
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <div
+              className="thd"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',

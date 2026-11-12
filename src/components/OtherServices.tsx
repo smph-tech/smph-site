@@ -17,7 +17,7 @@ export function OtherServices({ currentSlug }: { currentSlug: string }) {
             alt=""
             width={SCENE_SIZE.w}
             height={SCENE_SIZE.h}
-            sizes="(max-width: 900px) 100vw, 280px"
+            sizes="(max-width: 640px) 45vw, (max-width: 900px) 46vw, 280px"
           />
           <b>{s.name}</b>
           <span>{s.short}</span>

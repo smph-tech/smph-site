@@ -7,6 +7,7 @@ import { Rich } from './Rich';
 import { ToolTiles } from './Tools';
 import { content } from '@/content';
 import { SERVICES, serviceHref } from '@/content/services';
+import { padVars } from '@/lib/pad';
 
 const F = content.servicesPage.feel;
 type RowKey = keyof typeof F.rows;
@@ -20,7 +21,7 @@ export function HowItFeels() {
     <section className="sec" style={{ background: '#0A1030' }}>
       <Blob size={520} color="#3B5BFF" opacity={0.22} pos={{ left: -160, top: 40 }} />
       <Blob size={460} color="#FF5A1F" opacity={0.16} pos={{ right: -140, bottom: 0 }} />
-      <div className="wrap" style={{ paddingTop: 120, paddingBottom: 110 }}>
+      <div className="wrap" style={{ ...padVars(120, 110) }}>
         <Reveal>
           <Eyebrow>{F.eyebrow}</Eyebrow>
           <h2 className="h2" style={{ margin: '24px 0 18px', maxWidth: 820 }}>

@@ -23,7 +23,7 @@ export function SectionHeading({
   eyebrowStyle?: CSSProperties;
 }) {
   return (
-    <div style={style}>
+    <div className="shd" style={style}>
       <Eyebrow style={eyebrowStyle}>{eyebrow}</Eyebrow>
       <Tag className={Tag === 'h1' ? 'h1' : 'h2'} style={{ marginTop: 24, ...titleStyle }}>
         <Rich text={title} />

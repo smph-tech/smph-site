@@ -22,6 +22,7 @@ import { CTA } from '@/content/pages';
 import { SERVICES, getService, serviceHref } from '@/content/services';
 import { SITE } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 type Params = { slug: string };
 
@@ -60,10 +61,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
     <>
       <section className="sec">
         <HeroBackdrop />
-        <div
-          className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 28px)', paddingBottom: 110 }}
-        >
+        <div className="wrap hero-pad hw" style={{ ...padVars('calc(var(--hd) + 28px)', 110) }}>
           <nav className="crumb" aria-label="Breadcrumb">
             <Link href="/">{S.breadcrumbHome}</Link> &nbsp;/&nbsp;{' '}
             <Link href="/services">{S.breadcrumbRoot}</Link> &nbsp;/&nbsp; {service.name}
@@ -76,7 +74,10 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
               <p className="lead" style={{ marginTop: 26, maxWidth: 520 }}>
                 {service.lead}
               </p>
-              <div style={{ marginTop: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+              <div
+                className="btnrow"
+                style={{ marginTop: 36, display: 'flex', gap: 14, flexWrap: 'wrap' }}
+              >
                 <BookButton service={service.slug} arrow>
                   {CTA.talk}
                 </BookButton>
@@ -92,7 +93,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <SectionHeading
               eyebrow={S.needs.eyebrow}
@@ -108,7 +109,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       <section id="build" className="sec">
         <Blob size={520} color="#3B5BFF" opacity={0.28} pos={{ left: -160, top: 100 }} />
         <Blob size={420} color="#7C4DFF" opacity={0.28} pos={{ right: -120, bottom: -60 }} />
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <SectionHeading
               eyebrow={S.builds.eyebrow}
@@ -123,7 +124,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <SectionHeading
               eyebrow={S.steps.eyebrow}
@@ -140,7 +141,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       </section>
 
       <section className="sec">
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120, maxWidth: 980 }}>
+        <div className="wrap" style={{ ...padVars(120, 120), maxWidth: 980 }}>
           <Reveal>
             <SectionHeading eyebrow={S.faq.eyebrow} title={S.faq.h2} style={{ marginBottom: 48 }} />
             <FaqAccordion items={service.faq} />
@@ -149,7 +150,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 110, paddingBottom: 110 }}>
+        <div className="wrap" style={{ ...padVars(110, 110) }}>
           <Reveal>
             <SectionHeading
               eyebrow={S.others.eyebrow}

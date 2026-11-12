@@ -9,6 +9,7 @@ import { ServiceRow } from '@/components/ServiceRow';
 import { SERVICES_PAGE } from '@/content/pages';
 import { SERVICES } from '@/content/services';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 export const metadata = pageMetadata({
   title: SERVICES_PAGE.meta.title,
@@ -23,8 +24,8 @@ export default function ServicesPage() {
       <section className="sec">
         <HeroBackdrop />
         <div
-          className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 56px)', paddingBottom: 100, textAlign: 'center' }}
+          className="wrap hero-pad hw"
+          style={{ ...padVars('calc(var(--hd) + 56px)', 100), textAlign: 'center' }}
         >
           <Eyebrow>{h.eyebrow}</Eyebrow>
           <h1 className="h1" style={{ margin: '28px auto 0', maxWidth: 900 }}>
@@ -50,12 +51,18 @@ export default function ServicesPage() {
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 72, paddingBottom: 72 }}>
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.slug}>
-              <ServiceRow service={s} index={i} />
-            </Reveal>
-          ))}
+        <div className="wrap" style={{ ...padVars(72, 72) }}>
+          {SERVICES.map((s, i) =>
+            // The first row is near the top of the page on phones, so it is shown at once
+            // (a scroll-reveal would keep the image invisible until the animation code loads).
+            i === 0 ? (
+              <ServiceRow key={s.slug} service={s} index={i} />
+            ) : (
+              <Reveal key={s.slug}>
+                <ServiceRow service={s} index={i} />
+              </Reveal>
+            ),
+          )}
         </div>
       </section>
 

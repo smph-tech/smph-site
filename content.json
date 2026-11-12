@@ -1,6 +1,6 @@
 {
   "brand": {
-    "name": "SMPH.Tech",
+    "name": "smph.tech",
     "tagline": "We engineer growth for businesses: software, systems and marketing that remove what holds you back."
   },
   "placeholders": {
@@ -530,12 +530,12 @@
   "home": {
     "meta": {
       "title": "Software, systems and marketing that grow your business",
-      "description": "SMPH.Tech finds what is holding your business back, then builds the software, systems and marketing that remove it. Book a free call."
+      "description": "smph.tech finds what is holding your business back, then builds the software, systems and marketing that remove it. Book a free call."
     },
     "hero": {
       "eyebrow": "Engineering for business growth",
       "h1": "We engineer <grad>growth</grad> for your business.",
-      "lead": "SMPH.Tech finds what is holding your business back, then builds the software, systems and marketing that remove it.",
+      "lead": "smph.tech finds what is holding your business back, then builds the software, systems and marketing that remove it.",
       "secondary": "Explore services",
       "trust": [
         "Free first call",
@@ -562,7 +562,12 @@
       "eyebrow": "What we fix",
       "h2": "Pick the problem. We build the <grad>fix</grad>.",
       "lead": "Five services, each built for a problem we hear again and again. Open one to see exactly what you get.",
-      "cardLink": "See how we help"
+      "cardLink": "See how we help",
+      "notSure": {
+        "title": "Not sure which one?",
+        "text": "Tell us the problem. We will point you to the fix.",
+        "go": "Talk to us"
+      }
     },
     "process": {
       "eyebrow": "How we work",
@@ -676,12 +681,12 @@
   "about": {
     "meta": {
       "title": "About",
-      "description": "SMPH.Tech is a small team that helps businesses grow by fixing what holds them back, with software, systems and marketing."
+      "description": "smph.tech is a small team that helps businesses grow by fixing what holds them back, with software, systems and marketing."
     },
     "hero": {
       "eyebrow": "About",
       "h1": "A small team that engineers <grad>growth</grad>.",
-      "lead": "SMPH.Tech helps businesses grow by fixing what holds them back, with software, systems and marketing."
+      "lead": "smph.tech helps businesses grow by fixing what holds them back, with software, systems and marketing."
     },
     "what": {
       "eyebrow": "What we do",
@@ -878,5 +883,10 @@
         "talk": "Book a free call"
       }
     }
+  },
+  "whatsapp": {
+    "label": "Chat with us on WhatsApp",
+    "aria": "Chat with {brand} on WhatsApp",
+    "message": "Hi {brand}, I would like to talk about a project."
   }
 }

@@ -2,13 +2,18 @@
  * Site-wide facts: contact details, per-service visuals and tools, per-stage colours.
  * Contact links live here and nowhere else. Change a value once and it changes everywhere.
  */
+/** The brand name, always lowercase. Use this constant, never type it by hand. */
+export const BRAND = 'smph.tech';
+
 export const SITE = {
-  name: 'SMPH.Tech',
+  name: BRAND,
   phone: '+91 95668 31192',
   phoneTel: 'tel:+919566831192',
   email: 'smph.tech@gmail.com',
   instagramHandle: '@smph.tech',
   instagramUrl: 'https://www.instagram.com/smph.tech/',
+  /** Digits only, with country code. CONFIRM: this number must be on WhatsApp (see CONFIRM.md). */
+  whatsappNumber: '919566831192',
   whatsappChannelUrl: 'https://whatsapp.com/channel/0029Vb9H9qI7oQheRpgygP00',
   /** Still a placeholder until the real reply time is confirmed (see CONFIRM.md). */
   replyTime: '[24 hours]',

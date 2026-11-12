@@ -6,6 +6,7 @@ import { Button } from './Button';
 import { Rich } from './Rich';
 import { useVisited } from './VisitedProvider';
 import { CTA } from '@/content/pages';
+import { padVars } from '@/lib/pad';
 
 /**
  * Closing gradient band: heading, lead, "Book a free call" and an optional ghost link.
@@ -26,7 +27,7 @@ export function CtaBand({
       <div className="gridbg" style={{ opacity: 0.8 }} aria-hidden="true" />
       <Blob size={420} color="#22D3EE" opacity={0.35} pos={{ left: -120, bottom: -200 }} />
       <Blob size={360} color="#fff" opacity={0.18} pos={{ right: -80, top: -140 }} />
-      <div className="wrap" style={{ paddingTop: 100, paddingBottom: 100, textAlign: 'center' }}>
+      <div className="wrap" style={{ ...padVars(100, 100), textAlign: 'center' }}>
         <h2 className="h2" style={{ maxWidth: 800, margin: '0 auto', color: '#fff' }}>
           {seenAll ? CTA.seenAll : title}
         </h2>
@@ -37,6 +38,7 @@ export function CtaBand({
           <Rich text={lead} />
         </p>
         <div
+          className="btnrow"
           style={{
             marginTop: 36,
             display: 'flex',

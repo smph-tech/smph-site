@@ -9,6 +9,7 @@ import { StageBands } from '@/components/StageBands';
 import { StageRibbon } from '@/components/StageRibbon';
 import { content } from '@/content';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 const H = content.howPage;
 /** Number-badge colours for the first-call steps and the working terms. */
@@ -29,8 +30,8 @@ export default function HowWeWorkPage() {
         <Blob size={520} color="#FF5A1F" opacity={0.18} pos={{ right: -140, top: -120 }} />
         <Blob size={480} color="#4F7BFF" opacity={0.18} pos={{ left: -160, top: 160 }} />
         <div
-          className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 56px)', paddingBottom: 100, textAlign: 'center' }}
+          className="wrap hero-pad hw"
+          style={{ ...padVars('calc(var(--hd) + 56px)', 100), textAlign: 'center' }}
         >
           <Eyebrow>{H.hero.eyebrow}</Eyebrow>
           <h1 className="h1" style={{ margin: '28px auto 0', maxWidth: 900 }}>
@@ -46,7 +47,7 @@ export default function HowWeWorkPage() {
       <StageBands />
 
       <section className="sec" style={{ background: '#fff' }}>
-        <div className="wrap" style={{ paddingTop: 112, paddingBottom: 112 }}>
+        <div className="wrap" style={{ ...padVars(112, 112) }}>
           <Reveal>
             {/* white section: light-style eyebrow (the dark-style pill is unreadable on white) */}
             <Eyebrow
@@ -80,7 +81,7 @@ export default function HowWeWorkPage() {
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 110, paddingBottom: 110 }}>
+        <div className="wrap" style={{ ...padVars(110, 110) }}>
           <Reveal>
             <Eyebrow>{H.terms.eyebrow}</Eyebrow>
             <h2 className="h2" style={{ margin: '24px 0 56px', maxWidth: 760 }}>

@@ -20,6 +20,7 @@ import {
   talkHref,
 } from '@/lib/journey';
 import { cx } from '@/lib/cx';
+import { padVars } from '@/lib/pad';
 
 const J = content.journey;
 type CardKey = keyof typeof J.cards;
@@ -37,7 +38,7 @@ export function Journey({ current }: { current: PageKey }) {
 
   return (
     <section className="sec cream">
-      <div className="wrap" style={{ paddingTop: 104, paddingBottom: 110 }}>
+      <div className="wrap" style={{ ...padVars(104, 110) }}>
         <Reveal>
           <Eyebrow>{J.eyebrow}</Eyebrow>
           <h2 className="h2" style={{ marginTop: 24, maxWidth: 760 }}>

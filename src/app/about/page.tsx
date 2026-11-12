@@ -10,6 +10,7 @@ import { TeamGrid } from '@/components/TeamGrid';
 import { content } from '@/content';
 import { ABOUT_TOOLS, SITE } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
+import { padVars } from '@/lib/pad';
 
 const A = content.about;
 
@@ -24,10 +25,7 @@ export default function AboutPage() {
     <>
       <section className="sec">
         <HeroBackdrop />
-        <div
-          className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 56px)', paddingBottom: 110 }}
-        >
+        <div className="wrap hero-pad hw" style={{ ...padVars('calc(var(--hd) + 56px)', 110) }}>
           <div className="herogrid">
             <div>
               <Eyebrow>{A.hero.eyebrow}</Eyebrow>
@@ -55,7 +53,7 @@ export default function AboutPage() {
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <div className="fgrid" style={{ alignItems: 'start' }}>
               <div>
@@ -78,7 +76,7 @@ export default function AboutPage() {
       <section className="sec">
         <Blob size={500} color="#3B5BFF" opacity={0.28} pos={{ left: -140, top: 80 }} />
         <Blob size={440} color="#7C4DFF" opacity={0.25} pos={{ right: -120, bottom: 0 }} />
-        <div className="wrap" style={{ paddingTop: 120, paddingBottom: 120 }}>
+        <div className="wrap" style={{ ...padVars(120, 120) }}>
           <Reveal>
             <Eyebrow>{A.team.eyebrow}</Eyebrow>
             <h2 className="h2" style={{ margin: '24px 0 56px', maxWidth: 760 }}>
@@ -90,7 +88,7 @@ export default function AboutPage() {
       </section>
 
       <section className="sec light">
-        <div className="wrap" style={{ paddingTop: 110, paddingBottom: 110 }}>
+        <div className="wrap" style={{ ...padVars(110, 110) }}>
           <Reveal>
             <div className="fgrid" style={{ alignItems: 'start' }}>
               <div>
@@ -124,7 +122,10 @@ export default function AboutPage() {
                   <Rich text={A.share.h2} />
                 </h2>
                 <p className="lead">{A.share.lead}</p>
-                <div style={{ marginTop: 28, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <div
+                  className="btnrow"
+                  style={{ marginTop: 28, display: 'flex', gap: 12, flexWrap: 'wrap' }}
+                >
                   <a
                     className="btn"
                     href={SITE.instagramUrl}

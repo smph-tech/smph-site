@@ -11,7 +11,7 @@ export function ServiceHeroCard({ service }: { service: Service }) {
         width={SCENE_SIZE.w}
         height={SCENE_SIZE.h}
         priority
-        sizes="(max-width: 900px) 92vw, 540px"
+        sizes="(max-width: 640px) 100vw, (max-width: 900px) 92vw, 540px"
       />
     </div>
   );

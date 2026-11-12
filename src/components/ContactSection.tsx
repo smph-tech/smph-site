@@ -8,6 +8,8 @@ import { Rich } from './Rich';
 import { HOME } from '@/content/pages';
 import { SITE } from '@/content/site';
 import { TEAM, PHOTO_SIZE } from '@/content/team';
+import { cx } from '@/lib/cx';
+import { padVars } from '@/lib/pad';
 
 /**
  * The gradient "Start here" band with the form. Used on the home page (as #contact)
@@ -30,11 +32,8 @@ export function ContactSection({
       <Blob size={380} color="#fff" opacity={0.18} pos={{ right: -100, top: -120 }} />
       <Blob size={300} color="#FF5A1F" opacity={0.28} pos={{ left: '42%', top: -100 }} />
       <div
-        className="wrap hero-pad"
-        style={{
-          paddingTop: asPage ? 'calc(var(--hd) + 56px)' : 120,
-          paddingBottom: 120,
-        }}
+        className={cx('wrap hero-pad', asPage && 'hw')}
+        style={padVars(asPage ? 'calc(var(--hd) + 56px)' : 120, 120)}
       >
         <div className="fgrid">
           <div>
