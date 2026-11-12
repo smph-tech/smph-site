@@ -31,7 +31,7 @@ const heights = async (url) => {
 for (const [route, ref] of pages) {
   const s = await heights(BASE + route),
     r = await heights(
-      pathToFileURL(path.join(root, process.env.REFDIR ?? 'design-handoff-v4/reference', ref)).href,
+      pathToFileURL(path.join(root, process.env.REFDIR ?? 'design-handoff-v5/reference', ref)).href,
     );
   console.log(route.padEnd(30), 'site', s.join(','), '\n'.padEnd(31), 'ref ', r.join(','));
 }

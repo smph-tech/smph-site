@@ -1,6 +1,6 @@
-# SMPH.Tech website
+# smph.tech website
 
-Marketing site for SMPH.Tech. Next.js 15 (App Router), TypeScript, Tailwind CSS v4.
+Marketing site for smph.tech. Next.js 15 (App Router), TypeScript, Tailwind CSS v4.
 The "Book a free call" form saves every enquiry as a row in a Google Sheet (through a Google Apps Script), and can optionally email the owner.
 
 - Pages: `/`, `/services`, `/services/[slug]` (5 services), `/how-we-work`, `/about`, `/contact`, `/thank-you`
@@ -17,17 +17,17 @@ pnpm dev                        # http://localhost:3000
 
 If `pnpm` is missing, run `corepack enable pnpm` (Node 18+), or use `npm install` and `npm run <script>` instead.
 
-| Script                                                 | What it does                                                                                                             |
-| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------ |
-| `pnpm dev`                                             | Dev server                                                                                                               |
-| `pnpm build` / `pnpm start`                            | Production build and server                                                                                              |
-| `pnpm typecheck`                                       | TypeScript, strict                                                                                                       |
-| `pnpm lint`                                            | ESLint                                                                                                                   |
-| `pnpm test`                                            | Unit tests (zod schema, sheet-row sanitiser, rate limit, email, enquiry logic)                                           |
-| `pnpm assets`                                          | Regenerates favicon, app icons, Apple touch icon and `public/og.png` from the logo tile                                  |
-| `pnpm shots`                                           | Full-page screenshots of every route next to its design reference, with a pixel-diff (needs a running server, see below) |
-| `pnpm e2e links` / `ui` / `form-success` / `form-fail` | Playwright click-tests (needs a running server)                                                                          |
-| `pnpm check:content`                                   | After a build: fails on banned words/links and on any `[placeholder]` missing from `CONFIRM.md`                          |
+| Script                                                           | What it does                                                                                                             |
+| ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `pnpm dev`                                                       | Dev server                                                                                                               |
+| `pnpm build` / `pnpm start`                                      | Production build and server                                                                                              |
+| `pnpm typecheck`                                                 | TypeScript, strict                                                                                                       |
+| `pnpm lint`                                                      | ESLint                                                                                                                   |
+| `pnpm test`                                                      | Unit tests (zod schema, sheet-row sanitiser, rate limit, email, enquiry logic)                                           |
+| `pnpm assets`                                                    | Regenerates favicon, app icons, Apple touch icon and `public/og.png` from the logo tile                                  |
+| `pnpm shots`                                                     | Full-page screenshots of every route next to its design reference, with a pixel-diff (needs a running server, see below) |
+| `pnpm e2e phone` / `links` / `ui` / `form-success` / `form-fail` | Playwright click-tests (needs a running server)                                                                          |
+| `pnpm check:content`                                             | After a build: fails on banned words/links and on any `[placeholder]` missing from `CONFIRM.md`                          |
 
 Playwright scripts need Chromium once: `pnpm exec playwright install chromium`.
 
@@ -87,12 +87,12 @@ the visitor sees the failure message.
 This replaces service-account keys, which many Google organisations block. The script runs as you,
 inside your own sheet. It takes about 10 minutes, once.
 
-1. **Create the sheet.** Go to <https://sheets.google.com> and create a blank spreadsheet, e.g. `SMPH.Tech enquiries`. You can leave it empty. The script creates a tab named `Enquiries` and the header row on the first enquiry.
+1. **Create the sheet.** Go to <https://sheets.google.com> and create a blank spreadsheet, e.g. `smph.tech enquiries`. You can leave it empty. The script creates a tab named `Enquiries` and the header row on the first enquiry.
 2. **Open the script editor.** In the sheet, **Extensions > Apps Script**. A new tab opens with a file called `Code.gs`.
-3. **Paste the script.** Delete everything in `Code.gs`, then paste the whole contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo. Click the save icon. (Rename the project to `SMPH enquiries` if you like.)
+3. **Paste the script.** Delete everything in `Code.gs`, then paste the whole contents of [`apps-script/Code.gs`](apps-script/Code.gs) from this repo. Click the save icon. (Rename the project to `smph.tech enquiries` if you like.)
 4. **Set the secret.** Make up a long random string (30 or more letters and numbers; a password manager can generate one). In the Apps Script editor click the gear icon (**Project Settings**), scroll to **Script Properties**, **Add script property**: name `SECRET`, value your string, then **Save script properties**. Keep this string; you need it again in step 8.
 5. **Deploy as a web app.** Click **Deploy > New deployment**. Click the gear next to "Select type", choose **Web app**. Set **Description** to `v1`, **Execute as** to **Me**, and **Who has access** to **Anyone**. Click **Deploy**.
-6. **Authorise.** Google asks for permission the first time: **Authorize access**, pick your account. If you see "Google hasn't verified this app", click **Advanced**, then **Go to SMPH enquiries (unsafe)**, then **Allow**. This is your own script writing to your own sheet.
+6. **Authorise.** Google asks for permission the first time: **Authorize access**, pick your account. If you see "Google hasn't verified this app", click **Advanced**, then **Go to smph.tech enquiries (unsafe)**, then **Allow**. This is your own script writing to your own sheet.
 7. **Copy the web app URL.** It is shown after deploying and ends in `/exec`, like `https://script.google.com/macros/s/AKfy.../exec`. Copy it.
 8. **Set the environment variables:** `APPS_SCRIPT_URL` = the `/exec` URL, `APPS_SCRIPT_SECRET` = the same secret string as in step 4. Locally put them in `.env.local`; on Vercel see "Deploy" below.
 9. **Quick check.** Open the `/exec` URL in a browser. You should see `{"ok":true,"service":"smph-enquiries"}`.
@@ -122,12 +122,12 @@ To turn it on with Resend:
 3. Set `RESEND_API_KEY` to that key and `CONTACT_TO_EMAIL` to your inbox.
 4. Optional: `SHEET_URL` (the link to your sheet) adds an "Open the Google Sheet" button to the email.
 
-With the default sender `SMPH.Tech <onboarding@resend.dev>`, Resend only delivers to the address that
+With the default sender `smph.tech <onboarding@resend.dev>`, Resend only delivers to the address that
 owns the Resend account. That is exactly right for owner notifications, so no domain is needed to start.
 The email has the visitor's email as reply-to, so you can answer straight from your inbox.
 
 **Auto-reply to visitors** (optional) needs a verified domain: in Resend, **Domains > Add domain** and add the DNS records it
-shows. Then set `CONTACT_FROM_EMAIL="SMPH.Tech <hello@yourdomain.com>"` and `SEND_AUTOREPLY=true`.
+shows. Then set `CONTACT_FROM_EMAIL="smph.tech <hello@yourdomain.com>"` and `SEND_AUTOREPLY=true`.
 
 **Gmail instead of Resend (fallback).** Set `EMAIL_TRANSPORT=smtp`, `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
 `SMTP_USER=you@gmail.com`, `SMTP_PASS` to a Google **App Password** (Google Account > Security > 2-Step Verification >
@@ -185,12 +185,19 @@ Every main page ends with a **Your path** section (cream background) above the c
 The order and the card logic are in [`src/lib/journey.ts`](src/lib/journey.ts) and are unit tested.
 
 - **Visited tracking** (`useVisited`): the pages a visitor has seen are kept in `localStorage` (`smph-visited`). They fill the path nodes and show a small orange dot under the nav item. Once all four main pages have been seen, the closing band on the next page says "You have seen it all. Let us talk." Nothing blocks or pops up, and the site works with storage blocked.
-- **"Up next" pill:** after about 70% scroll, a small pill slides in at the bottom left. The x dismisses it for the rest of the session. Hidden on `/contact` and `/thank-you`.
-- **Mobile bar** (below 900px): fixed `Call` and `Book a free call` buttons, hidden on `/contact`.
+- **"Up next" pill:** desktop only (901px and up; it is not rendered on phones or tablets). After about 70% scroll, a small pill slides in at the bottom left. The x dismisses it for the rest of the session. Hidden on `/contact` and `/thank-you`.
+- **On phones** the "Your path" cards are a swipeable carousel with the next step first, and nothing sticky is shown except the WhatsApp button.
 - No popups, countdowns, fake scarcity or fake social proof.
+
+## Phone layout and the WhatsApp button
+
+- The phone layer is [`src/styles/phone.css`](src/styles/phone.css), ported from `design-handoff-v5/reference/phone-layer.reference.css`. Breakpoints are container queries on `.pg`: phone is up to 640px, tablet up to 900px. Section padding comes from `--sec-pad-y` (120px desktop, 88px tablet, 52px phone) and per-section `--pt`/`--pb` set with `padVars()` in `src/lib/pad.ts`.
+- The home hero shows the picture first on phones and tablets using CSS `order` (the H1 stays first in the HTML).
+- **WhatsApp button:** [`src/components/WhatsAppFab.tsx`](src/components/WhatsAppFab.tsx), on every page except `/thank-you`. The number is `SITE.whatsappNumber` in `src/content/site.ts` and the message is `whatsapp.message` in `content.json`. It is rendered in `layout.tsx` outside `.pg`: `.pg` is a size container, which makes it the containing block for `position: fixed`, so a button inside it would scroll with the page.
+- **Brand:** the name is always lowercase, `BRAND = 'smph.tech'` in `site.ts`. `pnpm check:content` fails if any other spelling appears in `src/`, `content.json` or a built page.
 
 ## Accessibility and motion
 
-- The header is five plain links (no dropdown). The mobile menu is a full-screen native modal `<dialog>` (focus trap, Escape, closes on navigation).
+- The header is five plain links (no dropdown). The mobile menu is a full-screen native modal `<dialog>` (focus trap, Escape, closes on navigation, focus returns to the burger, page scroll locked while open).
 - One `<h1>` per page, skip link, visible focus rings, `alt=""` on decorative 3D art, descriptive alt on team photos.
 - All animation (floating hero, chips, marquee, pulsing steps, hover motion, scroll reveal) is off under `prefers-reduced-motion`.

@@ -10,7 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = process.env.BASE ?? 'http://localhost:3100';
 const OUT = path.join(root, 'shots');
 // V4 design reference (design-handoff-v4/reference). The earlier design is in design-handoff/.
-const REF = path.join(root, process.env.REFDIR ?? 'design-handoff-v4/reference');
+const REF = path.join(root, process.env.REFDIR ?? 'design-handoff-v5/reference');
 
 const PAGES = [
   ['home', '/', 'index.html'],
@@ -39,7 +39,7 @@ async function shoot(browser, url, file, [width, height]) {
   const page = await ctx.newPage();
   await page.goto(url, { waitUntil: 'load' });
   // Overlays that exist only in the live site (not in the design reference): hide them so full-page shots compare cleanly.
-  await page.addStyleTag({ content: '.upnext,.sbar,.sbar-sp{display:none!important}' });
+  await page.addStyleTag({ content: '.upnext,.wafab{display:none!important}' });
   await page.evaluate(() => document.fonts.ready);
   // load lazy images
   await page.evaluate(async () => {

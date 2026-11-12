@@ -17,6 +17,11 @@ page and is not listed here, so this file cannot go out of date quietly.
 
 The phone number, email, Instagram and WhatsApp channel are now real and live in `SITE` in the same file. They are not placeholders.
 
+## WhatsApp button (src/content/site.ts)
+
+- **Is +91 95668 31192 a WhatsApp number?** The floating button on every page (except the thank-you page) opens `https://wa.me/919566831192`. If the number is not on WhatsApp, change `SITE.whatsappNumber`, or point the button at the WhatsApp channel link (`SITE.whatsappChannelUrl`) instead.
+- **Confirm the pre-filled message.** Visitors see: "Hi smph.tech, I would like to talk about a project." It lives in `content.json` under `whatsapp.message`.
+
 ## Tool logos (src/content/site.ts)
 
 The brand logos shown on the Services rows, "How it feels", the service pages and the About page are the tools we **list** for each service (`SERVICE_VISUALS[slug].tools` and `ABOUT_TOOLS` in `src/content/site.ts`, marked `CONFIRM: only keep logos for tools we really use`). Remove any tool you do not really use. The logos are trademarks of their owners and are used only to show the tools we work with. The scene images also show tool logos; if you drop a tool, regenerate or replace that scene.

@@ -1,4 +1,4 @@
-// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [links|ui|pages|footer|journey|visited|pill|nav|form-ui|form-success|form-script|form-fail]
+// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [phone|links|ui|pages|footer|journey|visited|pill|nav|form-ui|form-success|form-script|form-fail]
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE ?? 'http://localhost:3100';
@@ -117,7 +117,10 @@ async function nav() {
       JSON.stringify(['/', '/services', '/how-we-work', '/about', '/contact']),
     'nav hrefs',
   );
-  ok((await page.locator('header .hdin > .brand').getAttribute('href')) === '/', 'logo links to /');
+  ok(
+    (await page.locator('header.hd > .hdin > .brand').getAttribute('href')) === '/',
+    'logo links to /',
+  );
   await page.hover('header .nav a[href="/services"]');
   await page.waitForTimeout(250);
   ok(
@@ -170,13 +173,18 @@ async function nav() {
   ok(true, 'Services link navigates to /services');
   await ctx.close();
 
-  // mobile menu + sticky bar
+  // full-screen mobile menu (V5)
   const m = await browser.newContext({ viewport: { width: 390, height: 844 } });
   const mp = await m.newPage();
   await mp.goto(BASE + '/services', { waitUntil: 'networkidle' });
-  ok(await mp.locator('.burger').isVisible(), 'burger visible at 390px');
+  ok(await mp.locator('.burger').first().isVisible(), 'burger visible at 390px');
   ok(!(await mp.locator('.nav').isVisible()), 'desktop nav hidden at 390px');
-  await mp.click('.burger');
+  const burgerBox = await mp.locator('header.hd > .hdin > .burger').boundingBox();
+  ok(
+    burgerBox && burgerBox.width >= 44 && burgerBox.height >= 44,
+    `burger is a 44px tap target (${burgerBox?.width}x${burgerBox?.height})`,
+  );
+  await mp.click('header.hd > .hdin > .burger');
   const dlg = mp.locator('dialog.mm');
   ok(await dlg.isVisible(), 'mobile menu opens');
   const box = await dlg.boundingBox();
@@ -184,65 +192,106 @@ async function nav() {
     box && box.width >= 389 && box.height >= 843,
     `mobile menu is full screen (${box?.width}x${box?.height})`,
   );
-  const mitems = (await text(mp, 'dialog.mm .mm-nav a')).map((t) => t.trim());
+  const mitems = (await text(mp, 'dialog.mm .mnav a')).map((t) => t.trim());
   ok(
     JSON.stringify(mitems) === JSON.stringify(['Home', 'Services', 'How we work', 'About']),
     `menu items, Home first (${mitems})`,
   );
+  ok((await mp.locator('dialog.mm .mnav a svg').count()) === 4, 'each menu link has an arrow');
   ok(
-    (await mp.locator('dialog.mm a[href="tel:+919566831192"]').count()) === 1,
-    'menu has the phone number',
+    (await mp.locator('dialog.mm .mnav a.on').innerText()).trim() === 'Services',
+    'current page is marked (orange dot) in the menu',
+  );
+  const dot = await mp
+    .locator('dialog.mm .mnav a.on')
+    .evaluate((e) => getComputedStyle(e, '::before').backgroundColor);
+  ok(dot === 'rgb(255, 90, 31)', `the current-page dot is orange (${dot})`);
+  const fs = await mp
+    .locator('dialog.mm .mnav a')
+    .first()
+    .evaluate((e) => getComputedStyle(e).fontSize);
+  ok(fs === '28px', `menu links are 28px (${fs})`);
+  ok(
+    (await mp.locator('dialog.mm a.btn[href="/contact"]').innerText()).includes('Book a free call'),
+    'menu has a full-width Book a free call',
+  );
+  const callBtn = mp.locator('dialog.mm a.btn.ghost[href="tel:+919566831192"]');
+  ok((await callBtn.innerText()).includes('Call +91 95668 31192'), 'menu has Call +91 95668 31192');
+  const widths = await mp.$$eval('dialog.mm a.btn', (as) =>
+    as.map((a) => Math.round(a.getBoundingClientRect().width)),
   );
   ok(
-    (await mp.locator('dialog.mm .btn', { hasText: 'Book a free call' }).count()) === 1,
-    'menu has Book a free call',
+    widths.every((w) => w >= 340),
+    `menu buttons are full width (${widths})`,
+  );
+  ok(
+    (await mp.locator('dialog.mm a[href="mailto:smph.tech@gmail.com"]').count()) === 1,
+    'menu shows the email',
+  );
+  ok(
+    (await mp.locator('dialog.mm a.sb[href="https://www.instagram.com/smph.tech/"]').count()) ===
+      1 &&
+      (await mp
+        .locator('dialog.mm a.sb[href="https://whatsapp.com/channel/0029Vb9H9qI7oQheRpgygP00"]')
+        .count()) === 1,
+    'menu has the Instagram and WhatsApp channel tiles',
+  );
+  ok(
+    (await mp.evaluate(() => getComputedStyle(document.documentElement).overflow)) === 'hidden',
+    'page scroll is locked while the menu is open',
+  );
+  // focus is trapped inside the dialog
+  for (let i = 0; i < 14; i++) await mp.keyboard.press('Tab');
+  ok(
+    await mp.evaluate(() => !!document.activeElement?.closest('dialog.mm')),
+    'Tab stays inside the open menu (focus trap)',
   );
   await mp.keyboard.press('Escape');
   ok(!(await dlg.isVisible()), 'Esc closes the mobile menu');
-  await mp.click('.burger');
-  await mp.click('dialog.mm a[href="/how-we-work"]');
+  ok(
+    await mp.evaluate(
+      () =>
+        document.activeElement?.classList.contains('burger') &&
+        !document.activeElement.closest('dialog'),
+    ),
+    'focus returns to the burger',
+  );
+  ok(
+    (await mp.evaluate(() => getComputedStyle(document.documentElement).overflow)) !== 'hidden',
+    'page scroll unlocked after closing',
+  );
+  await mp.click('header.hd > .hdin > .burger');
+  await mp.click('dialog.mm .mnav a[href="/how-we-work"]');
   await mp.waitForURL('**/how-we-work');
   await mp.waitForTimeout(400);
-  ok(!(await dlg.isVisible()), 'mobile menu closes after navigating');
-  await mp.click('.burger');
-  await mp.evaluate(() => document.querySelector('dialog.mm a[href="/about"]').click());
+  ok(!(await dlg.isVisible()), 'mobile menu closes after clicking a link');
+  await mp.click('header.hd > .hdin > .burger');
+  await mp.click('dialog.mm .mm-top .burger');
+  ok(!(await dlg.isVisible()), 'the X closes the menu');
+  await mp.click('header.hd > .hdin > .burger');
+  await mp.evaluate(() => document.querySelector('dialog.mm .mnav a[href="/about"]').click());
   await mp.waitForURL('**/about');
   await mp.waitForTimeout(400);
   ok(!(await dlg.isVisible()), 'mobile menu closes on route change');
-  const bar = mp.locator('.sbar');
-  ok(await bar.isVisible(), 'sticky bar visible on phones');
+  // V5: the fixed bottom bar is gone for good
   ok(
-    (await mp.locator('.sbar .sb-call').getAttribute('href')) === 'tel:+919566831192',
-    'sticky Call is tel:+919566831192',
+    (await mp
+      .locator('.sbar, .sbar-sp, .sb-call, .sb-book, [data-testid="mobile-bar"]')
+      .count()) === 0,
+    'no mobile bar element exists',
   );
-  ok(
-    (await mp.locator('.sbar .sb-book').innerText()).trim() === 'Book a free call' &&
-      (await mp.locator('.sbar .sb-book').getAttribute('href')) === '/contact',
-    'sticky Book a free call goes to /contact',
-  );
-  const pos = await bar.evaluate((e) => getComputedStyle(e).position);
-  ok(pos === 'fixed', 'sticky bar is fixed at the bottom');
-  // never covers content: scroll to the bottom, the last footer text must sit above the bar
+  ok((await mp.locator('.upnext').count()) === 0, 'the "Up next" pill is not rendered on phones');
   await mp.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-  await mp.waitForTimeout(300);
-  const covered = await mp.evaluate(() => {
-    const r = document.querySelector('.ftb').getBoundingClientRect();
-    const b = document.querySelector('.sbar').getBoundingClientRect();
-    return r.bottom > b.top + 1;
-  });
-  ok(!covered, 'sticky bar does not cover the footer bottom line');
-  await mp.goto(BASE + '/contact', { waitUntil: 'networkidle' });
-  ok((await mp.locator('.sbar').count()) === 0, 'sticky bar hidden on /contact');
+  await mp.waitForTimeout(400);
+  const pad = await mp.evaluate(
+    () => getComputedStyle(document.querySelector('footer.ft')).paddingBottom,
+  );
+  ok(pad === '0px', `no extra bottom padding for a bar (footer padding-bottom ${pad})`);
   const overflow = await mp.evaluate(
     () => document.documentElement.scrollWidth > window.innerWidth + 1,
   );
   ok(!overflow, 'no horizontal scroll at 390px');
   await m.close();
-  const d = await browser.newContext({ viewport: { width: 1440, height: 900 } });
-  const dp = await d.newPage();
-  await dp.goto(BASE + '/about');
-  ok(!(await dp.locator('.sbar').isVisible()), 'sticky bar hidden on desktop');
-  await d.close();
 }
 
 async function ui() {
@@ -252,7 +301,12 @@ async function ui() {
   // Regression: class names built with template literals once lost their spaces ("bcw3", "btnsm").
   await page.goto(BASE + '/');
   const count = (sel) => page.locator(sel).count();
-  ok((await count('.bc')) === 5 && (await count('.bc.w3')) === 2, 'home: 5 bento cards, 2 wide');
+  ok(
+    (await count('.bc:not(.cta6)')) === 5 &&
+      (await count('.bc.w3')) === 2 &&
+      (await count('.bc.cta6')) === 1,
+    'home: 5 service cards (2 wide) and the sixth card',
+  );
   ok((await count('.nav .btn.sm')) === 1, 'header Book button is the small variant');
   ok((await count('.btn.ghost')) >= 2, 'ghost buttons render');
   ok(
@@ -507,6 +561,458 @@ async function pages() {
   );
   ok(!/youtube/i.test(await page.content()), 'about: no YouTube');
   await ctx.close();
+}
+
+const ALL_ROUTES = [
+  '/',
+  '/services',
+  '/services/web-applications',
+  '/services/mobile-apps',
+  '/services/management-systems',
+  '/services/digital-marketing',
+  '/services/tech-consulting-automation',
+  '/how-we-work',
+  '/about',
+  '/contact',
+  '/thank-you',
+];
+const cols = (page, sel) =>
+  page
+    .locator(sel)
+    .first()
+    .evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(' ').filter(Boolean).length);
+
+/** V5: phone-first layout at 390x844, 360x740 and 768x1024, plus desktop. */
+async function phone() {
+  const sizes = [
+    { name: 'phone 390', w: 390, h: 844, kind: 'phone' },
+    { name: 'phone 360', w: 360, h: 740, kind: 'phone' },
+    { name: 'tablet 768', w: 768, h: 1024, kind: 'tablet' },
+    { name: 'desktop 1440', w: 1440, h: 900, kind: 'desktop' },
+  ];
+  for (const { name, w, h, kind } of sizes) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await ctx.newPage();
+    const errors = [];
+    page.on('pageerror', (e) => errors.push(String(e)));
+    page.on('console', (m) => {
+      if (m.type() === 'error') errors.push(m.text());
+    });
+
+    // 1. no horizontal page scroll on any route; 4. WhatsApp button; 6. brand
+    for (const r of ALL_ROUTES) {
+      await page.goto(BASE + r, { waitUntil: 'networkidle' });
+      const sw = await page.evaluate(() => [
+        document.documentElement.scrollWidth,
+        window.innerWidth,
+      ]);
+      ok(sw[0] <= sw[1], `${name} ${r}: no horizontal scroll (${sw[0]} <= ${sw[1]})`);
+      const fab = page.locator('a.wafab');
+      if (r === '/thank-you') {
+        ok((await fab.count()) === 0, `${name} ${r}: no WhatsApp button on /thank-you`);
+      } else {
+        ok((await fab.count()) === 1, `${name} ${r}: WhatsApp button exists`);
+        const g = await fab.evaluate((e) => {
+          const wi = e.querySelector('.wi').getBoundingClientRect();
+          return {
+            pos: getComputedStyle(e).position,
+            right: window.innerWidth - wi.right,
+            bottom: window.innerHeight - wi.bottom,
+            wi: wi.width,
+            inside:
+              wi.left >= 0 &&
+              wi.right <= window.innerWidth &&
+              wi.top >= 0 &&
+              wi.bottom <= window.innerHeight,
+            href: e.getAttribute('href'),
+            target: e.target,
+            rel: e.rel,
+            aria: e.getAttribute('aria-label'),
+            inPg: !!e.closest('.pg'),
+          };
+        });
+        ok(
+          g.pos === 'fixed' && g.inside && !g.inPg,
+          `${name} ${r}: button is fixed, inside the viewport, outside .pg`,
+        );
+        const expect =
+          kind === 'phone'
+            ? { size: 54, right: 14, bottom: 16 }
+            : { size: 60, right: 24, bottom: 24 };
+        ok(
+          Math.round(g.wi) === expect.size &&
+            Math.round(g.right) === expect.right &&
+            Math.round(g.bottom) === expect.bottom,
+          `${name} ${r}: ${expect.size}px at right ${expect.right} / bottom ${expect.bottom} (got ${Math.round(g.wi)}px, ${Math.round(g.right)}, ${Math.round(g.bottom)})`,
+        );
+        ok(
+          g.href.startsWith(
+            'https://wa.me/919566831192?text=Hi%20smph.tech%2C%20I%20would%20like%20to%20talk%20about%20a%20project.',
+          ) &&
+            g.target === '_blank' &&
+            /noopener/.test(g.rel) &&
+            /noreferrer/.test(g.rel) &&
+            g.aria === 'Chat with smph.tech on WhatsApp',
+          `${name} ${r}: wa.me link, new tab, aria-label`,
+        );
+      }
+      const bad = await page.evaluate(() => {
+        const t =
+          document.title +
+          ' ' +
+          document.body.innerText +
+          ' ' +
+          [...document.querySelectorAll('[alt],[aria-label],[title],meta[content]')]
+            .map(
+              (e) =>
+                (e.getAttribute('alt') ?? '') +
+                (e.getAttribute('aria-label') ?? '') +
+                (e.getAttribute('title') ?? '') +
+                (e.tagName === 'META' ? e.getAttribute('content') : ''),
+            )
+            .join(' ');
+        return (
+          (t.match(/smph\.tech/gi) ?? []).filter((x) => x !== 'smph.tech').length +
+          (t.includes('SMPH.Tech') ? 1 : 0)
+        );
+      });
+      ok(bad === 0, `${name} ${r}: never shows "SMPH.Tech"`);
+    }
+
+    // 2. Home: picture first on phone and tablet; 6-card grid
+    await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+    const hero = await page.evaluate(() => ({
+      img: document.querySelector('.herogrid .h3d img.main').getBoundingClientRect().top,
+      h1: document.querySelector('.herogrid h1').getBoundingClientRect().top,
+      h1First: document
+        .querySelector('.herogrid')
+        .firstElementChild.contains(document.querySelector('h1')),
+    }));
+    ok(hero.h1First, `${name}: the H1 stays first in source order`);
+    if (kind === 'desktop') ok(hero.img < hero.h1 + 400, `${name}: picture sits beside the text`);
+    else
+      ok(
+        hero.img < hero.h1,
+        `${name}: the hero picture is above the H1 (${Math.round(hero.img)} < ${Math.round(hero.h1)})`,
+      );
+    const bento = await page.evaluate(() => ({
+      total: document.querySelectorAll('.bento > *').length,
+      visible: [...document.querySelectorAll('.bento > *')].filter((e) => e.offsetParent !== null)
+        .length,
+    }));
+    ok(bento.total === 6, `${name}: bento has 6 children (${bento.total})`);
+    if (kind === 'desktop') {
+      ok(bento.visible === 5, `${name}: 5 cards visible, the sixth is hidden (${bento.visible})`);
+      ok((await cols(page, '.bento')) === 6, `${name}: desktop grid is the 6-column (2 + 3) bento`);
+    } else {
+      ok(bento.visible === 6, `${name}: all 6 cards visible (${bento.visible})`);
+      ok((await cols(page, '.bento')) === 2, `${name}: bento is a 2-column grid`);
+      ok(
+        /Not sure which one\?/.test(await page.locator('.bc.cta6').innerText()) &&
+          (await page.locator('.bc.cta6').getAttribute('href')) === '#contact',
+        `${name}: sixth card "Not sure which one?" links to #contact`,
+      );
+    }
+    if (kind === 'phone') {
+      ok(
+        !(await page.locator('.bc .num').first().isVisible()) &&
+          !(await page.locator('.bc p').first().isVisible()),
+        `${name}: card number and quote are hidden`,
+      );
+      const r = await page
+        .locator('.bc')
+        .first()
+        .evaluate((e) => getComputedStyle(e).borderRadius);
+      ok(r === '22px', `${name}: card radius 22px (${r})`);
+      ok((await cols(page, '.steps')) === 1, `${name}: stages are one vertical timeline`);
+      const sp = await page
+        .locator('.sp')
+        .first()
+        .evaluate((e) => getComputedStyle(e).gridTemplateColumns);
+      ok(sp.startsWith('44px'), `${name}: stage circle column is 44px (${sp})`);
+      ok(
+        (
+          await page
+            .locator('.wc')
+            .first()
+            .evaluate((e) => getComputedStyle(e).gridTemplateColumns)
+        ).startsWith('50px'),
+        `${name}: "How we think" cards are compact rows (50px icon)`,
+      );
+      ok(
+        !(await page.locator('.thd .btn').isVisible()),
+        `${name}: "About us" button hidden on phone`,
+      );
+      const jc = await page.locator('.jc').evaluate((e) => ({
+        ox: getComputedStyle(e).overflowX,
+        snap: getComputedStyle(e).scrollSnapType,
+        scroll: e.scrollWidth > e.clientWidth,
+        w:
+          e.firstElementChild.getBoundingClientRect().width /
+          e.parentElement.getBoundingClientRect().width,
+      }));
+      ok(
+        jc.ox === 'auto' && /x mandatory/.test(jc.snap) && jc.scroll,
+        `${name}: "Your path" cards are a scroll-snap carousel (${jc.snap})`,
+      );
+      ok(
+        await page
+          .locator('.jc a')
+          .first()
+          .evaluate((e) => e.classList.contains('nx')),
+        `${name}: "Up next" is the first card on Home`,
+      );
+      await page.locator('.jc a').nth(1).focus();
+      ok(
+        await page.evaluate(() => document.activeElement?.classList.contains('jcard')),
+        `${name}: carousel cards are keyboard focusable`,
+      );
+      const heroBtns = await page.$$eval('.herogrid .btnrow a.btn', (as) =>
+        as.map((a) => Math.round(a.getBoundingClientRect().width)),
+      );
+      ok(
+        heroBtns.length === 2 && heroBtns.every((w2) => w2 >= w - 60),
+        `${name}: hero buttons are stacked, full width (${heroBtns})`,
+      );
+      const trust = await page
+        .locator('.trust')
+        .first()
+        .evaluate((e) => getComputedStyle(e).fontSize);
+      ok(trust === '13.5px', `${name}: trust ticks 13.5px`);
+    }
+    // 3. team grid
+    const tcols = await cols(page, '.tm');
+    if (kind === 'phone') ok(tcols === 2, `${name}: team grid has 2 columns (${tcols})`);
+    else if (kind === 'desktop') ok(tcols === 4, `${name}: team grid has 4 columns (${tcols})`);
+    else ok(tcols >= 2 && tcols <= 4, `${name}: team grid has 2 to 4 columns (${tcols})`);
+    if (kind === 'phone') {
+      const ratio = await page
+        .locator('.tc img')
+        .first()
+        .evaluate((e) => e.getBoundingClientRect().width / e.getBoundingClientRect().height);
+      ok(Math.abs(ratio - 0.8) < 0.02, `${name}: team photos are 4:5 (${ratio.toFixed(2)})`);
+    }
+
+    // phone: other pages
+    if (kind === 'phone') {
+      await page.goto(BASE + '/services', { waitUntil: 'networkidle' });
+      const pills = await page.locator('.svpills').evaluate((e) => ({
+        wrap: getComputedStyle(e).flexWrap,
+        ox: getComputedStyle(e).overflowX,
+        scroll: e.scrollWidth > e.clientWidth,
+      }));
+      ok(
+        pills.wrap === 'nowrap' && pills.ox === 'auto' && pills.scroll,
+        `${name}: service pills are one scrollable row`,
+      );
+      ok(
+        (await page
+          .locator('.zz .btn')
+          .first()
+          .evaluate((e) => e.getBoundingClientRect().width)) >=
+          w - 50,
+        `${name}: row buttons are full width`,
+      );
+      ok(
+        (await page
+          .locator('.zz h2')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '23px',
+        `${name}: row quote is 23px`,
+      );
+      ok(
+        (await page
+          .locator('.fr')
+          .first()
+          .evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(' ').length)) === 1,
+        `${name}: "How it feels" rows stack`,
+      );
+      await page.goto(BASE + '/how-we-work', { waitUntil: 'networkidle' });
+      const rib = await page.locator('.rib').evaluate((e) => ({
+        wrap: getComputedStyle(e).flexWrap,
+        scroll: e.scrollWidth > e.clientWidth,
+      }));
+      ok(rib.wrap === 'nowrap' && rib.scroll, `${name}: stage pills are one scrollable row`);
+      ok(
+        (await page
+          .locator('.big')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '78px',
+        `${name}: stage numeral 78px`,
+      );
+      ok(
+        (await page
+          .locator('.stg2 h2')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '28px',
+        `${name}: stage name 28px`,
+      );
+      ok(
+        (await page
+          .locator('.sbox')
+          .first()
+          .evaluate((e) => getComputedStyle(e).gridTemplateColumns.split(' ').length)) === 1 &&
+          (await page
+            .locator('.sbox')
+            .first()
+            .evaluate((e) => getComputedStyle(e).borderLeftWidth)) === '5px',
+        `${name}: stage boxes stacked, 5px bar`,
+      );
+      ok((await cols(page, '.fc1')) === 1, `${name}: first-call and terms cards are one column`);
+      await page.goto(BASE + '/services/web-applications', { waitUntil: 'networkidle' });
+      const order = await page.evaluate(() => ({
+        card: document.querySelector('.svcard').getBoundingClientRect().top,
+        h1: document.querySelector('.sh h1').getBoundingClientRect().top,
+        crumb: document.querySelector('.crumb').getBoundingClientRect().top,
+      }));
+      ok(
+        order.crumb < order.card && order.card < order.h1,
+        `${name}: breadcrumb, then the picture card, then the H1`,
+      );
+      ok(
+        (await page
+          .locator('.facts3 .v')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '18px',
+        `${name}: fact values 18px`,
+      );
+      ok(
+        (await page
+          .locator('.nd .n')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '44px',
+        `${name}: problem numbers 44px`,
+      );
+      ok((await cols(page, '.feat')) === 1, `${name}: feature cards single column`);
+      ok(
+        (
+          await page
+            .locator('.sq')
+            .first()
+            .evaluate((e) => getComputedStyle(e).gridTemplateColumns)
+        ).startsWith('44px'),
+        `${name}: "How it works" steps are a vertical timeline`,
+      );
+      ok((await cols(page, '.oc')) === 2, `${name}: other services are a 2 x 2 grid`);
+      await page.goto(BASE + '/about', { waitUntil: 'networkidle' });
+      const ab = await page.evaluate(() => ({
+        img: document.querySelector('.herogrid .h3d').getBoundingClientRect().top,
+        h1: document.querySelector('.herogrid h1').getBoundingClientRect().top,
+      }));
+      ok(ab.img < ab.h1, `${name}: About hero picture is above the text`);
+      // contact + footer
+      await page.goto(BASE + '/contact', { waitUntil: 'networkidle' });
+      ok(
+        (await page
+          .locator('.fcard input')
+          .first()
+          .evaluate((e) => getComputedStyle(e).fontSize)) === '16px',
+        `${name}: inputs are 16px (no iOS zoom)`,
+      );
+      ok(
+        (await page.locator('.fcard textarea').evaluate((e) => getComputedStyle(e).height)) ===
+          '92px',
+        `${name}: textarea is 92px`,
+      );
+      const cl = await page.$$eval('.callrow a.cl', (as) =>
+        as.map((a) => Math.round(a.getBoundingClientRect().width)),
+      );
+      ok(
+        cl.length === 2 && cl.every((x) => x >= w - 60),
+        `${name}: contact pills are stacked, full width`,
+      );
+      const fb = await page.$$eval('.fcta .fbtn', (as) =>
+        as.map((a) => Math.round(a.getBoundingClientRect().width)),
+      );
+      ok(
+        fb.length === 2 && fb.every((x) => x >= w - 50),
+        `${name}: footer Call and Email buttons are full width`,
+      );
+      const f2 = await cols(page, '.ftg2');
+      ok(f2 === 2, `${name}: footer is a 2-column grid (${f2})`);
+      // tap targets
+      const small = await page.evaluate(() =>
+        [
+          ...document.querySelectorAll(
+            'main .btn, header .burger, .svp, .rb, .jcard, footer .fbtn, footer .sb',
+          ),
+        ]
+          .filter((e) => e.offsetParent !== null)
+          .map((e) => {
+            const r = e.getBoundingClientRect();
+            return [e.className, Math.round(r.height), Math.round(r.width)];
+          })
+          .filter(([, hh, ww]) => hh < 44 || ww < 44),
+      );
+      ok(
+        small.length === 0,
+        `${name}: tap targets are at least 44px (${JSON.stringify(small.slice(0, 4))})`,
+      );
+      // section padding 52px
+      await page.goto(BASE + '/services/web-applications', { waitUntil: 'networkidle' });
+      const padv = await page.$$eval('main .sec > .wrap:not(.hw)', (els) =>
+        els.slice(0, 4).map((e) => getComputedStyle(e).paddingTop),
+      );
+      ok(
+        padv.every((v) => v === '52px'),
+        `${name}: section padding is 52px (${padv})`,
+      );
+    }
+    if (kind === 'tablet') {
+      await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+      ok(
+        parseInt(
+          await page
+            .locator('.bc')
+            .first()
+            .evaluate((e) => getComputedStyle(e).minHeight),
+        ) === 440,
+        `${name}: tablet cards are min-height 440px`,
+      );
+      ok(await page.locator('.bc p').first().isVisible(), `${name}: tablet cards show the quote`);
+      const padv = await page.$$eval('main .sec > .wrap:not(.hw)', (els) =>
+        els.slice(0, 3).map((e) => parseInt(getComputedStyle(e).paddingTop)),
+      );
+      ok(
+        padv.every((v) => v <= 88),
+        `${name}: section padding is capped at 88px (${padv})`,
+      );
+    }
+    if (kind === 'desktop') {
+      const padv = await page.$$eval('main .sec > .wrap:not(.hw)', (els) =>
+        els.slice(0, 3).map((e) => parseInt(getComputedStyle(e).paddingTop)),
+      );
+      ok(
+        padv[0] === 128 && padv[1] === 120,
+        `${name}: desktop section padding is unchanged (${padv})`,
+      );
+      await page.hover('a.wafab');
+      await page.waitForTimeout(300);
+      ok(
+        (await page.locator('.wafab .wl').evaluate((e) => getComputedStyle(e).opacity)) === '1',
+        `${name}: label shows on hover`,
+      );
+      const lbl = await page.evaluate(() => ({
+        l: document.querySelector('.wafab .wl').getBoundingClientRect().right,
+        wi: document.querySelector('.wafab .wi').getBoundingClientRect().left,
+      }));
+      ok(lbl.l <= lbl.wi, `${name}: label slides out to the left of the icon`);
+      await page.mouse.move(10, 10);
+      await page.locator('a.wafab').focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      await page.waitForTimeout(300);
+      ok(
+        (await page.locator('.wafab .wl').evaluate((e) => getComputedStyle(e).opacity)) === '1',
+        `${name}: label shows on keyboard focus`,
+      );
+    }
+    ok(
+      errors.length === 0,
+      `${name}: no console errors (${errors.slice(0, 2).join(' | ') || 'none'})`,
+    );
+    await ctx.close();
+  }
 }
 
 async function footer() {
@@ -822,21 +1328,22 @@ async function pill() {
     await p2.waitForTimeout(500);
     ok((await p2.locator('.upnext').count()) === 0, `${r}: no pill`);
   }
-  // sits above the mobile bar
-  const c3 = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  const p3 = await c3.newPage();
-  await p3.goto(BASE + '/about', { waitUntil: 'networkidle' });
-  await scrollTo(p3, 0.8);
-  await p3.waitForTimeout(700);
-  const geo = await p3.evaluate(() => ({
-    pill: document.querySelector('.upnext').getBoundingClientRect().bottom,
-    bar: document.querySelector('.sbar').getBoundingClientRect().top,
-  }));
-  ok(
-    geo.pill <= geo.bar - 4,
-    `pill sits above the mobile bar (${Math.round(geo.pill)} <= ${Math.round(geo.bar)})`,
-  );
-  await c3.close();
+  // V5: desktop only. Not rendered on phones or tablets.
+  for (const [w, h] of [
+    [390, 844],
+    [768, 1024],
+  ]) {
+    const c3 = await browser.newContext({ viewport: { width: w, height: h } });
+    const p3 = await c3.newPage();
+    await p3.goto(BASE + '/about', { waitUntil: 'networkidle' });
+    await scrollTo(p3, 0.9);
+    await p3.waitForTimeout(700);
+    ok(
+      (await p3.locator('.upnext').count()) === 0,
+      `${w}px wide: the "Up next" pill is not rendered`,
+    );
+    await c3.close();
+  }
   await c2.close();
   await ctx.close();
   // reduced motion: no animation
@@ -1082,6 +1589,7 @@ async function formFail() {
 }
 
 const run = {
+  phone,
   nav,
   pages,
   footer,
