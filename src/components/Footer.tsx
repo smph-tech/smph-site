@@ -1,39 +1,66 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import type { ReactNode } from 'react';
+import { BookLink } from './BookButton';
+import { MailIcon, PhoneIcon } from './icons';
+import { TechLogo } from './Tools';
 import { FOOTER } from '@/content/pages';
 import { SERVICES, serviceHref } from '@/content/services';
-import { SITE, isPlaceholder } from '@/content/site';
+import { SITE } from '@/content/site';
 
-/** A link once the real value exists, plain marked text until then. */
-function Maybe({ href, children }: { href: string | null; children: ReactNode }) {
-  if (!href) {
-    return (
-      <span className="fl" data-placeholder="">
-        {children}
-      </span>
-    );
-  }
-  return (
-    <a href={href} rel="noopener noreferrer">
-      {children}
-    </a>
-  );
-}
+const L = FOOTER.labels;
+const EXT = { target: '_blank', rel: 'noopener noreferrer' } as const;
 
 export function Footer() {
-  const mail = isPlaceholder(SITE.email) ? null : `mailto:${SITE.email}`;
   return (
     <footer className="ft">
       <div className="wrap">
-        <div className="ftg">
+        <div className="fcta">
+          <div>
+            <h2 className="fcta-h">{FOOTER.ready.h}</h2>
+            <p>{FOOTER.ready.p}</p>
+          </div>
+          <div className="fb">
+            <a className="fbtn or" href={SITE.phoneTel}>
+              <PhoneIcon /> {FOOTER.ready.call} {SITE.phone}
+            </a>
+            <a className="fbtn" href={`mailto:${SITE.email}`}>
+              <MailIcon /> {SITE.email}
+            </a>
+          </div>
+        </div>
+
+        <div className="ftg2">
           <div>
             <Link className="brand" href="/">
               <Image src="/logo/logo-tile-720.png" alt="" width={44} height={44} />
               <span>{SITE.name}</span>
             </Link>
-            <p style={{ margin: '18px 0 0', maxWidth: 330 }}>{FOOTER.about}</p>
+            <p style={{ margin: '18px 0 0', maxWidth: 340 }}>{FOOTER.about}</p>
+            <div className="soc">
+              <a
+                className="sb"
+                href={SITE.instagramUrl}
+                aria-label={`${SITE.name} on Instagram`}
+                style={{
+                  background:
+                    'linear-gradient(45deg,#FEDA75,#FA7E1E 30%,#D62976 60%,#962FBF 80%,#4F5BD5)',
+                }}
+                {...EXT}
+              >
+                <TechLogo name="Instagram" size={26} white />
+              </a>
+              <a
+                className="sb"
+                href={SITE.whatsappChannelUrl}
+                aria-label={`${SITE.name} WhatsApp channel`}
+                style={{ background: '#25D366' }}
+                {...EXT}
+              >
+                <TechLogo name="WhatsApp" size={28} white />
+              </a>
+            </div>
           </div>
+
           <div>
             <h2>{FOOTER.services}</h2>
             {SERVICES.map((s) => (
@@ -42,22 +69,60 @@ export function Footer() {
               </Link>
             ))}
           </div>
+
           <div>
-            <h2>{FOOTER.company}</h2>
+            <h2>{FOOTER.explore}</h2>
+            <Link href="/">Home</Link>
+            <Link href="/services">Services</Link>
             <Link href="/how-we-work">How we work</Link>
             <Link href="/about">About</Link>
-            <Link href="/contact">{FOOTER.contact}</Link>
+            <BookLink>Book a free call</BookLink>
           </div>
+
           <div>
-            <h2>{FOOTER.follow}</h2>
-            <Maybe href={SITE.instagramUrl}>Instagram {SITE.instagram}</Maybe>
-            <Maybe href={SITE.youtubeUrl}>YouTube {SITE.youtube}</Maybe>
-            <Maybe href={mail}>{SITE.email}</Maybe>
+            <h2>{FOOTER.touch}</h2>
+            <a className="ci" href={SITE.phoneTel}>
+              <span className="ib">
+                <PhoneIcon size={18} />
+              </span>
+              <span>
+                <small>{L.call}</small>
+                {SITE.phone}
+              </span>
+            </a>
+            <a className="ci" href={`mailto:${SITE.email}`}>
+              <span className="ib">
+                <MailIcon size={18} />
+              </span>
+              <span>
+                <small>{L.email}</small>
+                {SITE.email}
+              </span>
+            </a>
+            <a className="ci" href={SITE.instagramUrl} {...EXT}>
+              <span className="ib">
+                <TechLogo name="Instagram" size={18} decorative />
+              </span>
+              <span>
+                <small>{L.instagram}</small>
+                {SITE.instagramHandle}
+              </span>
+            </a>
+            <a className="ci" href={SITE.whatsappChannelUrl} {...EXT}>
+              <span className="ib">
+                <TechLogo name="WhatsApp" size={18} decorative />
+              </span>
+              <span>
+                <small>{L.whatsapp}</small>
+                {L.whatsappLine}
+              </span>
+            </a>
           </div>
         </div>
+
         <div className="ftb">
           <span>
-            &copy; {new Date().getFullYear()} {SITE.name}
+            &copy; {new Date().getFullYear()} {SITE.name} &nbsp;&middot;&nbsp; {FOOTER.copy}
           </span>
           <span>{FOOTER.replies}</span>
         </div>

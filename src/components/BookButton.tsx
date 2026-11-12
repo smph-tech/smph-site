@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button, type ButtonVariant } from './Button';
 import type { CSSProperties, ReactNode } from 'react';
@@ -31,4 +32,10 @@ export function BookButton({ service, children, ...rest }: Props) {
       {children}
     </Button>
   );
+}
+
+/** A plain text link (no button styling) with the same "Book a free call" destination rule. */
+export function BookLink({ service, children }: { service?: string; children: ReactNode }) {
+  const href = useBookHref(service);
+  return <Link href={href}>{children}</Link>;
 }

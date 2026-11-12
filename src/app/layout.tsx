@@ -2,7 +2,10 @@ import type { Metadata, Viewport } from 'next';
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
-import { SITE, isPlaceholder } from '@/content/site';
+import { StickyBar } from '@/components/StickyBar';
+import { UpNextPill } from '@/components/UpNextPill';
+import { VisitedProvider } from '@/components/VisitedProvider';
+import { SITE } from '@/content/site';
 import { content } from '@/content';
 import './globals.css';
 
@@ -41,7 +44,6 @@ export const viewport: Viewport = {
 };
 
 function organizationJsonLd() {
-  const sameAs = [SITE.instagramUrl, SITE.youtubeUrl].filter(Boolean);
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -49,8 +51,9 @@ function organizationJsonLd() {
     url: SITE.url,
     logo: `${SITE.url}/icon-512.png`,
     description: content.brand.tagline,
-    ...(sameAs.length ? { sameAs } : {}),
-    ...(isPlaceholder(SITE.email) ? {} : { email: SITE.email }),
+    telephone: SITE.phone.replace(/\s/g, ''),
+    email: SITE.email,
+    sameAs: [SITE.instagramUrl, SITE.whatsappChannelUrl],
   };
 }
 
@@ -66,11 +69,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <a className="skip" href="#main">
           Skip to content
         </a>
-        <div className="pg">
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-        </div>
+        <VisitedProvider>
+          <div className="pg">
+            <Header />
+            <main id="main">{children}</main>
+            <Footer />
+          </div>
+          {/* Outside .pg so position: fixed is relative to the screen, not the page container */}
+          <StickyBar />
+          <UpNextPill />
+        </VisitedProvider>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd()) }}

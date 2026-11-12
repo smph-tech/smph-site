@@ -1,10 +1,16 @@
+'use client';
+
 import { Blob } from './Backdrop';
 import { BookButton } from './BookButton';
 import { Button } from './Button';
 import { Rich } from './Rich';
+import { useVisited } from './VisitedProvider';
 import { CTA } from '@/content/pages';
 
-/** Closing gradient band: heading, lead, "Book a free call" and a ghost link. */
+/**
+ * Closing gradient band: heading, lead, "Book a free call" and an optional ghost link.
+ * Once all four main pages have been seen, the heading becomes "You have seen it all. Let us talk."
+ */
 export function CtaBand({
   title,
   lead,
@@ -12,8 +18,9 @@ export function CtaBand({
 }: {
   title: string;
   lead: string;
-  secondary: { href: string; label: string };
+  secondary?: { href: string; label: string };
 }) {
+  const { seenAll } = useVisited();
   return (
     <section className="sec" style={{ background: 'var(--grad-cta)' }}>
       <div className="gridbg" style={{ opacity: 0.8 }} aria-hidden="true" />
@@ -21,7 +28,7 @@ export function CtaBand({
       <Blob size={360} color="#fff" opacity={0.18} pos={{ right: -80, top: -140 }} />
       <div className="wrap" style={{ paddingTop: 100, paddingBottom: 100, textAlign: 'center' }}>
         <h2 className="h2" style={{ maxWidth: 800, margin: '0 auto', color: '#fff' }}>
-          {title}
+          {seenAll ? CTA.seenAll : title}
         </h2>
         <p
           className="lead"
@@ -41,9 +48,11 @@ export function CtaBand({
           <BookButton variant="white" arrow>
             {CTA.book}
           </BookButton>
-          <Button href={secondary.href} variant="ghost">
-            {secondary.label}
-          </Button>
+          {secondary ? (
+            <Button href={secondary.href} variant="ghost">
+              {secondary.label}
+            </Button>
+          ) : null}
         </div>
       </div>
     </section>
