@@ -24,12 +24,17 @@ const htmlFiles = (await walk(path.join(root, '.next/server/app'))).filter((f) =
   f.endsWith('.html'),
 );
 const srcFiles = [...(await walk(path.join(root, 'src'))), path.join(root, 'content.json')];
+// V4: no timeline placeholders, no YouTube, no leftover contact placeholders.
 const BANNED = [
+  /\[X to Y (weeks|days)\]/,
+  /\[X weeks included\]/,
+  /youtube/i,
+  /\[EMAIL\]|\[HANDLE\]|\[CHANNEL\]|INSTAGRAM HANDLE|YOUTUBE CHANNEL/,
+  /\btypical timeline\b/i,
   /\bfounders?\b/i,
   /four friends/i,
   /case stud/i,
   /portfolio/i,
-  /\bour work\b(?!\s*(?:before|$))/i,
 ];
 const stripTags = (h) =>
   h
@@ -41,8 +46,6 @@ for (const f of [...htmlFiles, ...srcFiles]) {
   const t = await readFile(f, 'utf8');
   for (const re of BANNED)
     if (re.test(f.endsWith('.html') ? stripTags(t) : t)) {
-      // "Where we share our work" (About) is the one allowed use of the phrase.
-      if (re.source.includes('our work') && /Where we share our work/i.test(t)) continue;
       fail(`${path.relative(root, f)} matches ${re}`);
     }
 }

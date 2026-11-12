@@ -70,7 +70,9 @@ describe('contactSchema', () => {
     expect(SERVICE_OPTIONS.slice(0, 5)).toEqual(content.services.map((s) => s.name));
     expect(SERVICE_OPTIONS.at(-1)).toBe('Not sure');
     expect(content.form.service.options).toEqual([...SERVICE_OPTIONS]);
-    expect(content.form.service.placeholder).toBe('Select a service (optional)');
+    expect(content.form.service.placeholder).toBe('Select a service');
+    expect(content.form.service.label).toBe('Service');
+    expect(content.form.service.optional).toBe('(optional)');
   });
 });
 

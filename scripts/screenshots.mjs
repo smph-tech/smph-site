@@ -9,20 +9,17 @@ import sharp from 'sharp';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = process.env.BASE ?? 'http://localhost:3100';
 const OUT = path.join(root, 'shots');
-const REF = path.join(root, 'design-handoff', 'reference');
+// V4 design reference (design-handoff-v4/reference). The earlier design is in design-handoff/.
+const REF = path.join(root, process.env.REFDIR ?? 'design-handoff-v4/reference');
 
 const PAGES = [
   ['home', '/', 'index.html'],
   ['services', '/services', 'services.html'],
-  ['web-applications', '/services/web-applications', 'service-web-applications.html'],
-  ['mobile-apps', '/services/mobile-apps', 'service-mobile-apps.html'],
-  ['management-systems', '/services/management-systems', 'service-management-systems.html'],
-  ['digital-marketing', '/services/digital-marketing', 'service-digital-marketing.html'],
-  [
-    'tech-consulting-automation',
-    '/services/tech-consulting-automation',
-    'service-tech-consulting-automation.html',
-  ],
+  ['web-applications', '/services/web-applications', 'service-web.html'],
+  ['mobile-apps', '/services/mobile-apps', 'service-mobile.html'],
+  ['management-systems', '/services/management-systems', 'service-systems.html'],
+  ['digital-marketing', '/services/digital-marketing', 'service-marketing.html'],
+  ['tech-consulting-automation', '/services/tech-consulting-automation', 'service-consulting.html'],
   ['how-we-work', '/how-we-work', 'how-we-work.html'],
   ['about', '/about', 'about.html'],
   ['contact', '/contact', null],
@@ -41,6 +38,8 @@ async function shoot(browser, url, file, [width, height]) {
   });
   const page = await ctx.newPage();
   await page.goto(url, { waitUntil: 'load' });
+  // Overlays that exist only in the live site (not in the design reference): hide them so full-page shots compare cleanly.
+  await page.addStyleTag({ content: '.upnext,.sbar,.sbar-sp{display:none!important}' });
   await page.evaluate(() => document.fonts.ready);
   // load lazy images
   await page.evaluate(async () => {

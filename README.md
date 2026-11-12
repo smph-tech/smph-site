@@ -46,12 +46,12 @@ Change a sentence there and rebuild. Inline markup in strings:
 - `<em>word</em>` emphasis
 - `[anything in brackets]` a placeholder. It stays visible on the page until you replace it.
 
-Contact details (email, Instagram, YouTube, reply time) are set once in
-[`src/content/site.ts`](src/content/site.ts). Everything still to be confirmed is listed, with
+Contact details (phone, email, Instagram, WhatsApp channel, reply time), each service's colours, scene image and tool logos, and each stage's colours are set in
+[`src/content/site.ts`](src/content/site.ts), in one place. Everything still to be confirmed is listed, with
 the page and exact text, in [`CONFIRM.md`](CONFIRM.md).
 
-Team photos: `public/photos/`. 3D images: `public/3d/` (keep the filenames). Logo: `public/logo/logo-tile-720.png`.
-The original design files are kept in `design-handoff/` for reference and for `pnpm shots`.
+Team photos: `public/photos/`. Hero 3D image: `public/3d/hero.png`. Service scene images: `public/images/scenes/`. Brand logos for tools: `public/images/tech/` (listed per service in `site.ts`; only keep logos for tools you really use). Logo: `public/logo/logo-tile-720.png`.
+The design references are kept in `design-handoff-v4/` (current) and `design-handoff/` (earlier). `pnpm shots` compares the site with `design-handoff-v4/reference`.
 
 ## How the contact form works
 
@@ -178,8 +178,19 @@ scripts/                 assets, screenshots, e2e, content checks
 design-handoff/          original reference HTML and assets
 ```
 
+## How visitors are led through the site
+
+Every main page ends with a **Your path** section (cream background) above the closing band: a five-step progress line
+(Home, Services, How we work, About, Talk to us) and cards for the pages still ahead, with the next one highlighted as **Up next**.
+The order and the card logic are in [`src/lib/journey.ts`](src/lib/journey.ts) and are unit tested.
+
+- **Visited tracking** (`useVisited`): the pages a visitor has seen are kept in `localStorage` (`smph-visited`). They fill the path nodes and show a small orange dot under the nav item. Once all four main pages have been seen, the closing band on the next page says "You have seen it all. Let us talk." Nothing blocks or pops up, and the site works with storage blocked.
+- **"Up next" pill:** after about 70% scroll, a small pill slides in at the bottom left. The x dismisses it for the rest of the session. Hidden on `/contact` and `/thank-you`.
+- **Mobile bar** (below 900px): fixed `Call` and `Book a free call` buttons, hidden on `/contact`.
+- No popups, countdowns, fake scarcity or fake social proof.
+
 ## Accessibility and motion
 
-- Services dropdown opens on hover and keyboard focus, closes on Escape. The mobile menu is a native modal `<dialog>` (focus trap, Escape).
+- The header is five plain links (no dropdown). The mobile menu is a full-screen native modal `<dialog>` (focus trap, Escape, closes on navigation).
 - One `<h1>` per page, skip link, visible focus rings, `alt=""` on decorative 3D art, descriptive alt on team photos.
 - All animation (floating hero, chips, marquee, pulsing steps, hover motion, scroll reveal) is off under `prefers-reduced-motion`.

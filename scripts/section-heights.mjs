@@ -8,7 +8,7 @@ const W = Number(process.env.W ?? 1440);
 const pages = [
   ['/', 'index.html'],
   ['/services', 'services.html'],
-  ['/services/web-applications', 'service-web-applications.html'],
+  ['/services/web-applications', 'service-web.html'],
   ['/how-we-work', 'how-we-work.html'],
   ['/about', 'about.html'],
 ];
@@ -30,7 +30,9 @@ const heights = async (url) => {
 };
 for (const [route, ref] of pages) {
   const s = await heights(BASE + route),
-    r = await heights(pathToFileURL(path.join(root, 'design-handoff/reference', ref)).href);
+    r = await heights(
+      pathToFileURL(path.join(root, process.env.REFDIR ?? 'design-handoff-v4/reference', ref)).href,
+    );
   console.log(route.padEnd(30), 'site', s.join(','), '\n'.padEnd(31), 'ref ', r.join(','));
 }
 await b.close();
