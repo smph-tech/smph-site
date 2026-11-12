@@ -23,17 +23,19 @@ type Status = 'idle' | 'sending' | 'failed';
 type FieldName = 'name' | 'mobile' | 'email' | 'service' | 'message';
 const FIELDS: readonly FieldName[] = ['name', 'mobile', 'email', 'service', 'message'];
 
-/** Label with an optional red asterisk, the control, and its inline error. */
+/** Label with a red asterisk when required, "(optional)" when not, the control, and its inline error. */
 function Field({
   id,
   label,
   required,
+  optional,
   error,
   children,
 }: {
   id: FieldName;
   label: string;
   required?: boolean;
+  optional?: string;
   error?: string;
   children: ReactNode;
 }) {
@@ -42,11 +44,12 @@ function Field({
       <span className="lbl">
         {label}
         {required ? (
-          <b className="req" aria-hidden="true">
+          <b className="rq" aria-hidden="true">
             {' '}
             *
           </b>
         ) : null}
+        {optional ? <b className="opt"> {optional}</b> : null}
       </span>
       {children}
       {error ? (
@@ -187,7 +190,12 @@ export function ContactForm() {
         />
       </Field>
 
-      <Field id="service" label={F.service.label} error={err('service')}>
+      <Field
+        id="service"
+        label={F.service.label}
+        optional={F.service.optional}
+        error={err('service')}
+      >
         <select id="f-service" {...a11y('service')} {...register('service')}>
           <option value="">{F.service.placeholder}</option>
           {SERVICE_OPTIONS.map((o) => (

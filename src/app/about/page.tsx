@@ -2,13 +2,14 @@ import Image from 'next/image';
 import { Blob, HeroBackdrop } from '@/components/Backdrop';
 import { CtaBand } from '@/components/CtaBand';
 import { Eyebrow } from '@/components/Eyebrow';
+import { Journey } from '@/components/Journey';
+import { TechLogo } from '@/components/Tools';
 import { Reveal } from '@/components/Reveal';
 import { Rich } from '@/components/Rich';
 import { TeamGrid } from '@/components/TeamGrid';
 import { content } from '@/content';
-import { SITE, isPlaceholder } from '@/content/site';
+import { ABOUT_TOOLS, SITE } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
-import { cx } from '@/lib/cx';
 
 const A = content.about;
 
@@ -101,9 +102,12 @@ export default function AboutPage() {
                   <Rich text={A.tools.h2} />
                 </h2>
                 <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {content.tools.map((t) => (
-                    <li key={t} style={{ display: 'inline' }}>
-                      <span className="chip2 lc">{t}</span>
+                  {ABOUT_TOOLS.map((t) => (
+                    <li key={t.label ?? t.name} style={{ display: 'contents' }}>
+                      <span className="chip2 lc2">
+                        <TechLogo name={t.name} size={22} decorative />
+                        {t.label ?? t.name}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -121,8 +125,24 @@ export default function AboutPage() {
                 </h2>
                 <p className="lead">{A.share.lead}</p>
                 <div style={{ marginTop: 28, display: 'flex', gap: 12, flexWrap: 'wrap' }}>
-                  <SocialButton href={SITE.instagramUrl} label={`Instagram ${SITE.instagram}`} />
-                  <SocialButton href={SITE.youtubeUrl} label={`YouTube ${SITE.youtube}`} dark />
+                  <a
+                    className="btn"
+                    href={SITE.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ background: 'linear-gradient(45deg,#FA7E1E,#D62976 55%,#962FBF)' }}
+                  >
+                    <TechLogo name="Instagram" size={20} decorative white /> Instagram
+                  </a>
+                  <a
+                    className="btn"
+                    href={SITE.whatsappChannelUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ background: '#0E7A41' }}
+                  >
+                    <TechLogo name="WhatsApp" size={20} decorative white /> WhatsApp channel
+                  </a>
                 </div>
               </div>
             </div>
@@ -130,40 +150,13 @@ export default function AboutPage() {
         </div>
       </section>
 
+      <Journey current="about" />
+
       <CtaBand
         title={A.cta.h2}
         lead={A.cta.lead}
         secondary={{ href: '/services', label: A.cta.secondary }}
       />
     </>
-  );
-}
-
-/** A real link once the account URL is set. Until then a marked, non-clickable button. */
-function SocialButton({
-  href,
-  label,
-  dark,
-}: {
-  href: string | null;
-  label: string;
-  dark?: boolean;
-}) {
-  if (!href || isPlaceholder(href)) {
-    return (
-      <span
-        className={cx('btn', dark && 'dk')}
-        data-placeholder=""
-        aria-disabled="true"
-        style={{ cursor: 'default' }}
-      >
-        {label}
-      </span>
-    );
-  }
-  return (
-    <a className={cx('btn', dark && 'dk')} href={href} rel="noopener noreferrer">
-      {label}
-    </a>
   );
 }

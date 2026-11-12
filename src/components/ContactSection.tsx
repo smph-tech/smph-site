@@ -1,14 +1,19 @@
+import Image from 'next/image';
 import { Blob } from './Backdrop';
 import { ContactForm } from './ContactForm';
-import { LazyContactForm } from './LazyContactForm';
 import { Eyebrow } from './Eyebrow';
+import { LazyContactForm } from './LazyContactForm';
+import { MailIcon, PhoneIcon, TickPlain } from './icons';
 import { Rich } from './Rich';
-import { TickPlain } from './icons';
 import { HOME } from '@/content/pages';
+import { SITE } from '@/content/site';
+import { TEAM, PHOTO_SIZE } from '@/content/team';
 
 /**
  * The gradient "Start here" band with the form. Used on the home page (as #contact)
  * and as the body of /contact, where the heading is the page's h1.
+ * Under the trust list: the four team photos ("you will talk to the people who build it"),
+ * and the phone and email as small pill buttons.
  */
 export function ContactSection({
   asPage = false,
@@ -23,6 +28,7 @@ export function ContactSection({
       <div className="gridbg" style={{ opacity: 0.8 }} aria-hidden="true" />
       <Blob size={420} color="#22D3EE" opacity={0.35} pos={{ left: -120, bottom: -160 }} />
       <Blob size={380} color="#fff" opacity={0.18} pos={{ right: -100, top: -120 }} />
+      <Blob size={300} color="#FF5A1F" opacity={0.28} pos={{ left: '42%', top: -100 }} />
       <div
         className="wrap hero-pad"
         style={{
@@ -46,7 +52,7 @@ export function ContactSection({
             </Heading>
             <p
               className="lead"
-              style={{ marginTop: 22, maxWidth: 470, color: 'rgba(255,255,255,.82)' }}
+              style={{ marginTop: 22, maxWidth: 470, color: 'rgba(255,255,255,.85)' }}
             >
               {copy.lead}
             </p>
@@ -70,6 +76,34 @@ export function ContactSection({
                 </li>
               ))}
             </ul>
+
+            <div className="who">
+              <div className="av">
+                {TEAM.map((p) => {
+                  const size = PHOTO_SIZE[p.photo]!;
+                  return (
+                    <Image
+                      key={p.name}
+                      src={p.photo}
+                      alt={p.name}
+                      width={size.w}
+                      height={size.h}
+                      sizes="50px"
+                    />
+                  );
+                })}
+              </div>
+              <span>{copy.who}</span>
+            </div>
+
+            <div className="callrow">
+              <a className="cl" href={SITE.phoneTel}>
+                <PhoneIcon /> {SITE.phone}
+              </a>
+              <a className="cl" href={`mailto:${SITE.email}`}>
+                <MailIcon /> {SITE.email}
+              </a>
+            </div>
           </div>
           {asPage ? <ContactForm /> : <LazyContactForm />}
         </div>

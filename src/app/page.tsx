@@ -4,7 +4,8 @@ import { BookButton } from '@/components/BookButton';
 import { Button } from '@/components/Button';
 import { ContactSection } from '@/components/ContactSection';
 import { Eyebrow } from '@/components/Eyebrow';
-import { TickCyan } from '@/components/icons';
+import { Journey } from '@/components/Journey';
+import { TickOrange } from '@/components/icons';
 import { Marquee } from '@/components/Marquee';
 import { ProcessSteps } from '@/components/ProcessSteps';
 import { Reveal } from '@/components/Reveal';
@@ -62,7 +63,7 @@ export default function HomePage() {
               >
                 {h.trust.map((t) => (
                   <li key={t}>
-                    <TickCyan />
+                    <TickOrange />
                     <span>
                       <Rich text={t} />
                     </span>
@@ -168,6 +169,8 @@ export default function HomePage() {
           </Reveal>
         </div>
       </section>
+
+      <Journey current="home" />
 
       <ContactSection />
     </>

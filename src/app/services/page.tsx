@@ -1,7 +1,8 @@
-import { CompareTable } from '@/components/CompareTable';
-import { CtaBand } from '@/components/CtaBand';
 import { Eyebrow } from '@/components/Eyebrow';
 import { HeroBackdrop } from '@/components/Backdrop';
+import { CtaBand } from '@/components/CtaBand';
+import { HowItFeels } from '@/components/HowItFeels';
+import { Journey } from '@/components/Journey';
 import { Reveal } from '@/components/Reveal';
 import { Rich } from '@/components/Rich';
 import { ServiceRow } from '@/components/ServiceRow';
@@ -23,7 +24,7 @@ export default function ServicesPage() {
         <HeroBackdrop />
         <div
           className="wrap hero-pad"
-          style={{ paddingTop: 'calc(var(--hd) + 56px)', paddingBottom: 110, textAlign: 'center' }}
+          style={{ paddingTop: 'calc(var(--hd) + 56px)', paddingBottom: 100, textAlign: 'center' }}
         >
           <Eyebrow>{h.eyebrow}</Eyebrow>
           <h1 className="h1" style={{ margin: '28px auto 0', maxWidth: 900 }}>
@@ -32,6 +33,19 @@ export default function ServicesPage() {
           <p className="lead" style={{ margin: '26px auto 0', maxWidth: 600 }}>
             {h.lead}
           </p>
+          <nav className="svpills" aria-label={h.pillsLabel}>
+            {SERVICES.map((s) => (
+              <a
+                key={s.slug}
+                className="svp"
+                href={`#${s.anchor}`}
+                style={{ '--c': s.accent } as React.CSSProperties}
+              >
+                <i aria-hidden="true" />
+                {s.name}
+              </a>
+            ))}
+          </nav>
         </div>
       </section>
 
@@ -45,17 +59,9 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      <section className="sec light" style={{ borderTop: '1px solid rgba(79,123,255,.18)' }}>
-        <div className="wrap" style={{ paddingTop: 20, paddingBottom: 120 }}>
-          <Reveal>
-            <Eyebrow>{SERVICES_PAGE.compare.eyebrow}</Eyebrow>
-            <h2 className="h2" style={{ margin: '24px 0 48px' }}>
-              {SERVICES_PAGE.compare.h2}
-            </h2>
-            <CompareTable />
-          </Reveal>
-        </div>
-      </section>
+      <HowItFeels />
+
+      <Journey current="services" />
 
       <CtaBand
         title={SERVICES_PAGE.cta.h2}

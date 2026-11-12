@@ -15,15 +15,15 @@ export function ArrowIcon({ size = 18 }: { size?: number }) {
   );
 }
 
-/** Cyan circled tick, used in the dark trust rows. */
-export function TickCyan() {
+/** Orange circled tick, used in the dark trust rows (logo colours). */
+export function TickOrange() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-      <circle cx="10" cy="10" r="10" fill="#22D3EE" opacity=".2" />
+      <circle cx="10" cy="10" r="10" fill="#FF5A1F" opacity=".22" />
       <path
         d="M5.5 10.5l3 3 6-7"
         fill="none"
-        stroke="#22D3EE"
+        stroke="#FF8A4C"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -99,3 +99,36 @@ export const WHY_ICONS: Record<string, ReactElement> = {
     </svg>
   ),
 };
+
+const STROKE = {
+  fill: 'none',
+  stroke: 'currentColor',
+  strokeWidth: 2,
+  strokeLinecap: 'round',
+  strokeLinejoin: 'round',
+} as const;
+
+export function PhoneIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...STROKE}>
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z" />
+    </svg>
+  );
+}
+
+export function MailIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" {...STROKE}>
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <path d="m4 8 8 6 8-6" />
+    </svg>
+  );
+}
+
+export function CloseIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 20 20" aria-hidden="true" {...STROKE}>
+      <path d="M4 4l12 12M16 4L4 16" />
+    </svg>
+  );
+}

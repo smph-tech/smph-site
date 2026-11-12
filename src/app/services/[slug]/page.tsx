@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { HeroBackdrop, Blob } from '@/components/Backdrop';
@@ -9,15 +8,18 @@ import { CtaBand } from '@/components/CtaBand';
 import { FactBand } from '@/components/FactBand';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { FeatureGrid } from '@/components/FeatureGrid';
+import { Journey } from '@/components/Journey';
 import { OtherServices } from '@/components/OtherServices';
 import { ProblemList } from '@/components/ProblemList';
 import { Reveal } from '@/components/Reveal';
 import { Rich, plain } from '@/components/Rich';
 import { SectionHeading } from '@/components/SectionHeading';
+import { ServiceHeroCard } from '@/components/ServiceHeroCard';
+import { ToolPills } from '@/components/Tools';
 import { StepRow } from '@/components/StepRow';
 import { content } from '@/content';
 import { CTA } from '@/content/pages';
-import { IMAGE_SIZE, SERVICES, getService, serviceHref } from '@/content/services';
+import { SERVICES, getService, serviceHref } from '@/content/services';
 import { SITE } from '@/content/site';
 import { pageMetadata } from '@/lib/seo';
 
@@ -44,8 +46,6 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
   if (!service) notFound();
 
   const S = content.service;
-  const size = IMAGE_SIZE[service.image]!;
-  const [chipA, chipB] = service.heroChips;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -65,6 +65,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           style={{ paddingTop: 'calc(var(--hd) + 28px)', paddingBottom: 110 }}
         >
           <nav className="crumb" aria-label="Breadcrumb">
+            <Link href="/">{S.breadcrumbHome}</Link> &nbsp;/&nbsp;{' '}
             <Link href="/services">{S.breadcrumbRoot}</Link> &nbsp;/&nbsp; {service.name}
           </nav>
           <div className="sh" style={{ marginTop: 36 }}>
@@ -84,29 +85,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                 </Button>
               </div>
             </div>
-            <div className="h3d sv" style={{ padding: '10px 30px' }}>
-              <Image
-                className="main"
-                src={service.image}
-                alt=""
-                width={size.w}
-                height={size.h}
-                priority
-                sizes="(max-width: 900px) 70vw, 520px"
-              />
-              <div className="chip" style={{ left: 0, top: '10%' }} aria-hidden="true">
-                <b>&#10003;</b>
-                {chipA}
-              </div>
-              <div
-                className="chip"
-                style={{ right: 0, bottom: '12%', animationDelay: '-3s' }}
-                aria-hidden="true"
-              >
-                <b>&#8599;</b>
-                {chipB}
-              </div>
-            </div>
+            <ServiceHeroCard service={service} />
           </div>
           <FactBand service={service} />
         </div>
@@ -134,9 +113,10 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             <SectionHeading
               eyebrow={S.builds.eyebrow}
               title={S.builds.h2}
-              style={{ marginBottom: 56 }}
+              style={{ marginBottom: 40 }}
               titleStyle={{ maxWidth: 760 }}
             />
+            <ToolPills names={service.tools} label={S.builtWith} style={{ margin: '0 0 44px' }} />
             <FeatureGrid items={service.builds} />
           </Reveal>
         </div>
@@ -181,11 +161,9 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         </div>
       </section>
 
-      <CtaBand
-        title={S.cta.h2}
-        lead={S.cta.lead}
-        secondary={{ href: '/services', label: S.cta.secondary }}
-      />
+      <Journey current="services" />
+
+      <CtaBand title={S.cta.h2} lead={S.cta.lead} />
 
       <script
         type="application/ld+json"

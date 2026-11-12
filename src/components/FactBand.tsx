@@ -1,5 +1,4 @@
 import { GlassCard } from './GlassCard';
-import { Rich } from './Rich';
 import { content } from '@/content';
 import type { Service } from '@/content/services';
 
@@ -8,10 +7,8 @@ export function FactBand({ service }: { service: Service }) {
   return (
     <div className="facts3">
       <GlassCard>
-        <div className="k">{f.timeline}</div>
-        <div className="v">
-          <Rich text={service.timeline} />
-        </div>
+        <div className="k">{f.start}</div>
+        <div className="v">{f.startValue}</div>
       </GlassCard>
       <GlassCard>
         <div className="k">{f.price}</div>
