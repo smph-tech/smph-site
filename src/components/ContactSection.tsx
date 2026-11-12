@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Blob } from './Backdrop';
 import { ContactForm } from './ContactForm';
+import { EmailLink, PhoneLink } from './ContactLinks';
 import { Eyebrow } from './Eyebrow';
 import { LazyContactForm } from './LazyContactForm';
 import { MailIcon, PhoneIcon, TickPlain } from './icons';
@@ -96,12 +97,12 @@ export function ContactSection({
             </div>
 
             <div className="callrow">
-              <a className="cl" href={SITE.phoneTel}>
+              <PhoneLink className="cl">
                 <PhoneIcon /> {SITE.phone}
-              </a>
-              <a className="cl" href={`mailto:${SITE.email}`}>
+              </PhoneLink>
+              <EmailLink className="cl">
                 <MailIcon /> {SITE.email}
-              </a>
+              </EmailLink>
             </div>
           </div>
           {asPage ? <ContactForm /> : <LazyContactForm />}

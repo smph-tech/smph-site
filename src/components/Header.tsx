@@ -5,10 +5,10 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { BookButton } from './BookButton';
+import { EmailLink, PhoneLink } from './ContactLinks';
 import { HeroBackdrop } from './Backdrop';
 import { ArrowIcon, PhoneIcon } from './icons';
 import { TechLogo } from './Tools';
-import { useVisited } from './VisitedProvider';
 import { NAV } from '@/content/pages';
 import { SITE, type PageKey } from '@/content/site';
 import { pageKeyFor } from '@/lib/journey';
@@ -36,7 +36,6 @@ function Logo() {
  */
 export function Header({ light }: { light?: boolean }) {
   const pathname = usePathname();
-  const { visited } = useVisited();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const current = pageKeyFor(pathname);
   const isLight = light ?? pathname === '/how-we-work';
@@ -63,7 +62,6 @@ export function Header({ light }: { light?: boolean }) {
                 aria-current={on ? 'page' : undefined}
               >
                 {i.label}
-                {!on && visited.has(i.key) ? <span className="vd" aria-hidden="true" /> : null}
               </Link>
             );
           })}
@@ -125,11 +123,11 @@ export function Header({ light }: { light?: boolean }) {
             <BookButton arrow style={{ width: '100%', marginTop: 30 }}>
               {NAV.book}
             </BookButton>
-            <a className="btn ghost" href={SITE.phoneTel} style={{ width: '100%', marginTop: 12 }}>
+            <PhoneLink className="btn ghost" style={{ width: '100%', marginTop: 12 }}>
               <PhoneIcon /> {NAV.call} {SITE.phone}
-            </a>
+            </PhoneLink>
             <div className="mm-contact">
-              <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+              <EmailLink copy={false} />
               <a
                 className="sb"
                 href={SITE.instagramUrl}

@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { BookLink } from './BookButton';
+import { EmailLink, PhoneLink } from './ContactLinks';
 import { MailIcon, PhoneIcon } from './icons';
 import { TechLogo } from './Tools';
 import { FOOTER } from '@/content/pages';
@@ -20,12 +21,12 @@ export function Footer() {
             <p>{FOOTER.ready.p}</p>
           </div>
           <div className="fb">
-            <a className="fbtn or" href={SITE.phoneTel}>
+            <PhoneLink className="fbtn or">
               <PhoneIcon /> {FOOTER.ready.call} {SITE.phone}
-            </a>
-            <a className="fbtn" href={`mailto:${SITE.email}`}>
+            </PhoneLink>
+            <EmailLink className="fbtn">
               <MailIcon /> {SITE.email}
-            </a>
+            </EmailLink>
           </div>
         </div>
 
@@ -81,7 +82,7 @@ export function Footer() {
 
           <div>
             <h2>{FOOTER.touch}</h2>
-            <a className="ci" href={SITE.phoneTel}>
+            <PhoneLink className="ci">
               <span className="ib">
                 <PhoneIcon size={18} />
               </span>
@@ -89,8 +90,8 @@ export function Footer() {
                 <small>{L.call}</small>
                 {SITE.phone}
               </span>
-            </a>
-            <a className="ci" href={`mailto:${SITE.email}`}>
+            </PhoneLink>
+            <EmailLink className="ci">
               <span className="ib">
                 <MailIcon size={18} />
               </span>
@@ -98,7 +99,7 @@ export function Footer() {
                 <small>{L.email}</small>
                 {SITE.email}
               </span>
-            </a>
+            </EmailLink>
             <a className="ci" href={SITE.instagramUrl} {...EXT}>
               <span className="ib">
                 <TechLogo name="Instagram" size={18} decorative />

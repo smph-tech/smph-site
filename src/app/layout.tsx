@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { Toaster } from '@/components/Toaster';
 import { UpNextPill } from '@/components/UpNextPill';
 import { WhatsAppFab } from '@/components/WhatsAppFab';
 import { VisitedProvider } from '@/components/VisitedProvider';
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <aside aria-label="Quick actions">
             <WhatsAppFab />
             <UpNextPill />
+            <Toaster />
           </aside>
         </VisitedProvider>
         <script

@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
+import { EmailLink } from './ContactLinks';
 import { ArrowIcon } from './icons';
 import {
   contactSchema,
@@ -144,12 +145,7 @@ export function ContactForm() {
       {status === 'failed' ? (
         <p className="fail" role="alert">
           {F.failure}{' '}
-          {hasEmail ? (
-            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
-          ) : (
-            <span data-placeholder="">{SITE.email}</span>
-          )}
-          .
+          {hasEmail ? <EmailLink copy={false} /> : <span data-placeholder="">{SITE.email}</span>}.
         </p>
       ) : null}
 
