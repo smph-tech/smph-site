@@ -1,4 +1,4 @@
-// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [phone|links|ui|pages|footer|journey|visited|pill|nav|tracker|contact-links|form-ui|form-success|form-script|form-fail]
+// End-to-end checks with Playwright. Usage: BASE=http://localhost:3100 node scripts/e2e.mjs [phone|links|ui|pages|footer|journey|visited|pill|nav|tracker|contact-links|team-links|form-ui|form-success|form-script|form-fail]
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE ?? 'http://localhost:3100';
@@ -2043,6 +2043,270 @@ async function contactLinks() {
   }
 }
 
+/** V7: LinkedIn links on the About page team photos only. */
+async function teamLinks() {
+  const LINKS = [
+    ['Subbaiah S', 'https://www.linkedin.com/in/subbiah-s-6b2750353/'],
+    ['Madeswaran M', 'https://www.linkedin.com/in/mmadeswaran2112/'],
+    ['Parthesh S', 'https://www.linkedin.com/in/parthesh-s-b45486316/'],
+    ['Harish S', 'https://www.linkedin.com/in/harishsivakumarjs/'],
+  ];
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  await ctx.route('https://www.linkedin.com/**', (r) =>
+    r.fulfill({ status: 200, contentType: 'text/html', body: '<title>in</title>' }),
+  );
+  const page = await ctx.newPage();
+
+  // home: nothing clickable, nothing new
+  await page.goto(BASE + '/', { waitUntil: 'networkidle' });
+  ok((await page.locator('.tm a').count()) === 0, 'home: team photos are not links');
+  ok(
+    (await page.locator('a[href*="linkedin.com"]').count()) === 0,
+    'home: no LinkedIn link anywhere on the page',
+  );
+  ok(
+    (await page.locator('.tm .in, .tm .tc.lk').count()) === 0,
+    'home: no badge, no linkable cards',
+  );
+  const homeCursor = await page
+    .locator('.tm .tc img')
+    .first()
+    .evaluate((e) => getComputedStyle(e).cursor);
+  ok(
+    homeCursor === 'auto' || homeCursor === 'default',
+    `home: no cursor change on the photos (${homeCursor})`,
+  );
+  const homeLift = async () => {
+    await page.locator('.tm .tc').first().scrollIntoViewIfNeeded();
+    await page.locator('.tm .tc').first().hover();
+    await page.waitForTimeout(500);
+    return page
+      .locator('.tm .tc')
+      .first()
+      .evaluate((e) => new DOMMatrix(getComputedStyle(e).transform).m42);
+  };
+  ok((await homeLift()) === -8, 'home: the card hover is unchanged from the design (8px)');
+  ok(
+    (await page
+      .locator('.tm .tc')
+      .first()
+      .evaluate((e) => getComputedStyle(e, ':after').content)) !== undefined,
+    'home: card structure untouched',
+  );
+
+  // about: the four photo links
+  await page.goto(BASE + '/about', { waitUntil: 'networkidle' });
+  const rows = await page.$$eval('.tm .tc', (cs) =>
+    cs.map((c) => {
+      const a = c.querySelector('a');
+      return {
+        name: c.querySelector('.nm')?.textContent,
+        href: a?.getAttribute('href'),
+        target: a?.getAttribute('target'),
+        rel: a?.getAttribute('rel'),
+        label: a?.getAttribute('aria-label'),
+        hasImg: !!a?.querySelector('img'),
+        nested: !!a?.parentElement?.closest('a') || !!a?.querySelector('a'),
+        anchors: c.querySelectorAll('a').length,
+        nameInLink: !!a?.contains(c.querySelector('.nm')),
+      };
+    }),
+  );
+  ok(rows.length === 4, 'about: four team cards');
+  LINKS.forEach(([name, href], i) => {
+    const r = rows[i];
+    ok(r?.name === name, `about: card ${i + 1} keeps the name as written (${r?.name})`);
+    ok(r?.href === href && r.hasImg, `about: ${name}'s photo is inside a link to ${href}`);
+    ok(
+      r?.target === '_blank' && /noopener/.test(r.rel ?? ''),
+      `about: ${name}'s link opens in a new tab with noopener (${r?.rel})`,
+    );
+    ok(
+      r?.label === `${name} on LinkedIn`,
+      `about: ${name}'s link has the aria-label (${r?.label})`,
+    );
+    ok(
+      r?.anchors === 1 && !r.nested && !r.nameInLink,
+      `about: ${name}: one link, not nested, name and role are not links`,
+    );
+  });
+
+  // click opens a new tab
+  const [popup] = await Promise.all([
+    page.waitForEvent('popup', { timeout: 5000 }).catch(() => null),
+    page.locator('.tm .tc a').nth(3).click(),
+  ]);
+  ok(
+    !!popup && popup.url() === LINKS[3][1],
+    `about: clicking a photo opens LinkedIn in a new tab (${popup?.url()})`,
+  );
+  if (popup) await popup.close();
+  ok(page.url() === BASE + '/about', 'about: the site page stays where it was');
+  // clicking the strip with the name still hits the photo link
+  const [pop2] = await Promise.all([
+    page.waitForEvent('popup', { timeout: 5000 }).catch(() => null),
+    (async () => {
+      const nm = page.locator('.tm .tc .nm').first();
+      await nm.scrollIntoViewIfNeeded();
+      const b = await nm.boundingBox();
+      await page.mouse.click(b.x + b.width / 2, b.y + b.height / 2);
+    })(),
+  ]);
+  ok(
+    !!pop2 && pop2.url() === LINKS[0][1],
+    'about: a click on the name strip falls through to the photo link',
+  );
+  if (pop2) await pop2.close();
+
+  // affordance: cursor, lift, badge (desktop hover)
+  const card = page.locator('.tm .tc').nth(1);
+  await card.scrollIntoViewIfNeeded();
+  await page.mouse.move(5, 5);
+  await page.waitForTimeout(400);
+  const badge = (i) => page.locator('.tm .tc').nth(i).locator('.in');
+  ok(
+    (await page
+      .locator('.tm .tc a')
+      .first()
+      .evaluate((e) => getComputedStyle(e).cursor)) === 'pointer',
+    'about: cursor is a pointer over the photo',
+  );
+  ok(
+    (await badge(1).evaluate((e) => getComputedStyle(e).opacity)) === '0',
+    'about: the badge is hidden until hover',
+  );
+  await card.hover({ position: { x: 100, y: 100 } });
+  await page.waitForTimeout(600);
+  const hov = await card.evaluate((e) => ({
+    lift: new DOMMatrix(getComputedStyle(e).transform).m42,
+  }));
+  ok(hov.lift === -4, `about: the photo lifts 4px on hover (${hov.lift})`);
+  const bs = await badge(1).evaluate((e) => {
+    const cs = getComputedStyle(e);
+    const r = e.getBoundingClientRect();
+    const pr = e.closest('.tl').getBoundingClientRect();
+    return {
+      op: cs.opacity,
+      bg: cs.backgroundColor,
+      color: cs.color,
+      w: r.width,
+      h: r.height,
+      text: e.textContent.trim(),
+      glyph: getComputedStyle(e.querySelector('svg path')).fill === 'rgb(255, 255, 255)',
+      br: cs.borderRadius,
+      right: Math.round(pr.right - r.right),
+      bottom: Math.round(pr.bottom - r.bottom),
+    };
+  });
+  ok(
+    bs.op === '1' &&
+      bs.bg === 'rgb(10, 102, 194)' &&
+      bs.w === 22 &&
+      bs.h === 22 &&
+      bs.glyph &&
+      bs.text === '',
+    `about: hover shows a 22px #0A66C2 circle with a white "in" glyph (${JSON.stringify(bs)})`,
+  );
+  ok(
+    bs.right >= 0 && bs.right <= 16 && bs.bottom >= 0 && bs.bottom <= 16,
+    `about: the badge sits in the bottom-right corner (${bs.right}, ${bs.bottom})`,
+  );
+  await page.mouse.move(5, 5);
+
+  // keyboard: Tab reaches each photo link and the ring is visible
+  await page
+    .locator('.tm .tc a')
+    .first()
+    .evaluate((e) => e.focus());
+  await page.evaluate(() => document.activeElement.blur());
+  await page
+    .locator('main')
+    .first()
+    .evaluate(() => {});
+  // start just before the first photo link and tab through
+  await page.evaluate(() => {
+    const a = document.querySelector('.tm .tc a');
+    const prev = document.createElement('span');
+    prev.tabIndex = 0;
+    prev.id = 'tab-start';
+    a.closest('ul').before(prev);
+    prev.focus();
+  });
+  for (let i = 0; i < 4; i++) {
+    await page.keyboard.press('Tab');
+    await page.waitForTimeout(450);
+    const f = await page.evaluate(() => {
+      const a = document.activeElement;
+      const c = a.closest('.tc');
+      const cs = getComputedStyle(c);
+      return {
+        href: a.getAttribute('href'),
+        outline: `${cs.outlineStyle} ${cs.outlineWidth} ${cs.outlineColor} +${cs.outlineOffset}`,
+        badge: getComputedStyle(a.querySelector('.in')).opacity,
+        own: getComputedStyle(a).outlineStyle,
+      };
+    });
+    ok(f.href === LINKS[i][1], `keyboard: Tab ${i + 1} lands on ${LINKS[i][0]}'s photo link`);
+    ok(
+      f.outline === 'solid 3px rgb(255, 122, 46) +3px',
+      `keyboard: ${LINKS[i][0]} shows a 3px orange ring with 3px offset (${f.outline})`,
+    );
+    ok(f.badge === '1', `keyboard: ${LINKS[i][0]}'s badge is shown on focus`);
+  }
+  await page.keyboard.press('Tab');
+  ok(
+    !(await page.evaluate(() => document.activeElement?.closest?.('.tc'))),
+    'keyboard: the ring is gone once focus moves on',
+  );
+  await ctx.close();
+
+  // touch: the badge is always visible, nothing lifts
+  const mc = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+  });
+  const m = await mc.newPage();
+  await m.goto(BASE + '/about', { waitUntil: 'networkidle' });
+  const ops = await m.$$eval('.tm .tc .in', (bs) => bs.map((b) => getComputedStyle(b).opacity));
+  ok(
+    ops.length === 4 && ops.every((o) => o === '1'),
+    `touch: the LinkedIn badge is always visible (${ops})`,
+  );
+  const ov = await m.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1);
+  ok(!ov, 'touch: no horizontal scroll');
+  const tap = await m.$$eval('.tm .tc a', (as) =>
+    as.map((a) => Math.round(a.getBoundingClientRect().width)),
+  );
+  ok(
+    tap.every((w) => w >= 44),
+    `touch: photo links are big enough to tap (${tap})`,
+  );
+  await m.goto(BASE + '/', { waitUntil: 'networkidle' });
+  ok((await m.locator('.tm .in').count()) === 0, 'touch: the home page has no badge');
+  await mc.close();
+
+  // reduced motion: no lift
+  const rm = await browser.newContext({
+    viewport: { width: 1440, height: 900 },
+    reducedMotion: 'reduce',
+  });
+  const r = await rm.newPage();
+  await r.goto(BASE + '/about', { waitUntil: 'networkidle' });
+  await r.locator('.tm .tc').nth(1).scrollIntoViewIfNeeded();
+  await r
+    .locator('.tm .tc')
+    .nth(1)
+    .hover({ position: { x: 100, y: 100 } });
+  await r.waitForTimeout(500);
+  const lift = await r
+    .locator('.tm .tc')
+    .nth(1)
+    .evaluate((e) => getComputedStyle(e).transform);
+  ok(lift === 'none', `reduced motion: no lift on hover (${lift})`);
+  await rm.close();
+}
+
 const run = {
   phone,
   nav,
@@ -2052,6 +2316,7 @@ const run = {
   visited,
   pill,
   tracker,
+  'team-links': teamLinks,
   'contact-links': contactLinks,
   links,
   ui,

@@ -726,3 +726,61 @@ a.wafab:focus-visible .wi {
 .ftb {
   padding-bottom: 88px;
 }
+
+/* ---- V7: LinkedIn links on the About page team photos (only cards with .lk; the home page is untouched) ---- */
+.tc.lk .cap {
+  pointer-events: none; /* clicks on the name strip fall through to the photo link */
+}
+.tc.lk .tl {
+  position: relative;
+  display: block;
+  cursor: pointer;
+}
+.tc.lk .tl:focus-visible {
+  outline: none; /* the ring is drawn on the card: the card clips overflow, so an outline on the photo would be cut off */
+}
+.tc.lk:has(.tl:focus-visible) {
+  outline: 3px solid #ff7a2e;
+  outline-offset: 3px;
+}
+.tc.lk .in {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0a66c2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+.tc.lk .tl:focus-visible .in {
+  opacity: 1;
+}
+@media (hover: hover) {
+  .tc.lk:hover {
+    transform: translateY(-4px); /* 4px, not the 8px of the plain card */
+  }
+  .tc.lk:hover .in {
+    opacity: 1;
+  }
+}
+/* touch devices have no hover, so the badge is always shown */
+@media (hover: none) {
+  .tc.lk .in {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc.lk:hover {
+    transform: none;
+  }
+  .tc.lk .in {
+    transition: none;
+  }
+}

@@ -82,7 +82,7 @@ export default function AboutPage() {
             <h2 className="h2" style={{ margin: '24px 0 56px', maxWidth: 760 }}>
               <Rich text={A.team.h2} />
             </h2>
-            <TeamGrid />
+            <TeamGrid linkable />
           </Reveal>
         </div>
       </section>

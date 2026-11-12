@@ -496,22 +496,26 @@
     {
       "name": "Subbaiah S",
       "role": "Full-Stack Developer",
-      "photo": "/photos/subbaiah.jpg"
+      "photo": "/photos/subbaiah.jpg",
+      "linkedin": "https://www.linkedin.com/in/subbiah-s-6b2750353/"
     },
     {
       "name": "Madeswaran M",
       "role": "Full-Stack Developer",
-      "photo": "/photos/madeswaran.jpg"
+      "photo": "/photos/madeswaran.jpg",
+      "linkedin": "https://www.linkedin.com/in/mmadeswaran2112/"
     },
     {
       "name": "Parthesh S",
       "role": "UI/UX Designer",
-      "photo": "/photos/parthesh.jpg"
+      "photo": "/photos/parthesh.jpg",
+      "linkedin": "https://www.linkedin.com/in/parthesh-s-b45486316/"
     },
     {
       "name": "Harish S",
       "role": "Technical Lead",
-      "photo": "/photos/harish.jpg"
+      "photo": "/photos/harish.jpg",
+      "linkedin": "https://www.linkedin.com/in/harishsivakumarjs/"
     }
   ],
   "marquee": [
